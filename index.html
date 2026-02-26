@@ -4,6 +4,13 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
 <title>REGI — Coaching Studio</title>
+<link rel="manifest" href="manifest.json" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="REGI" />
+<meta name="theme-color" content="#08080a" />
+<link rel="apple-touch-icon" href="icon.png" />
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 <style>
 :root{
@@ -326,6 +333,23 @@ function tS(i){const el=$("s"+i);const a=$("sa"+i);if(el){const sh=el.style.disp
 function tI(si,ii){const el=$("it"+si+"_"+ii);const a=$("ia"+si+"_"+ii);if(el){const sh=el.style.display==="none";el.style.display=sh?"block":"none";if(a)a.style.transform=sh?"rotate(180deg)":"rotate(0)"}}
 function exportData(){const d={clients,sessions,schedule,exported:new Date().toISOString()};const b=new Blob([JSON.stringify(d,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="regi_backup_"+new Date().toISOString().split("T")[0]+".json";a.click();URL.revokeObjectURL(a.href);toast("✓ Backup downloaded")}
 R();
+
+// PWA install prompt
+let _deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',(e)=>{
+  e.preventDefault();_deferredPrompt=e;
+  const b=document.createElement('div');
+  b.id='installBanner';
+  b.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#1a1610,#2e2418);border:1px solid var(--accB);border-radius:12px;padding:14px 20px;display:flex;align-items:center;gap:14px;z-index:99;box-shadow:0 8px 32px rgba(0,0,0,0.4);max-width:320px;width:90%';
+  b.innerHTML=`<div style="width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,var(--accDeep),var(--accD));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:18px;font-weight:900;color:var(--ice);flex-shrink:0">R</div><div style="flex:1"><div style="font-size:12px;font-weight:700;color:var(--ice);font-family:var(--mono)">INSTALL APP</div><div style="font-size:10px;color:var(--mu);margin-top:2px">Add REGI to your home screen</div></div><button onclick="installApp()" style="background:linear-gradient(135deg,var(--accDeep),var(--accD));color:var(--ice);font-family:var(--mono);font-size:9px;font-weight:700;padding:7px 12px;border-radius:6px;border:none;cursor:pointer;letter-spacing:0.08em">ADD</button><span onclick="document.getElementById('installBanner').remove()" style="color:var(--dm);cursor:pointer;font-size:16px;padding:2px 4px">✕</span>`;
+  document.body.appendChild(b);
+});
+function installApp(){if(_deferredPrompt){_deferredPrompt.prompt();_deferredPrompt.userChoice.then(()=>{_deferredPrompt=null;const b=document.getElementById('installBanner');if(b)b.remove()})}}
+
+// Service worker
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
 </script>
 </body>
 </html>
