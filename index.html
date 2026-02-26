@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<title>REGI — Coaching Studio</title>
+<link rel="manifest" href="manifest.json" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="REGI" />
+<meta name="theme-color" content="#08080a" />
+<link rel="apple-touch-icon" href="icon.png" />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg:#08080a;--bg2:#111114;--card:#141418;--cardH:#1c1c22;
+  --border:#2a2520;--borderH:#3e3830;--borderS:#1a1815;
+  --acc:#d4a44a;--accD:#c09030;--accDeep:#9a7020;--accVib:#f0cc70;
+  --accS:rgba(212,164,74,0.06);--accB:rgba(212,164,74,0.18);--accM:rgba(212,164,74,0.30);
+  --accGlow:rgba(212,164,74,0.14);
+  --ice:#fff8e8;--wh:#f0ece4;--ow:#c8c0b0;--mu:#908878;--dm:#605848;--dmL:#3a3428;
+  --glass:rgba(212,164,74,0.03);--glassB:rgba(212,164,74,0.07);
+  --warn:#e8b878;--danger:#d87878;
+  --display:'Cinzel',serif;--body:'Rajdhani',sans-serif;--mono:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--wh);font-family:var(--body);min-height:100vh;-webkit-font-smoothing:antialiased}
+input,textarea,select{font-family:var(--body);color:var(--wh);background:rgba(212,164,74,0.04);border:1px solid var(--border);border-radius:6px;padding:12px 14px;font-size:14px;outline:none;width:100%;box-sizing:border-box}
+input:focus,textarea:focus,select:focus{border-color:var(--acc);box-shadow:0 0 14px var(--accS)}
+input::placeholder,textarea::placeholder{color:var(--dm)}
+select{cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23605848' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+select option{background:var(--card);color:var(--wh)}
+button{font-family:var(--body);cursor:pointer;border:none;outline:none}
+button:active{transform:scale(0.97)}
+.btn{background:linear-gradient(135deg,var(--accDeep),var(--accD));color:var(--ice);font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0.12em;padding:14px;border-radius:8px;width:100%;box-shadow:0 4px 24px var(--accGlow);text-shadow:0 1px 4px rgba(0,0,0,0.4)}
+.btn2{background:var(--accS);color:var(--acc);border:1px solid var(--accB);font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.1em;padding:8px 14px;border-radius:6px}
+.cd{background:linear-gradient(180deg,rgba(20,20,24,0.97),rgba(8,8,10,0.98));border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:8px}
+.gw{height:1px;background:linear-gradient(90deg,transparent,var(--accDeep),var(--acc),var(--accDeep),transparent);box-shadow:0 0 14px var(--accGlow);margin:22px 0}
+.sl{font-size:10px;font-weight:700;color:var(--acc);letter-spacing:0.18em;font-family:var(--mono);text-shadow:0 0 16px var(--accGlow);margin-bottom:10px}
+.pt{font-size:22px;font-weight:700;color:var(--ice);font-family:var(--display);letter-spacing:0.04em;text-shadow:0 0 28px rgba(212,164,74,0.08);margin-bottom:16px}
+.lb{font-size:10px;font-weight:700;color:var(--dm);font-family:var(--mono);letter-spacing:0.08em;display:block;margin-bottom:5px}
+.chip{display:inline-flex;padding:4px 10px;border-radius:5px;font-size:9px;font-weight:700;font-family:var(--mono);background:var(--accS);border:1px solid var(--borderS);color:var(--ow);cursor:pointer;margin:2px}
+.chip.on{background:rgba(212,164,74,0.12);border-color:var(--accD);color:var(--accVib)}
+#app{max-width:640px;margin:0 auto;min-height:100vh;position:relative;z-index:1}
+.hdr{display:flex;align-items:center;padding:14px 16px 12px;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(8,8,10,0.94);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);z-index:10}
+.ct{padding:18px 16px 100px}
+.tabs{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:640px;background:rgba(8,8,10,0.97);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:10px 0 max(10px,env(safe-area-inset-bottom));z-index:10}
+.ti{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:6px 10px;font-size:9px;font-weight:700;font-family:var(--mono);letter-spacing:0.04em;color:var(--dm);position:relative}
+.ti.on{color:var(--acc);filter:drop-shadow(0 0 8px var(--accGlow))}
+.ti.on::before{content:'';position:absolute;top:-10px;left:50%;transform:translateX(-50%);width:24px;height:2px;border-radius:1px;background:var(--acc);box-shadow:0 0 10px var(--accGlow)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px}
+.stat{padding:14px 6px;text-align:center;background:linear-gradient(180deg,rgba(20,20,24,0.9),rgba(8,8,10,0.95));border-radius:10px;border:1px solid var(--glassB)}
+.stat b{font-size:22px;font-weight:800;font-family:var(--mono);display:block;line-height:1}
+.stat small{font-size:7px;color:var(--dm);letter-spacing:0.12em;display:block;margin-top:5px;font-weight:700;font-family:var(--mono)}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes breathe{0%,100%{box-shadow:0 0 18px var(--accGlow)}50%{box-shadow:0 0 40px var(--accM)}}
+@keyframes glowPulse{0%,100%{text-shadow:0 0 14px rgba(212,164,74,0.3)}50%{text-shadow:0 0 30px rgba(212,164,74,0.5)}}
+.toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--accDeep),var(--accD));color:var(--ice);font-family:var(--mono);font-size:11px;font-weight:700;padding:10px 28px;border-radius:10px;z-index:100;animation:fadeIn 0.3s;box-shadow:0 4px 24px var(--accM);letter-spacing:0.06em;white-space:nowrap}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+@media(min-width:900px){
+  #app{max-width:100%;width:100%;display:flex;flex-direction:column}
+  .tabs{
+    position:fixed;left:0;top:0;bottom:0;width:220px;
+    flex-direction:column;justify-content:flex-start;align-items:stretch;
+    padding:0;border-top:none;border-right:1px solid var(--border);
+    background:rgba(8,8,10,0.99);transform:none;left:0;max-width:220px;
+  }
+  .ti{
+    flex-direction:row;justify-content:flex-start;gap:12px;
+    padding:13px 22px;font-size:11px;letter-spacing:0.08em;width:100%;
+  }
+  .ti.on::before{
+    top:50%;left:0;transform:translateY(-50%);
+    width:3px;height:60%;border-radius:0 3px 3px 0;
+  }
+  .hdr{left:220px;right:0;width:auto;padding:16px 36px}
+  .ct{margin-left:220px;padding:32px 48px 60px;max-width:1100px}
+  .desk-logo{display:flex!important}
+}
+.desk-logo{display:none;align-items:center;gap:12px;padding:24px 20px 18px;border-bottom:1px solid var(--border);margin-bottom:6px}
+</style>
+</head>
+<body>
+<div style="position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 120% 60% at 50% -15%,rgba(212,164,74,0.06) 0%,transparent 50%),radial-gradient(ellipse 70% 80% at -10% 100%,rgba(154,112,32,0.04) 0%,transparent 45%),var(--bg)"></div>
+<div id="app">
+  <div class="hdr">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#1a1610,#2e2418);border:1px solid var(--borderH);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:20px;font-weight:900;color:var(--acc);box-shadow:0 0 28px var(--accGlow),inset 0 1px 0 var(--glassB);animation:breathe 4s ease-in-out infinite">R</div>
+      <div><div style="font-family:var(--display);font-size:15px;font-weight:700;letter-spacing:0.08em;color:var(--ice)">REGI</div><div style="font-size:8px;color:var(--dm);font-family:var(--mono);letter-spacing:0.12em;margin-top:1px">COACHING STUDIO</div></div>
+    </div>
+  </div>
+  <div class="tabs" id="tabs">
+    <div class="desk-logo">
+      <div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#1a1610,#2e2418);border:1px solid var(--borderH);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:20px;font-weight:900;color:var(--acc);box-shadow:0 0 28px var(--accGlow);animation:breathe 4s ease-in-out infinite;flex-shrink:0">R</div>
+      <div><div style="font-family:var(--display);font-size:14px;font-weight:700;letter-spacing:0.08em;color:var(--ice)">REGI</div><div style="font-size:7px;color:var(--dm);font-family:var(--mono);letter-spacing:0.12em;margin-top:1px">COACHING STUDIO</div></div>
+    </div>
+  </div>
+  <div class="ct" id="ct"></div>
+</div>
+<script>
+const SHEETS_URL="https://script.google.com/macros/s/AKfycbxR8LcIMm8nL5t0XvgBI-5u5L21k8_HJv4u1aUSWBR8ZG4bemyhj8jj1-Yi3mg95XRf/exec";
+const LS={get(k,d){try{return JSON.parse(localStorage.getItem("regi_"+k))||d}catch(e){return d}},set(k,v){try{localStorage.setItem("regi_"+k,JSON.stringify(v))}catch(e){}}};
+let S={tab:"home",view:"main",_ci:0,_si:null,_pre:null};
+let clients=LS.get("clients",[]),sessions=LS.get("sessions",[]),schedule=LS.get("schedule",[]);
+function save(){LS.set("clients",clients);LS.set("sessions",sessions);LS.set("schedule",schedule)}
+function toast(m,dur){const d=document.createElement("div");d.className="toast";d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),dur||2200)}
+function $(id){return document.getElementById(id)}
+function v(id){const el=$(id);return el?el.value.trim():""}
+const DN=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],GYM=0.20;
+const fmt=s=>{const m=Math.floor(s/60),ss=s%60;return(m<10?"0"+m:m)+":"+(ss<10?"0"+ss:ss)};
+let _ts=0,_tm=60,_tr=false,_ti=null;
+
+async function logToSheets(session){
+  try{
+    const exercises=session.exercises?session.exercises.map(ex=>{
+      const sets=ex.sets?ex.sets.map(s=>`${s.w||"—"}×${s.r||"—"}`).join(", "):"";
+      return `${ex.name}${ex.tempo&&ex.tempo!=="Normal"?" ("+ex.tempo+")":""}: ${sets}${ex.note?" | "+ex.note:""}`;
+    }).join(" || "):"";
+    const payload={
+      date:session.date,
+      clientName:session.clientName,
+      type:session.type,
+      duration:session.duration+"min",
+      rate:session.rate,
+      energy:session.energy||"—",
+      notes:session.notes||"",
+      nextPlan:session.nextPlan||"",
+      exercises:exercises
+    };
+    await fetch(SHEETS_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+    toast("✓ Saved & logged to sheet");
+  }catch(err){
+    toast("✓ Saved locally");
+  }
+}
+
+const TABS=[
+{k:"home",l:"Home",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1"/></svg>'},
+{k:"clients",l:"Clients",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>'},
+{k:"sessions",l:"Sessions",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>'},
+{k:"schedule",l:"Schedule",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>'},
+{k:"guide",l:"Guide",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>'},
+];
+
+function R(){
+  const tabsEl=$("tabs");
+  // Remove old tab items but keep desk-logo
+  tabsEl.querySelectorAll(".ti").forEach(el=>el.remove());
+  tabsEl.innerHTML += TABS.map(t=>`<div class="ti ${S.tab===t.k?"on":""}" onclick="go('${t.k}')">${t.svg}<span>${t.l}</span></div>`).join("");
+  const c=$("ct");c.style.animation="none";c.offsetHeight;c.style.animation="fadeIn 0.3s ease";
+  c.innerHTML=({home:pgHome,clients:pgClients,sessions:pgSessions,schedule:pgSchedule,guide:pgGuide}[S.tab]||pgHome)();
+}
+function go(t){S.tab=t;S.view="main";S._pre=null;R();window.scrollTo({top:0,behavior:"smooth"})}
+function sub(v){S.view=v;R();window.scrollTo({top:0,behavior:"smooth"})}
+
+function pgHome(){
+const t=new Date(),mo=t.getMonth(),yr=t.getFullYear();
+const moS=sessions.filter(s=>{const d=new Date(s.date);return d.getMonth()===mo&&d.getFullYear()===yr});
+const gross=moS.reduce((a,s)=>a+parseFloat(s.rate||70),0);
+const cut=Math.round(gross*GYM);const take=gross-cut;
+const iso=t.toISOString().split("T")[0];
+const today=schedule.filter(s=>s.date===iso).sort((a,b)=>(a.time||"").localeCompare(b.time||""));
+const h=t.getHours();const gr=h<12?"Good morning":h<17?"Good afternoon":"Good evening";
+return `
+  <div style="margin:-18px -16px 0;padding:38px 20px 32px;position:relative;overflow:hidden;background:linear-gradient(170deg,#181412 0%,#111114 40%,var(--bg) 100%)">
+    <div style="position:absolute;top:-70px;right:-50px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(212,164,74,0.12),transparent 55%);pointer-events:none;filter:blur(25px)"></div>
+    <div style="position:relative">
+      <div style="font-size:12px;color:var(--dm);font-family:var(--mono);letter-spacing:0.1em;margin-bottom:14px">${DN[t.getDay()].toUpperCase()} · ${t.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"})}</div>
+      <div style="font-size:30px;font-weight:800;color:var(--wh);line-height:1.05;font-family:var(--display)">${gr},</div>
+      <div style="font-size:30px;font-weight:800;line-height:1.15;font-family:var(--display);animation:glowPulse 4s ease-in-out infinite"><span style="background:linear-gradient(135deg,var(--accVib),var(--acc),var(--accD));-webkit-background-clip:text;-webkit-text-fill-color:transparent">Regina</span></div>
+    </div>
+  </div>
+  <div class="sl" style="margin-top:20px">${t.toLocaleDateString("en-US",{month:"long"}).toUpperCase()} EARNINGS</div>
+  <div class="g4">
+    <div class="stat"><b style="color:var(--acc)">${moS.length}</b><small>SESSIONS</small></div>
+    <div class="stat"><b style="color:var(--ow)">$${gross}</b><small>GROSS</small></div>
+    <div class="stat"><b style="color:var(--dm)">-$${cut}</b><small>GYM 20%</small></div>
+    <div class="stat" style="border-color:var(--accB)"><b style="color:var(--accVib);text-shadow:0 0 16px var(--accGlow)">$${take}</b><small>YOURS</small></div>
+  </div>
+  ${today.length?`<div class="sl" style="margin-top:24px">TODAY</div>${today.map(s=>`<div class="cd" style="display:flex;align-items:center;gap:14px;border-left:3px solid var(--acc)"><div style="min-width:50px;font-family:var(--mono);font-size:13px;font-weight:700;color:var(--acc)">${s.time||"TBD"}</div><div style="flex:1"><div style="font-size:14px;font-weight:600;color:var(--wh)">${s.clientName}</div><div style="font-size:10px;color:var(--dm)">${s.type||"Training"}</div></div><div style="font-size:11px;color:var(--ow);font-family:var(--mono)">$${s.rate||70}</div></div>`).join("")}`:"<div class='cd' style='text-align:center;padding:22px;margin-top:24px;border:1px dashed var(--border);color:var(--dm)'>No sessions today</div>"}
+  ${sessions.length?`<div class="sl" style="margin-top:24px">RECENT</div>${sessions.slice(-3).reverse().map(s=>`<div class="cd" style="display:flex;align-items:center;gap:12px;cursor:pointer" onclick="S._si='${s.id}';S.tab='sessions';sub('detail')"><div style="width:34px;height:34px;border-radius:8px;background:var(--accS);border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;font-weight:700;color:var(--accVib)">${(s.clientName||"?")[0]}</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">${s.clientName}</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">${s.type} · ${s.date}</div></div><div style="font-size:10px;color:var(--ow);font-family:var(--mono)">$${s.rate}</div></div>`).join("")}`:""}
+  <div class="gw"></div>
+  <div class="cd" style="border-left:3px solid var(--accDeep);padding:16px"><div style="font-size:12px;color:var(--mu);line-height:1.7;margin-bottom:10px">Download a backup of all your data.</div><button class="btn2" onclick="exportData()" style="width:100%">DOWNLOAD BACKUP</button></div>`;
+}
+
+function pgClients(){
+if(S.view==="add")return pgAdd();if(S.view==="detail")return pgCd();
+return `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><div class="pt" style="margin-bottom:0">Clients</div><button class="btn2" onclick="sub('add')">+ NEW</button></div>${clients.length?clients.map((c,i)=>`<div class="cd" style="display:flex;align-items:center;gap:14px;cursor:pointer" onclick="S._ci=${i};sub('detail')"><div style="width:44px;height:44px;border-radius:11px;background:linear-gradient(135deg,var(--accM),var(--accS));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:17px;font-weight:700;color:var(--wh);flex-shrink:0;box-shadow:0 0 16px var(--accGlow)">${c.name[0].toUpperCase()}</div><div style="flex:1"><div style="font-size:14px;font-weight:600;color:var(--wh)">${c.name}</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">${c.type||"Training"} · $${c.rate||70}/hr · ${sessions.filter(x=>x.clientId===c.id).length} sessions</div></div><div style="color:var(--dm)">›</div></div>`).join(""):`<div class="cd" style="text-align:center;padding:40px"><div style="color:var(--dm);margin-bottom:14px">No clients yet</div><button class="btn" style="max-width:200px;margin:0 auto" onclick="sub('add')">ADD FIRST CLIENT</button></div>`}`;
+}
+function pgAdd(){
+return `<button class="btn2" onclick="sub('main')" style="margin-bottom:14px">‹ Back</button><div class="pt">New Client</div>
+  <div class="cd" style="padding:18px">
+    <div style="margin-bottom:14px"><span class="lb">NAME *</span><input id="cN" placeholder="Full name"></div>
+    <div class="g2" style="margin-bottom:14px"><div><span class="lb">PHONE</span><input id="cP" placeholder="(555) 123-4567"></div><div><span class="lb">EMAIL</span><input id="cE" placeholder="email@..."></div></div>
+    <div class="g2"><div><span class="lb">AGE</span><input id="cA" type="number" placeholder="—"></div><div><span class="lb">RATE ($/HR)</span><input id="cR" type="number" value="70"></div></div>
+  </div>
+  <div class="sl" style="margin-top:14px">SESSION TYPE</div><div class="cd" style="padding:14px"><div style="display:flex;flex-wrap:wrap;gap:4px"><div class="chip on" onclick="pk(this,'cTv')">Training</div><div class="chip" onclick="pk(this,'cTv')">Mobility</div><div class="chip" onclick="pk(this,'cTv')">Training + Mobility</div></div><input type="hidden" id="cTv" value="Training"></div>
+  <div class="sl" style="margin-top:14px">EXPERIENCE</div><div class="cd" style="padding:14px"><div style="display:flex;flex-wrap:wrap;gap:4px"><div class="chip on" onclick="pk(this,'cLv')">Beginner</div><div class="chip" onclick="pk(this,'cLv')">Some Experience</div><div class="chip" onclick="pk(this,'cLv')">Intermediate</div><div class="chip" onclick="pk(this,'cLv')">Advanced</div></div><input type="hidden" id="cLv" value="Beginner"></div>
+  <div class="sl" style="margin-top:14px">HEALTH & HISTORY</div><div class="cd" style="padding:18px">
+    <div style="margin-bottom:14px"><span class="lb">GOALS</span><textarea id="cG" rows="2" placeholder="What do they want?"></textarea></div>
+    <div style="margin-bottom:14px"><span class="lb">INJURIES / LIMITATIONS</span><textarea id="cI" rows="2" placeholder="Surgeries, joint issues, chronic pain..."></textarea></div>
+    <div style="margin-bottom:14px"><span class="lb">MEDICAL</span><textarea id="cM" rows="1" placeholder="Conditions, medications..."></textarea></div>
+    <div style="margin-bottom:14px"><span class="lb">CURRENT ACTIVITY</span><textarea id="cAc" rows="1" placeholder="Sedentary, light gym, active..."></textarea></div>
+    <div><span class="lb">NOTES</span><textarea id="cO" rows="2" placeholder="Personality, preferences, anything else..."></textarea></div>
+  </div>
+  <button class="btn" style="margin-top:16px" onclick="aC()">SAVE CLIENT</button>`;
+}
+function pk(el,hid){el.parentElement.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));el.classList.add('on');const h=$(hid);if(h)h.value=el.textContent}
+function aC(){const n=v("cN");if(!n){alert("Name is required");return}clients.push({id:Date.now().toString(),name:n,phone:v("cP"),email:v("cE"),type:v("cTv"),rate:v("cR")||"70",age:v("cA"),level:v("cLv"),goals:v("cG"),injuries:v("cI"),medical:v("cM"),activity:v("cAc"),notes:v("cO")});save();toast("✓ "+n+" added");sub("main")}
+function pgCd(){
+  const c=clients[S._ci];if(!c)return pgClients();const cs=sessions.filter(x=>x.clientId===c.id);const rev=cs.reduce((a,x)=>a+parseFloat(x.rate||c.rate||70),0);
+  const info=[["Phone",c.phone],["Email",c.email],["Age",c.age],["Goals",c.goals],["Injuries",c.injuries],["Medical",c.medical],["Activity",c.activity],["Notes",c.notes]].filter(r=>r[1]);
+  return `<button class="btn2" onclick="sub('main')" style="margin-bottom:14px">‹ Back</button>
+<div style="display:flex;align-items:center;gap:16px;margin-bottom:24px"><div style="width:58px;height:58px;border-radius:14px;background:linear-gradient(135deg,var(--accM),var(--accS));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:var(--wh);font-family:var(--mono);box-shadow:0 0 30px var(--accGlow)">${c.name[0].toUpperCase()}</div><div><div style="font-size:22px;font-weight:800;font-family:var(--display)">${c.name}</div><div style="font-size:12px;color:var(--acc);font-weight:600">${c.type} · $${c.rate}/hr · ${c.level||"Beginner"}</div></div></div>
+<div class="g3" style="margin-bottom:22px"><div class="stat"><b style="color:var(--acc)">${cs.length}</b><small>SESSIONS</small></div><div class="stat"><b style="color:var(--ow)">$${rev}</b><small>GROSS</small></div><div class="stat"><b style="color:var(--accVib)">$${Math.round(rev*(1-GYM))}</b><small>YOUR CUT</small></div></div>
+${info.length?`<div class="sl">INFO</div><div class="cd" style="padding:4px 16px">${info.map((r,i,a)=>`<div style="display:flex;justify-content:space-between;padding:11px 0;border-bottom:${i<a.length-1?"1px solid var(--borderS)":"none"};gap:14px"><span style="font-size:11px;color:var(--dm);font-weight:600;min-width:55px">${r[0]}</span><span style="font-size:12px;color:var(--ow);text-align:right;word-break:break-word;flex:1">${r[1]}</span></div>`).join("")}</div>`:""}
+${cs.length?`<div class="sl" style="margin-top:20px">SESSION HISTORY</div>${cs.slice().reverse().slice(0,10).map(x=>`<div class="cd" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="S._si='${x.id}';S.tab='sessions';sub('detail')"><div><div style="font-size:12px;font-weight:600;color:var(--wh)">${x.type}</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">${x.date}</div></div><div style="font-size:10px;color:var(--ow);font-family:var(--mono)">$${x.rate}</div></div>`).join("")}`:""}
+<button class="btn" style="margin-top:16px" onclick="S._pre='${c.id}';S.tab='sessions';sub('new')">LOG SESSION</button>
+<button style="width:100%;margin-top:10px;padding:12px;background:rgba(216,120,120,0.05);border:1px solid rgba(216,120,120,0.15);border-radius:8px;color:var(--danger);font-family:var(--mono);font-size:10px;font-weight:700;cursor:pointer" onclick="if(confirm('Delete?')){clients.splice(${S._ci},1);save();sub('main')}">DELETE CLIENT</button>`;
+}
+
+let _exN=0,_eng=0;
+function pgSessions(){if(S.view==="new")return pgLog();if(S.view==="detail")return pgSd();return pgSList()}
+function pgSList(){
+const tmr=`<div class="cd" style="padding:16px;margin-bottom:16px;border:1px solid var(--accB)"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span class="sl" style="margin:0">REST TIMER</span><span id="td" style="font-family:var(--mono);font-size:28px;font-weight:300;color:var(--ice);text-shadow:0 0 20px var(--accGlow)">${fmt(_ts||_tm)}</span></div><div style="display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap">${[30,45,60,90,120].map(s=>`<div class="chip ${_tm===s?"on":""}" onclick="_tm=${s};_ts=${s};updT()">${fmt(s)}</div>`).join("")}</div><div style="display:flex;gap:6px"><button class="btn2" style="flex:1" onclick="togT()" id="tb">${_tr?"PAUSE":"START"}</button><button class="btn2" style="flex:1" onclick="rstT()">RESET</button></div></div>`;
+return `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><div class="pt" style="margin-bottom:0">Sessions</div><button class="btn2" onclick="sub('new')">+ LOG</button></div>
+${tmr}
+${sessions.length?sessions.slice().reverse().map(s=>`<div class="cd" style="display:flex;align-items:center;gap:12px;cursor:pointer" onclick="S._si='${s.id}';sub('detail')"><div style="width:36px;height:36px;border-radius:8px;background:var(--accS);border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;font-weight:700;color:var(--accVib)">${(s.clientName||"?")[0]}</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">${s.clientName}</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">${s.type} · ${s.duration||60}min · ${s.date}</div></div><div style="font-size:11px;color:var(--ow);font-family:var(--mono)">$${s.rate}</div></div>`).join(""):`<div class="cd" style="text-align:center;padding:30px;color:var(--dm)">No sessions yet</div>`}`;
+}
+function updT(){const d=$("td");if(d)d.textContent=fmt(_ts||_tm)}
+function togT(){if(_tr){clearInterval(_ti);_tr=false}else{if(_ts<=0)_ts=_tm;_tr=true;_ti=setInterval(()=>{_ts--;const d=$("td");if(d){d.textContent=fmt(_ts);d.style.color=_ts<=5&&_ts>0?"var(--warn)":_ts===0?"var(--accVib)":"var(--ice)"}if(_ts<=0){clearInterval(_ti);_tr=false;const b=$("tb");if(b)b.textContent="START"}},1000)}const b=$("tb");if(b)b.textContent=_tr?"PAUSE":"START"}
+function rstT(){clearInterval(_ti);_tr=false;_ts=_tm;updT();const b=$("tb");if(b)b.textContent="START";const d=$("td");if(d)d.style.color="var(--ice)"}
+function pgLog(){
+  _exN=0;_eng=0;
+  const opts=clients.map(c=>`<option value="${c.id}" ${S._pre===c.id?"selected":""}>${c.name}</option>`).join("");
+  const tmr=`<div class="cd" style="padding:12px;margin-bottom:12px;display:flex;align-items:center;gap:12px;border:1px solid var(--accB)"><span style="font-size:9px;color:var(--dm);font-family:var(--mono);letter-spacing:0.1em">REST</span><span id="td" style="font-family:var(--mono);font-size:22px;font-weight:300;color:var(--ice);flex:1;text-shadow:0 0 16px var(--accGlow)">${fmt(_ts||_tm)}</span><div style="display:flex;gap:3px">${[60,90,120].map(s=>`<div class="chip ${_tm===s?"on":""}" onclick="_tm=${s};_ts=${s};updT()" style="padding:3px 6px;font-size:8px">${s}s</div>`).join("")}</div><button class="btn2" onclick="togT()" id="tb" style="padding:5px 10px;font-size:9px">${_tr?"⏸":"▶"}</button></div>`;
+  return `<button class="btn2" onclick="sub('main');S._pre=null" style="margin-bottom:14px">‹ Back</button><div class="pt">Log Session</div>
+${tmr}
+<div class="cd" style="padding:18px"><div class="g2" style="margin-bottom:14px"><div><span class="lb">CLIENT *</span><select id="sC"><option value="">Select...</option>${opts}</select></div><div><span class="lb">DATE</span><input id="sD" type="date" value="${new Date().toISOString().split("T")[0]}"></div></div><div class="g2" style="margin-bottom:14px"><div><span class="lb">TYPE</span><select id="sT"><option>Training</option><option>Mobility</option><option>Training + Mobility</option><option>Assessment</option></select></div><div><span class="lb">DURATION (min)</span><input id="sDu" type="number" value="60" style="text-align:center"></div></div><div><span class="lb">PRICE ($)</span><input id="sR" type="number" value="70"></div></div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px"><div class="sl" style="margin:0">EXERCISES</div><button class="btn2" onclick="aE()" style="padding:6px 12px;font-size:9px">+ ADD</button></div><div id="exL" style="margin-top:8px"></div>
+<div class="sl" style="margin-top:22px">SESSION NOTES</div>
+<div class="cd" style="padding:18px">
+  <div style="margin-bottom:14px"><span class="lb">NOTES</span><textarea id="sN" rows="3" placeholder="Energy, form, adjustments, observations..."></textarea></div>
+  <div style="margin-bottom:14px"><span class="lb">RATING (1–10)</span><div style="display:flex;gap:4px">${Array.from({length:10},(_,i)=>`<div onclick="sE(${i+1})" id="e${i+1}" style="flex:1;height:30px;border-radius:5px;display:flex;align-items:center;justify-content:center;background:rgba(212,164,74,0.03);border:1px solid var(--borderS);color:var(--dm);font-size:10px;font-weight:700;font-family:var(--mono);cursor:pointer">${i+1}</div>`).join("")}</div></div>
+  <div><span class="lb">NEXT SESSION PLAN</span><textarea id="sNx" rows="2" placeholder="Focus areas, progressions, notes for next time..."></textarea></div>
+</div>
+<button class="btn" style="margin-top:18px" onclick="sS()">SAVE & LOG SESSION</button>`;
+}
+function sE(n){_eng=n;for(let i=1;i<=10;i++){const el=$("e"+i);if(!el)continue;const on=i<=n;el.style.background=on?`rgba(212,164,74,${0.05+(i/10)*0.18})`:"rgba(212,164,74,0.03)";el.style.borderColor=on?"var(--accD)":"var(--borderS)";el.style.color=on?"var(--accVib)":"var(--dm)"}}
+function aE(){_exN++;const d=document.createElement("div");d.className="cd";d.id="ex"+_exN;d.style.padding="16px";d.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span style="font-size:11px;font-weight:700;color:var(--acc);font-family:var(--mono)">EXERCISE ${_exN}</span><span style="font-size:14px;color:var(--danger);cursor:pointer;padding:2px 6px" onclick="this.closest('.cd').remove()">✕</span></div><input class="xN" placeholder="Exercise name" style="margin-bottom:8px;font-weight:600"><div style="margin-bottom:8px;display:flex;flex-wrap:wrap;gap:3px"><div class="chip on" onclick="pk(this,'')">Normal</div><div class="chip" onclick="pk(this,'')">3s Ecc</div><div class="chip" onclick="pk(this,'')">Pause</div><div class="chip" onclick="pk(this,'')">Isometric</div></div><div class="xS"></div><button class="btn2" onclick="aS(this)" style="margin-top:6px;padding:5px 12px;font-size:9px">+ SET</button><input class="xO" placeholder="Notes — cues, substitutions..." style="margin-top:10px;font-size:12px">`;$("exL").appendChild(d);aS(d.querySelector(".btn2"))}
+function aS(btn){const rows=btn.closest(".cd").querySelector(".xS");const n=rows.querySelectorAll(".sw").length+1;const d=document.createElement("div");d.style.cssText="display:flex;gap:5px;align-items:center;margin-bottom:5px";d.innerHTML=`<span style="font-size:9px;color:var(--dm);font-family:var(--mono);min-width:20px">S${n}</span><input class="sw" placeholder="lbs" style="width:55px;padding:8px;font-size:11px;text-align:center"><span style="font-size:10px;color:var(--dmL)">×</span><input class="sr" placeholder="reps" style="width:48px;padding:8px;font-size:11px;text-align:center"><input class="sn" placeholder="note" style="flex:1;padding:8px;font-size:11px">`;rows.appendChild(d)}
+function sS(){
+  const cId=v("sC");if(!cId){alert("Select a client");return}
+  const cl=clients.find(c=>c.id===cId);
+  const exercises=[];
+  document.querySelectorAll("#exL .cd").forEach(card=>{
+    const name=card.querySelector(".xN")?.value||"";
+    const note=card.querySelector(".xO")?.value||"";
+    const tempoEl=card.querySelector(".chip.on");
+    const tempo=tempoEl?tempoEl.textContent:"Normal";
+    const sets=[];
+    card.querySelectorAll(".sw").forEach((w,i)=>{const r=card.querySelectorAll(".sr")[i];const n=card.querySelectorAll(".sn")[i];sets.push({w:w.value,r:r?.value||"",n:n?.value||""})});
+    if(name)exercises.push({name,tempo,sets,note})
+  });
+  const session={id:Date.now().toString(),clientId:cId,clientName:cl?.name||"",date:v("sD"),type:v("sT"),duration:v("sDu")||"60",rate:v("sR")||"70",exercises,notes:v("sN"),energy:_eng,nextPlan:v("sNx")};
+  sessions.push(session);
+  save();
+  logToSheets(session);
+  _exN=0;_eng=0;S._pre=null;
+  sub("main");
+}
+function pgSd(){const s=sessions.find(x=>x.id===S._si);if(!s){sub("main");return""}return `<button class="btn2" onclick="sub('main')" style="margin-bottom:14px">‹ Back</button><div style="margin-bottom:18px"><div class="pt" style="margin-bottom:4px">${s.clientName}</div><div style="font-size:12px;color:var(--dm);font-family:var(--mono)">${s.date} · ${s.type} · ${s.duration}min · $${s.rate}</div></div>${s.energy?`<div class="cd" style="display:flex;align-items:center;gap:12px;margin-bottom:8px"><span style="font-size:10px;color:var(--dm);font-family:var(--mono)">RATING</span><div style="display:flex;gap:3px;flex:1">${Array.from({length:10},(_,i)=>`<div style="flex:1;height:22px;border-radius:4px;background:${i<s.energy?`rgba(212,164,74,${0.05+((i+1)/10)*0.18})`:"rgba(212,164,74,0.03)"};border:1px solid ${i<s.energy?"var(--accD)":"var(--borderS)"};color:${i<s.energy?"var(--accVib)":"var(--dm)"};font-size:8px;font-weight:700;font-family:var(--mono);display:flex;align-items:center;justify-content:center">${i+1}</div>`).join("")}</div></div>`:""} ${s.exercises?.length?`<div class="sl">EXERCISES</div>${s.exercises.map(ex=>`<div class="cd"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-size:14px;font-weight:700;color:var(--wh)">${ex.name}</span>${ex.tempo&&ex.tempo!=="Normal"?`<span class="chip on" style="cursor:default">${ex.tempo}</span>`:""}</div>${ex.sets?.length?`<div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px">${ex.sets.map((st,j)=>`<span style="font-size:10px;color:var(--ow);font-family:var(--mono);background:var(--accS);border:1px solid var(--borderS);border-radius:5px;padding:4px 8px">S${j+1}: ${st.w||"—"}×${st.r||"—"}${st.n?" · "+st.n:""}</span>`).join("")}</div>`:""}${ex.note?`<div style="font-size:11px;color:var(--mu);font-style:italic">${ex.note}</div>`:""}</div>`).join("")}`:""} ${s.notes?`<div class="sl" style="margin-top:8px">NOTES</div><div class="cd"><div style="font-size:12px;color:var(--mu);line-height:1.7">${s.notes}</div></div>`:""} ${s.nextPlan?`<div class="sl" style="margin-top:8px">NEXT SESSION</div><div class="cd" style="border-left:3px solid var(--acc)"><div style="font-size:12px;color:var(--ow);line-height:1.7">${s.nextPlan}</div></div>`:""}<button style="width:100%;margin-top:18px;padding:12px;background:rgba(216,120,120,0.05);border:1px solid rgba(216,120,120,0.15);border-radius:8px;color:var(--danger);font-family:var(--mono);font-size:10px;font-weight:700;cursor:pointer" onclick="if(confirm('Delete?')){sessions=sessions.filter(x=>x.id!=='${s.id}');save();sub('main')}">DELETE</button>`}
+
+function pgSchedule(){
+const now=new Date();const mon=new Date(now);mon.setDate(now.getDate()-(now.getDay()===0?6:(now.getDay()-1)));mon.setHours(0,0,0,0);
+const days=[];for(let i=0;i<7;i++){const d=new Date(mon);d.setDate(mon.getDate()+i);days.push(d)}
+return `<div class="pt">Schedule</div>
+<div style="display:flex;gap:5px;margin-bottom:22px">${days.map(d=>{const iso=d.toISOString().split("T")[0];const isT=d.toDateString()===now.toDateString();const n=schedule.filter(s=>s.date===iso).length;return `<div style="flex:1;text-align:center;padding:12px 2px;border-radius:10px;background:${isT?"rgba(212,164,74,0.12)":"var(--glass)"};border:${isT?"2px":"1px"} solid ${isT?"var(--acc)":"var(--glassB)"}"><div style="font-size:8px;color:${isT?"var(--acc)":"var(--dm)"};font-family:var(--mono);font-weight:700">${DN[d.getDay()]}</div><div style="font-size:18px;font-weight:800;color:${isT?"var(--acc)":"var(--ow)"};font-family:var(--mono);margin:5px 0">${d.getDate()}</div>${n?`<div style="width:6px;height:6px;border-radius:50%;background:var(--acc);margin:0 auto"></div>`:`<div style="height:6px"></div>`}</div>`}).join("")}</div>
+${days.map(d=>{const iso=d.toISOString().split("T")[0];const ds=schedule.filter(s=>s.date===iso).sort((a,b)=>(a.time||"").localeCompare(b.time||""));if(!ds.length)return"";return `<div style="margin-bottom:14px"><div style="font-size:10px;color:var(--dm);font-family:var(--mono);margin-bottom:6px">${DN[d.getDay()].toUpperCase()} · ${d.getMonth()+1}/${d.getDate()}</div>${ds.map(s=>`<div class="cd" style="display:flex;align-items:center;gap:14px"><div style="min-width:48px;font-family:var(--mono);font-size:13px;font-weight:700;color:var(--acc)">${s.time||"TBD"}</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">${s.clientName}</div><div style="font-size:10px;color:var(--dm)">${s.type} · $${s.rate||70}</div></div><span style="font-size:13px;color:var(--danger);cursor:pointer;padding:4px 8px" onclick="schedule=schedule.filter(x=>x.id!=='${s.id}');save();R()">✕</span></div>`).join("")}</div>`}).join("")||`<div class="cd" style="text-align:center;padding:22px;color:var(--dm);border:1px dashed var(--border)">Nothing this week</div>`}
+<div class="gw"></div><div class="sl">ADD TO SCHEDULE</div>
+<div class="cd" style="padding:18px">
+  <div class="g2" style="margin-bottom:12px"><div><span class="lb">CLIENT</span><select id="schC"><option value="">Select...</option>${clients.map(c=>`<option value="${c.id}">${c.name}</option>`).join("")}</select></div><div><span class="lb">DATE</span><input id="schD" type="date" value="${now.toISOString().split("T")[0]}"></div></div>
+  <div class="g2" style="margin-bottom:14px"><div><span class="lb">TIME</span><input id="schT" type="time" value="10:00"></div><div><span class="lb">TYPE</span><select id="schTy"><option>Training</option><option>Mobility</option><option>Training + Mobility</option><option>Assessment</option></select></div></div>
+  <button class="btn" onclick="addSch()">ADD TO SCHEDULE</button>
+</div>`;
+}
+function addSch(){const cId=v("schC");if(!cId){alert("Select a client");return}const c=clients.find(c=>c.id===cId);schedule.push({id:Date.now().toString(),clientId:cId,clientName:c?.name||"",date:v("schD"),time:v("schT"),type:v("schTy"),rate:c?.rate||70});save();toast("✓ Scheduled");R()}
+
+function pgGuide(){
+const G=[
+{t:"MINDSET",items:[
+{t:"You Are the Professional",d:"Nobody hires a trainer from confidence. They come because they want more, feel stuck, or don't know where to start. The moment they booked, they chose you. Walk in like you've earned it — because you have."},
+{t:"Their Doubt Is Not Yours to Carry",d:"They already have plenty of self-doubt. The last thing they need is to sense any in you. Hear them, validate, then redirect toward what's possible. You're probably the only person in their life right now who sees what they're actually capable of."},
+{t:"Be the Highlight",d:"Your energy sets the tone the second they walk in. Some days they'll come in fired up. Some days running on empty. Your job stays the same. For a lot of people, this hour is the only part of their day that was entirely for them — make it feel that way."},
+{t:"Let Them Talk",d:"Ask good questions, then listen. People will tell you everything you need to know if you give them space. Pain points, real goals, actual limitations — it all comes out naturally. You don't need every answer right away. You just need them to feel heard."},
+{t:"Make the Small Wins Big",d:"The first time someone does something they didn't think they could, make it a moment. Be more excited about their progress than they are. That feeling is what keeps people coming back long before the physical results show up."},
+{t:"You Live What You Teach",d:"You've competed. You've done the work. When a client looks at you they're not just seeing a trainer — they're seeing where they want to go. Let that be visible. Not arrogance — just presence."},
+{t:"Start Before You Feel Ready",d:"Self-doubt before a session is normal. Set it aside and walk in as the version of yourself that's already figured it out. Your instincts are sharper than you think, and every session makes them sharper."},
+]},
+{t:"IN-PERSON SESSIONS",items:[
+{t:"Phone Consultation",d:"Schedule a free fitness consultation call through Semore. Find out: where they're starting, what they want and why, any limitations, availability, and when they want to begin. Listen more than you talk. If they're hesitant — offer a complimentary first session. Works almost every time."},
+{t:"Pricing",d:"Starting point: $1/min — $60 for 60 min. Adjust upward freely, no ceiling. They're not paying for an hour. They're paying for everything you've built to be able to give them that hour. Add-ons: meal plan $100–150, program $100–150. Packages: per session, weekly, monthly, 3-month block. Always enforce 24-hour cancellation."},
+{t:"Payment",d:"Prefer cash. Venmo — have them send as a gift to avoid business fees. Run everything through a business account. Track deductibles: gas, clothes, equipment. Gym split: 20% of monthly earnings due within the first 5 days of the following month. Log every session consistently: date, client, amount charged."},
+{t:"First Session Logistics",d:"Location: Old School Iron, Brook Park OH. Last door on the far right end of the building — meet at the front desk. Ask new clients to arrive 15 minutes early. Non-members sign the gym waiver on the iPad at front desk. Your 5 registered clients enter free."},
+{t:"First Session Flow",d:"Walk them in, give a quick tour, keep the conversation going — you're still learning them. Re-confirm their goal, explain simply what you're going to do, then do it. From here the session blueprint takes over."},
+]},
+{t:"SESSION BLUEPRINT",items:[
+{t:"The Flow",d:"0–5 min: check-in — mood, soreness, anything new. 5–12 min: warm-up specific to the day. 12–15 min: pre-activation — light isolation to build awareness in the target muscle. 15–45 min: main block — strength movement → volume → finisher. 45–55 min: mobility and stretching. 55–60 min: close with one specific thing they did well."},
+{t:"Warm-Up: Upper Days",d:"Light lateral raises, front raises, bent-over rear delt flyes with a plate or light dumbbell. Band rotations if available. 5 minutes max — blood flow only, not fatigue."},
+{t:"Warm-Up: Lower Days",d:"Hip circles, leg swings, bodyweight squats, glute bridges or banded abductions, light RDL to find the hinge pattern."},
+{t:"Main Block Order",d:"Heaviest compound first while they're freshest. Volume work second. Finisher or circuit last. Never reverse this — fatigue on a heavy compound is how injuries happen."},
+{t:"The Close",d:"One specific thing they did well — not 'good job,' something real. That's what they carry until next session."},
+{t:"Illness Rule",d:"Symptoms above the neck (stuffy nose, mild headache) — train, modify if needed. Symptoms below the neck (fever, chest, stomach) — send them home."},
+]},
+{t:"PROGRAMMING",items:[
+{t:"Rep Ranges by Goal",d:"Strength: 3–6 reps, 2–3 min rest. Size: 6–12 reps, 60–90s rest. Endurance/tone: 12–20 reps, 30–45s rest. Fat loss circuits: 10–15 reps, 30–45s rest. Beginners: 8–12 reps, full recovery — never rush."},
+{t:"Starting Weight",d:"Whatever you think — cut it in half for set one. Easy first set shows you their mechanics and builds their confidence. You can always go up."},
+{t:"Progressive Overload",d:"Doesn't always mean more weight. In order: form quality → full ROM → reps (hit top of range) → tempo (slower negative) → volume (one more set) → shorter rest → load increase → exercise complexity (machine → dumbbell → barbell over time). Progress when: form is clean, hitting top of rep range, RPE below 7."},
+{t:"Pre-Activation vs Pre-Exhaustion",d:"Pre-activation: light isolation before the compound. Wakes up the muscle, builds connection. Not meant to fatigue. Use with almost everyone. Pre-exhaustion: working sets on isolation before the compound. Limits load (reduces injury risk) and guarantees the target muscle does the work. Best for intermediate+ clients, anyone on a cut, or chronic joint issues."},
+{t:"Intensifiers",d:"Drop set: fail → drop 20% → keep going. Rest-pause: fail → 15–20s rest → finish reps. Forced reps: assist the lift 2–3 reps past failure. Slow negative: 5–8 second eccentric at end of set. Read the client — if they're at their limit, back off. If they're holding back, push."},
+{t:"Finisher Structure",d:"2–3 exercises, 2–3 rounds, ~10 reps each. Longer eccentrics, less load, more contraction focus. Elevates heart rate and burns more without grinding them down. Example chest finisher: hammer strength press → machine fly → incline push-up, drop to knees at failure."},
+{t:"FST-7",d:"7 sets, 30 sec rest, 10–20 reps, isolation only. For lagging or poorly activated muscle groups. Example: cable lateral raise lying back on incline bench — removes trap involvement, isolates the lateral delt directly."},
+{t:"Six Sequence (Lateral Delts)",d:"Start at the lightest dumbbell with perfect form. 6 reps, controlled negative, pinky up at the top, stop just above hip to keep tension. Move up one dumbbell. Continue until 6 clean reps aren't possible, then come back down the rack. Complete exhaustion of the lateral head."},
+{t:"Triceps Rule",d:"Never start tricep work cold. Always after movements that have already warmed the elbow joint. On arm-focused days, open with a cable pushdown. Cue: full lockout, pinkies rotating out at the bottom."},
+]},
+{t:"CLIENT PROFILES",items:[
+{t:"Decision Framework",d:"For every client, work through this first: What do they want? What's limiting them? What can't they do? What can they do instead? What does a win look like today?"},
+{t:"Beginner",d:"Movement quality and comfort first — results are secondary for the first month. Compounds only until patterns are solid. One cue per movement, two max. RPE never above 7 early on. Starting weight: cut your guess in half. Defaults: goblet squat, RDL, dumbbell incline press, cable row, pallof press."},
+{t:"Intermediate / Inconsistent",d:"Probably skeptical — they've trained before without results. Consistent tracking and visible week-over-week progress earns trust faster than anything you say. Push/pull/legs or upper/lower, 3x/week minimum. Strength movement (6–8) → volume (8–12) → circuit finisher. Introduce intensifiers around session 3–4."},
+{t:"Advanced / Competitor",d:"They came to you specifically — that's already trust. Train them hard, be direct. Ask what they've been doing and build on it. Identify the lagging group and make it the priority. Higher volume, shorter rest, intensifiers used freely."},
+{t:"Joint Injury / Post-Trauma",d:"Strengthen what surrounds the joint before loading it. Function before aesthetics. Knee example: reverse sled drags + TKEs + tibialis raises → hamstring curls + hip thrusts → single-leg balance work → light leg extension → wide-stance press (belt squat, leg press, goblet squat). Pain stops the set. Discomfort is workable — pain is not."},
+{t:"Older Adult",d:"Everything connects to how they move in real life. Extended warm-up every time. Reduced ROM is fine — machines and bands before free weights. Never rush rest periods. Defaults: sit-to-stand, hip hinge to bench, banded rows, wall push-up, light farmer's carry. Connective tissue adapts slower than muscle — load accordingly."},
+{t:"Shoulder Limitation",d:"Avoid: overhead pressing, upright rows, wide-grip barbell, behind-the-neck anything. Keep: neutral grip pressing, cables, machine press, all rows. Mods: neutral grip DB press, landmine press, low cable fly, face pulls. Rotator cuff pre-activation before any pressing — every session."},
+{t:"Back Pain / Spinal",d:"Avoid: spinal flexion under load, heavy conventional deadlifts, sit-ups. Keep: neutral spine hinge patterns, trap bar deadlift, leg press, most upper body, bird dogs, dead bugs, pallof press. Mods: RDL from rack height, trap bar over conventional, Bulgarian split squat, anti-rotation core only. Refer if: shooting pain down a limb, numbness, tingling."},
+{t:"Neurological / Balance",d:"Stability first — stated goal is secondary until baseline is established. Bilateral movements before unilateral. TRX for assisted single-leg work. Slow tempos throughout. Balance is built by strengthening the muscles and stabilizers. Defaults: TRX single-leg squat, step-ups, single-arm cable row, pallof press, farmer's carry."},
+]},
+{t:"MOBILITY & STRETCHING",items:[
+{t:"When to Address It First",d:"If a range of motion is significantly restricted, address it before loading that area. Training a stiff joint under load increases injury risk — this applies to any movement where tightness is visibly limiting the pattern."},
+{t:"PNF Adjustments",d:"Push intensity matters — harder contraction gets a better response when a muscle is stubborn. Extend hold duration to 5–7 seconds for tight or imbalanced areas. Alternate sides each round, especially in session one — gives you a clear read on bilateral differences. If a stretch is felt in the wrong place, isolate that surrounding muscle first, then return."},
+{t:"Before vs After Training",d:"Before: dynamic movement only — no prolonged static holds before lifting, it temporarily reduces force output. PNF is fine pre-session only when addressing a restriction that directly affects that day's movements. After: static stretching and PNF are both ideal — muscles are warm and receptive."},
+{t:"Frequency",d:"Once every 7 days is the minimum to see consistent progress. 2–3x per week is the sweet spot. More than 3x rarely adds much. For imbalances: double the hold or add an extra round on the tighter side when they're working alone."},
+]},
+{t:"NUTRITION & SUPPLEMENTS",items:[
+{t:"Fat Loss",d:"The goal is fat loss, not weight loss. Most people assume they need to eat less — but lower calorie-dense foods are often more filling. Help them replace, not restrict. Practical start: one solid meal per day they actually enjoy. One good meal out of three is already a 33% improvement. Momentum builds from there."},
+{t:"Supplements",d:"Creatine monohydrate: 5g/day, most well-researched performance supplement available. If bloating persists past the first week, switch to creatine HCl. Betaine: supports muscular endurance, underrated. Caffeine: improves output when used appropriately — not for everyone. Water: muscle is ~80% water, dehydration directly limits performance. Carbohydrates: primary fuel source for training — don't let clients fear them."},
+{t:"Pharmaceutical Questions",d:"These will come up. Keep it factual, brief, and neutral. Semaglutide (Ozempic/Wegovy): GLP-1 agonist, delays gastric emptying, reduces appetite. Tirzepatide (Mounjaro/Zepbound): dual GLP-1 + GIP agonist, stronger fat loss response than semaglutide. Anything beyond explaining what a medication is — not your lane."},
+]},
+{t:"BUSINESS",items:[
+{t:"Professionalism",d:"Arrive before your client, every time. Being there when they walk in versus arriving after them are two completely different experiences. If anything changes — reach out first. Proactive communication builds trust faster than almost anything else."},
+{t:"Revenue Tracking",d:"Log every session: date, client, amount. 20% to the gym within the first 5 days of the following month. Run all income through a business account. Track deductibles — gas, clothes, equipment. Be consistent with what you log."},
+{t:"Know Your Scope",d:"You're not a doctor, PT, or dietitian. Persistent pain, clinical nutrition, mental health concerns — acknowledge it, point them to the right person, keep training them. Being honest about your scope makes you more credible, not less."},
+]},
+];
+return `<div class="pt">Training Guide</div><div style="font-size:12px;color:var(--mu);margin-bottom:16px;line-height:1.6">Reference and decision frameworks. Tap to expand.</div><div style="text-align:right;margin-bottom:12px"><button class="btn2" id="gT" onclick="tA()">EXPAND ALL</button></div>${G.map((sec,si)=>`<div class="sl" style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;margin-top:18px" onclick="tS(${si})">${sec.t}<span id="sa${si}" style="font-size:9px;transition:transform 0.2s">▼</span></div><div id="s${si}" style="display:none">${sec.items.map((it,ii)=>`<div class="cd" style="cursor:pointer" onclick="event.stopPropagation();tI(${si},${ii})"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px;font-weight:600;color:var(--ow)">${it.t}</span><span style="color:var(--dm);font-size:9px;transition:transform 0.2s" id="ia${si}_${ii}">▼</span></div><div id="it${si}_${ii}" style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--borderS);font-size:12px;color:var(--mu);line-height:1.85">${it.d}</div></div>`).join("")}</div>`).join("")}`;
+}
+let _ao=false;
+function tA(){_ao=!_ao;document.querySelectorAll("[id^='s']").forEach(el=>{if(/^s\d+$/.test(el.id))el.style.display=_ao?"block":"none"});document.querySelectorAll("[id^='it']").forEach(el=>{el.style.display=_ao?"block":"none"});document.querySelectorAll("[id^='sa'],[id^='ia']").forEach(el=>{el.style.transform=_ao?"rotate(180deg)":"rotate(0)"});const b=$("gT");if(b)b.textContent=_ao?"COLLAPSE ALL":"EXPAND ALL"}
+function tS(i){const el=$("s"+i);const a=$("sa"+i);if(el){const sh=el.style.display==="none";el.style.display=sh?"block":"none";if(a)a.style.transform=sh?"rotate(180deg)":"rotate(0)"}}
+function tI(si,ii){const el=$("it"+si+"_"+ii);const a=$("ia"+si+"_"+ii);if(el){const sh=el.style.display==="none";el.style.display=sh?"block":"none";if(a)a.style.transform=sh?"rotate(180deg)":"rotate(0)"}}
+function exportData(){const d={clients,sessions,schedule,exported:new Date().toISOString()};const b=new Blob([JSON.stringify(d,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="regi_backup_"+new Date().toISOString().split("T")[0]+".json";a.click();URL.revokeObjectURL(a.href);toast("✓ Backup downloaded")}
+R();
+
+// PWA install prompt
+let _deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',(e)=>{
+  e.preventDefault();_deferredPrompt=e;
+  const b=document.createElement('div');
+  b.id='installBanner';
+  b.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#1a1610,#2e2418);border:1px solid var(--accB);border-radius:12px;padding:14px 20px;display:flex;align-items:center;gap:14px;z-index:99;box-shadow:0 8px 32px rgba(0,0,0,0.4);max-width:320px;width:90%';
+  b.innerHTML=`<div style="width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,var(--accDeep),var(--accD));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:18px;font-weight:900;color:var(--ice);flex-shrink:0">R</div><div style="flex:1"><div style="font-size:12px;font-weight:700;color:var(--ice);font-family:var(--mono)">INSTALL APP</div><div style="font-size:10px;color:var(--mu);margin-top:2px">Add REGI to your home screen</div></div><button onclick="installApp()" style="background:linear-gradient(135deg,var(--accDeep),var(--accD));color:var(--ice);font-family:var(--mono);font-size:9px;font-weight:700;padding:7px 12px;border-radius:6px;border:none;cursor:pointer;letter-spacing:0.08em">ADD</button><span onclick="document.getElementById('installBanner').remove()" style="color:var(--dm);cursor:pointer;font-size:16px;padding:2px 4px">✕</span>`;
+  document.body.appendChild(b);
+});
+function installApp(){if(_deferredPrompt){_deferredPrompt.prompt();_deferredPrompt.userChoice.then(()=>{_deferredPrompt=null;const b=document.getElementById('installBanner');if(b)b.remove()})}}
+
+// Service worker
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+</script>
+</body>
+</html>
