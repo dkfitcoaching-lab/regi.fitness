@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>REGI — Coaching Studio</title>
 <link rel="manifest" href="manifest.json"/>
 <meta name="mobile-web-app-capable" content="yes"/>
@@ -13,6 +13,7 @@
 <meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate"/>
 <link rel="apple-touch-icon" href="icon.png"/>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
 <style>
 :root{
 --bg:#08080a;--bg2:#111114;--card:#141418;--cardH:#1c1c22;
@@ -38,8 +39,9 @@ select option{background:var(--card);color:var(--wh)}
 button{font-family:var(--body);cursor:pointer;border:none;outline:none;transition:all 0.18s ease}
 .btn{background:var(--goldGrad);background-size:200% 100%;color:#1a1408;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0.12em;padding:14px 18px;border-radius:8px;width:100%;box-shadow:0 4px 24px rgba(212,164,74,0.35),0 0 40px rgba(212,164,74,0.08);text-transform:uppercase;animation:shimmer 3s ease-in-out infinite}
 .btn:hover{box-shadow:0 6px 32px rgba(212,164,74,0.45),0 0 60px rgba(212,164,74,0.12);transform:translateY(-1px)}
-.btn:active{transform:translateY(0);box-shadow:0 2px 16px rgba(212,164,74,0.3)}
+.btn:active{transform:translateY(0) scale(0.98);box-shadow:0 2px 16px rgba(212,164,74,0.3)}
 .btn:disabled{opacity:0.4;pointer-events:none;animation:none}
+.btn:focus-visible,.btn2:focus-visible,.chip:focus-visible{outline:2px solid var(--accBright);outline-offset:2px}
 .btn2{background:var(--accS);color:var(--acc);border:1px solid var(--accB);font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.1em;padding:8px 14px;border-radius:6px;text-transform:uppercase;transition:all 0.18s}
 .btn2:hover{background:rgba(212,164,74,0.12);border-color:var(--acc);color:var(--accBright);box-shadow:0 0 16px rgba(212,164,74,0.08)}
 .btn2:active{transform:scale(0.97)}
@@ -81,7 +83,7 @@ button{font-family:var(--body);cursor:pointer;border:none;outline:none;transitio
 .timer-bar{position:fixed;top:0;left:0;right:0;height:2px;z-index:200;pointer-events:none;opacity:0;transition:opacity 0.3s}
 .timer-bar.active{opacity:1}
 .timer-bar-fill{height:100%;background:linear-gradient(90deg,var(--accDeep),var(--accBright));transition:width 1s linear;box-shadow:0 0 8px var(--accGlow)}
-.toast{position:fixed;top:24px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,rgba(16,14,20,0.98),rgba(22,18,28,0.98));color:var(--accBright);border:1px solid var(--accB);font-family:var(--mono);font-size:11px;font-weight:700;padding:11px 28px;border-radius:10px;z-index:1000;animation:toastIn 0.3s ease;box-shadow:0 8px 32px rgba(0,0,0,0.5),0 0 20px rgba(212,164,74,0.08);letter-spacing:0.08em;pointer-events:none}
+.toast{position:fixed;top:24px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,rgba(16,14,20,0.98),rgba(22,18,28,0.98));color:var(--accBright);border:1px solid var(--accB);font-family:var(--mono);font-size:11px;font-weight:700;padding:11px 28px;border-radius:10px;z-index:1000;animation:toastIn 0.3s ease;box-shadow:0 8px 32px rgba(0,0,0,0.5),0 0 20px rgba(212,164,74,0.08);letter-spacing:0.08em;pointer-events:none;max-width:90vw;overflow-wrap:break-word;text-align:center}
 .set-row{display:flex;gap:5px;align-items:center;margin-bottom:5px;padding:6px 8px;background:rgba(212,164,74,0.02);border-radius:6px;border:1px solid var(--borderS)}
 .set-badge{min-width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;font-family:var(--mono);flex-shrink:0;background:var(--accS);color:var(--acc);border:1px solid var(--accB)}
 .ex-summary{padding:12px 14px;background:rgba(212,164,74,0.03);border-radius:10px;border:1px solid var(--borderS);margin-top:8px}
@@ -113,6 +115,8 @@ button{font-family:var(--body);cursor:pointer;border:none;outline:none;transitio
 .pt{font-size:30px}.sl{font-size:11px}.stat b{font-size:32px}.stat{padding:24px 14px;border-radius:14px}.cd{padding:20px;border-radius:14px}.g2{gap:14px}.field{margin-bottom:20px}
 }
 .desk-logo{display:none;align-items:center;gap:14px;padding:28px 24px 22px;border-bottom:1px solid var(--border);margin-bottom:8px}
+.desk-footer{display:none}
+@media(min-width:900px){.desk-footer{display:flex!important}}
 </style>
 </head>
 <body>
@@ -133,16 +137,231 @@ button{font-family:var(--body);cursor:pointer;border:none;outline:none;transitio
 
 var SUPA_URL="https://pwopwvvgjflunjxwkkql.supabase.co";
 var SUPA_KEY="sb_publishable_6slliEpPsWV9JXIDvz8pyw_FNPrPMhv";
-var VERSION="2.4";
-var DN=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+var VERSION="2.5";
+var LANGS={
+en:{
+days:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],
+months:["January","February","March","April","May","June","July","August","September","October","November","December"],
+greetMorn:"Good morning",greetAfter:"Good afternoon",greetEve:"Good evening",
+sessions:"Sessions",gross:"Gross",yours:"Yours",clients:"Clients",
+schedule:"Schedule",guide:"Guide",settings:"Settings",home:"Home",log:"Log",
+save:"SAVE",cancel:"CANCEL",delete:"DELETE",edit:"EDIT",back:"Back",
+addClient:"ADD CLIENT",logSession:"LOG SESSION",
+noSessions:"No sessions scheduled today",scheduleOne:"SCHEDULE ONE",
+today:"TODAY",thisWeek:"THIS WEEK",
+complete:"Complete",cancelled:"Cancelled",lateCancel:"Late Cancel",noShow:"No-Show",
+noCharge:"NO CHARGE",charged:"CHARGED",
+reminder:"Upcoming Session",reminderBody:"{name} at {time} ({type})",
+export:"EXPORT",import:"IMPORT",backup:"BACKUP",restore:"RESTORE",
+pin:"PIN Lock",changePIN:"CHANGE PIN",lockNow:"LOCK NOW",
+incorrectPIN:"Incorrect PIN",unlock:"UNLOCK",
+signIn:"SIGN IN",signUp:"CREATE ACCOUNT",signOut:"SIGN OUT",
+networkError:"Network error. Check your connection.",
+defaultReminder:"Hey {name}! Just a reminder about your {type} session tomorrow at {time}. See you there! - Regina",
+sendReminder:"SEND REMINDER",customReminder:"Custom Reminder Message",
+reminderSaved:"Reminder template saved",
+lang:"Language",
+todaySchedule:"TODAY'S SCHEDULE",
+recentSessions:"RECENT SESSIONS",
+monthlyEarnings:"EARNINGS",
+noSessionsYet:"No sessions yet",
+addFirstClient:"Add Your First Client",
+everythingStarts:"Everything starts here.",
+sessionHistory:"SESSION HISTORY",
+info:"INFO",
+downloadReport:"DOWNLOAD CLIENT REPORT (PDF)",
+monthlyPDF:"MONTHLY EARNINGS PDF",
+security:"SECURITY",
+dataOverview:"DATA OVERVIEW",
+backupRestore:"BACKUP & RESTORE",
+gymSettings:"GYM SETTINGS",
+display:"DISPLAY",
+dangerZone:"DANGER ZONE",
+cannotUndo:"Cannot be undone. Export first.",
+clearSessions:"CLEAR SESSIONS",
+resetAll:"RESET ALL",
+automations:"AUTOMATIONS",
+sessionReminders:"Session Reminders",
+notified30:"Get notified 30 min before sessions",
+enableNotif:"ENABLE NOTIFICATIONS",
+reminderActive:"You'll receive browser notifications 30 minutes before each scheduled session.",
+clientReminder:"Client Reminder Templates",
+reminderDesc:"Set custom text reminders for each client",
+exercises:"EXERCISES",
+sessionNotes:"SESSION NOTES",
+workoutSummary:"WORKOUT SUMMARY",
+notes:"NOTES",
+nextSessionPlan:"NEXT SESSION PLAN",
+repeatSession:"REPEAT SESSION",
+training:"Training",
+mobility:"Mobility",
+trainingMobility:"Training + Mobility",
+assessment:"Assessment",
+addToSchedule:"ADD TO SCHEDULE",
+recurring:"RECURRING",
+oneTime:"One-Time",
+weekly:"Weekly",
+biweekly:"Biweekly",
+forHowLong:"FOR HOW LONG?",
+weeks:"weeks",
+month:"month",
+months:"months",
+name:"NAME",
+phone:"PHONE",
+email:"EMAIL",
+age:"AGE",
+rate:"RATE ($/HR)",
+sessionType:"SESSION TYPE",
+experience:"EXPERIENCE",
+healthHistory:"HEALTH & HISTORY",
+goals:"GOALS",
+injuries:"INJURIES / LIMITATIONS",
+medical:"MEDICAL",
+currentActivity:"CURRENT ACTIVITY",
+beginner:"Beginner",
+someExp:"Some Experience",
+intermediate:"Intermediate",
+advanced:"Advanced",
+selectClient:"Select...",
+client:"CLIENT",
+date:"DATE",
+time:"TIME",
+type:"TYPE",
+duration:"DURATION",
+price:"PRICE ($)",
+status:"STATUS",
+quickSave:"QUICK SAVE (NO EXERCISES)",
+trainingGuide:"Training Guide",
+knowledgeBase:"Your knowledge base. Everything you need, organized and ready.",
+expandAll:"EXPAND ALL",
+collapseAll:"COLLAPSE ALL",
+showAllDays:"SHOW ALL DAYS",
+editSession:"Edit Session",
+gymCut:"GYM CUT (%)",
+defaultRate:"DEFAULT SESSION RATE ($)",
+timeFormat:"TIME FORMAT",
+coachingStudio:"COACHING STUDIO",
+deleteConfirm:"Their session history will be preserved.",
+sync:"SYNC"
+},
+hu:{
+days:["Vas","H\u00e9t","Kedd","Sze","Cs\u00fct","P\u00e9n","Szo"],
+months:["Janu\u00e1r","Febru\u00e1r","M\u00e1rcius","\u00c1prilis","M\u00e1jus","J\u00fanius","J\u00falius","Augusztus","Szeptember","Okt\u00f3ber","November","December"],
+greetMorn:"J\u00f3 reggelt",greetAfter:"J\u00f3 napot",greetEve:"J\u00f3 est\u00e9t",
+sessions:"Edz\u00e9sek",gross:"Brutt\u00f3",yours:"Tied",clients:"\u00dcgyfelek",
+schedule:"Naptr\u00e1r",guide:"\u00datmutat\u00f3",settings:"Be\u00e1ll\u00edt\u00e1sok",home:"F\u0151oldal",log:"Napl\u00f3",
+save:"MENT\u00c9S",cancel:"M\u00c9GSEM",delete:"T\u00d6RL\u00c9S",edit:"SZERKESZT\u00c9S",back:"Vissza",
+addClient:"\u00dcgyf\u00e9l hozz\u00e1ad\u00e1sa",logSession:"Edz\u00e9s r\u00f6gz\u00edt\u00e9se",
+noSessions:"Ma nincs be\u00fctemezett edz\u00e9s",scheduleOne:"Be\u00fctemez\u00e9s",
+today:"MA",thisWeek:"EZ A H\u00c9T",
+complete:"Befejezve",cancelled:"Lemondva",lateCancel:"K\u00e9s\u0151i lemond\u00e1s",noShow:"Nem jelent meg",
+noCharge:"NEM SZ\u00c1ML\u00c1ZVA",charged:"SZ\u00c1ML\u00c1ZVA",
+reminder:"K\u00f6zelg\u0151 edz\u00e9s",reminderBody:"{name} - {time} ({type})",
+export:"EXPORT\u00c1L\u00c1S",import:"IMPORT\u00c1L\u00c1S",backup:"BIZTONS\u00c1GI MENT\u00c9S",restore:"VISSZA\u00c1LL\u00cdT\u00c1S",
+pin:"PIN z\u00e1r",changePIN:"PIN M\u00d3DOS\u00cdT\u00c1S",lockNow:"Z\u00c1ROL\u00c1S",
+incorrectPIN:"Helytelen PIN",unlock:"FELOLD\u00c1S",
+signIn:"BEJELENTKEZ\u00c9S",signUp:"REGISZTR\u00c1CI\u00d3",signOut:"KIJELENTKEZ\u00c9S",
+networkError:"H\u00e1l\u00f3zati hiba. Ellen\u0151rizze a kapcsolatot.",
+defaultReminder:"Szia {name}! Eml\u00e9keztet\u0151 a holnapi {type} edz\u00e9sedre {time}-kor. V\u00e1rlak! - Regina",
+sendReminder:"EML\u00c9KEZTET\u0151 K\u00dcLD\u00c9SE",customReminder:"Egyedi eml\u00e9keztet\u0151 \u00fczenet",
+reminderSaved:"Eml\u00e9keztet\u0151 sablon mentve",
+lang:"Nyelv",
+todaySchedule:"MAI EDZ\u00c9SEK",
+recentSessions:"LEGUT\u00d3BBI EDZ\u00c9SEK",
+monthlyEarnings:"BEV\u00c9TEL",
+noSessionsYet:"M\u00e9g nincsenek edz\u00e9sek",
+addFirstClient:"Adj hozz\u00e1 els\u0151 \u00fcgyf\u00e9lt",
+everythingStarts:"Minden itt kezd\u0151dik.",
+sessionHistory:"EDZ\u00c9S EL\u0150ZM\u00c9NYEK",
+info:"INFORM\u00c1CI\u00d3",
+downloadReport:"PDF \u00dcGYF\u00c9L JELENT\u00c9S LET\u00d6LT\u00c9SE",
+monthlyPDF:"HAVI BEV\u00c9TEL PDF",
+security:"BIZTONS\u00c1G",
+dataOverview:"ADATOK \u00c1TTEKINT\u00c9SE",
+backupRestore:"MENT\u00c9S \u00c9S VISSZA\u00c1LL\u00cdT\u00c1S",
+gymSettings:"TEREM BE\u00c1LL\u00cdT\u00c1SOK",
+display:"MEGJELEN\u00cdT\u00c9S",
+dangerZone:"VESZ\u00c9LYEZ\u00d3NA",
+cannotUndo:"Nem vonhat\u00f3 vissza. El\u0151sz\u00f6r ments!",
+clearSessions:"EDZ\u00c9SEK T\u00d6RL\u00c9SE",
+resetAll:"MINDENT T\u00d6R\u00d6L",
+automations:"AUTOMATIZ\u00c1L\u00c1SOK",
+sessionReminders:"Edz\u00e9s eml\u00e9keztet\u0151k",
+notified30:"30 perccel az edz\u00e9s el\u0151tt \u00e9rtes\u00edt\u00e9st kapsz",
+enableNotif:"\u00c9RTES\u00cdT\u00c9SEK ENGED\u00c9LYEZ\u00c9SE",
+reminderActive:"B\u00f6ng\u00e9sz\u0151 \u00e9rtes\u00edt\u00e9seket kapsz 30 perccel minden be\u00fctemezett edz\u00e9s el\u0151tt.",
+clientReminder:"\u00dcgyf\u00e9l eml\u00e9keztet\u0151 sablonok",
+reminderDesc:"\u00c1ll\u00edts be egyedi sz\u00f6veges eml\u00e9keztet\u0151ket minden \u00fcgyf\u00e9lhez",
+exercises:"GYAKORLATOK",
+sessionNotes:"EDZ\u00c9S JEGYZET",
+workoutSummary:"EDZ\u00c9S \u00d6SSZEFOGLAL\u00d3",
+notes:"JEGYZETEK",
+nextSessionPlan:"K\u00d6VETKEZ\u0150 EDZ\u00c9S TERV",
+repeatSession:"EDZ\u00c9S ISM\u00c9TL\u00c9SE",
+training:"Edz\u00e9s",
+mobility:"Mobilit\u00e1s",
+trainingMobility:"Edz\u00e9s + Mobilit\u00e1s",
+assessment:"\u00c9rt\u00e9kel\u00e9s",
+addToSchedule:"HOZZ\u00c1AD\u00c1S A NAPT\u00c1RHOZ",
+recurring:"ISM\u00c9TL\u0150D\u0150",
+oneTime:"Egyszeri",
+weekly:"Heti",
+biweekly:"K\u00e9theti",
+forHowLong:"MENNYI ID\u0150RE?",
+weeks:"h\u00e9t",
+month:"h\u00f3nap",
+months:"h\u00f3nap",
+name:"N\u00c9V",
+phone:"TELEFON",
+email:"E-MAIL",
+age:"\u00c9LETKOR",
+rate:"\u00c1R ($/\u00d3RA)",
+sessionType:"EDZ\u00c9S T\u00cdPUSA",
+experience:"TAPASZTALAT",
+healthHistory:"EG\u00c9SZS\u00c9G \u00c9S EL\u0150ZM\u00c9NYEK",
+goals:"C\u00c9LOK",
+injuries:"S\u00c9R\u00dcL\u00c9SEK / KORL\u00c1TOZ\u00c1SOK",
+medical:"ORVOSI",
+currentActivity:"JELENLEGI AKTIVIT\u00c1S",
+beginner:"Kezd\u0151",
+someExp:"N\u00e9mi tapasztalat",
+intermediate:"K\u00f6z\u00e9phalad\u00f3",
+advanced:"Halad\u00f3",
+selectClient:"V\u00e1lassz...",
+client:"\u00dcGYF\u00c9L",
+date:"D\u00c1TUM",
+time:"ID\u0150PONT",
+type:"T\u00cdPUS",
+duration:"ID\u0150TARTAM",
+price:"\u00c1R ($)",
+status:"\u00c1LLAPOT",
+quickSave:"GYORS MENT\u00c9S (GYAKORLATOK N\u00c9LK\u00dcL)",
+trainingGuide:"Edz\u00e9si \u00datmutat\u00f3",
+knowledgeBase:"A tud\u00e1sb\u00e1zisod. Minden, amire sz\u00fcks\u00e9ged van, rendszerezve.",
+expandAll:"\u00d6SSZES KINYIT\u00c1SA",
+collapseAll:"\u00d6SSZES BECSUK\u00c1SA",
+showAllDays:"MINDEN NAP MUTAT\u00c1SA",
+editSession:"Edz\u00e9s szerkeszt\u00e9se",
+gymCut:"TEREM R\u00c9SZESED\u00c9S (%)",
+defaultRate:"ALAP\u00c9RTELMEZETT EDZ\u00c9S D\u00cdJ ($)",
+timeFormat:"ID\u0150FORM\u00c1TUM",
+coachingStudio:"EDZ\u0150I ST\u00daDI\u00d3",
+deleteConfirm:"Az edz\u00e9s el\u0151zm\u00e9nyek meg\u0151rz\u00e9sre ker\u00fclnek.",
+sync:"SZINKRONIZ\u00c1L\u00c1S"
+}
+};
+var DN;/* initialized after LS */
 var LS={get:function(k,d){try{var v=JSON.parse(localStorage.getItem("regi_"+k));return v!=null?v:d;}catch(e){return d;}},set:function(k,v){try{localStorage.setItem("regi_"+k,JSON.stringify(v));}catch(e){}}};
+function getLang(){return LS.get("lang","en");}
+function t(key){var lang=getLang();return(LANGS[lang]&&LANGS[lang][key])||LANGS.en[key]||key;}
+DN=LANGS[getLang()].days;
 var clients=LS.get("clients",[]),sessions=LS.get("sessions",[]),schedule=LS.get("schedule",[]),_syncStatus="idle";
 function getGymCut(){return LS.get("gymCut",20)/100;}
 function save(){LS.set("clients",clients);LS.set("sessions",sessions);LS.set("schedule",schedule);syncToCloud();}
 
 // Supabase
 function supaFetch(path,method,body){method=method||"GET";var token=LS.get("accessToken",null)||SUPA_KEY;var h={"Content-Type":"application/json","apikey":SUPA_KEY,"Authorization":"Bearer "+token};if(method==="POST")h["Prefer"]="resolution=merge-duplicates,return=minimal";if(method==="DELETE")h["Prefer"]="return=minimal";var opts={method:method,headers:h};if(body)opts.body=JSON.stringify(body);return fetch(SUPA_URL+"/rest/v1/"+path,opts).then(function(r){if(r.status===204||r.status===201)return{};if(r.ok)return r.json().catch(function(){return{};});return r.json().then(function(e){throw e;});});}
-async function syncToCloud(){var tid=LS.get("userId",null);if(!tid)return;_syncStatus="syncing";updateSyncBadge();try{await supaFetch("trainers","POST",[{id:tid,email:LS.get("userEmail",""),gym_cut:Math.round(getGymCut()*100),default_rate:parseInt(LS.get("defaultRate","70"))}]);var tag={trainer_id:tid};var tasks=[];if(clients.length)tasks.push(supaFetch("clients","POST",clients.map(function(c){return Object.assign({},c,tag);})));if(sessions.length)tasks.push(supaFetch("sessions","POST",sessions.map(function(s){return Object.assign({},s,tag,{exercises:s.exercises||[]});})));if(schedule.length)tasks.push(supaFetch("schedule","POST",schedule.map(function(s){return Object.assign({},s,tag);})));await Promise.all(tasks);_syncStatus="ok";LS.set("lastSync",new Date().toISOString());}catch(e){console.warn("Sync:",e);_syncStatus="error";}updateSyncBadge();}
+async function syncToCloud(){var tid=LS.get("userId",null);if(!tid)return;_syncStatus="syncing";updateSyncBadge();try{await refreshAccessToken();await supaFetch("trainers","POST",[{id:tid,email:LS.get("userEmail",""),gym_cut:Math.round(getGymCut()*100),default_rate:parseInt(LS.get("defaultRate","70"))}]);var tag={trainer_id:tid};var tasks=[];if(clients.length)tasks.push(supaFetch("clients","POST",clients.map(function(c){return Object.assign({},c,tag);})));if(sessions.length)tasks.push(supaFetch("sessions","POST",sessions.map(function(s){return Object.assign({},s,tag,{exercises:s.exercises||[]});})));if(schedule.length)tasks.push(supaFetch("schedule","POST",schedule.map(function(s){return Object.assign({},s,tag);})));await Promise.all(tasks);_syncStatus="ok";LS.set("lastSync",new Date().toISOString());}catch(e){console.warn("Sync:",e);_syncStatus="error";}updateSyncBadge();}
 async function syncFromCloud(){var tid=LS.get("userId",null);if(!tid)return;_syncStatus="syncing";updateSyncBadge();try{var res=await Promise.all([supaFetch("clients?trainer_id=eq."+tid+"&order=created_at.asc"),supaFetch("sessions?trainer_id=eq."+tid+"&order=created_at.asc"),supaFetch("schedule?trainer_id=eq."+tid+"&order=created_at.asc")]);if(Array.isArray(res[0])){clients=res[0];LS.set("clients",res[0]);}if(Array.isArray(res[1])){sessions=res[1];LS.set("sessions",res[1]);}if(Array.isArray(res[2])){schedule=res[2];LS.set("schedule",res[2]);}LS.set("lastSync",new Date().toISOString());_syncStatus="ok";}catch(e){_syncStatus="error";}updateSyncBadge();}
 async function cloudDelete(table,id){var tid=LS.get("userId",null);if(!tid)return;try{await supaFetch(table+"?id=eq."+id+"&trainer_id=eq."+tid,"DELETE");}catch(e){}}
 function updateSyncBadge(){var icons={idle:"\u25CB",syncing:"\u21BB",ok:"\u25CF",error:"!"};var colors={idle:"var(--dm)",syncing:"var(--acc)",ok:"var(--success)",error:"var(--danger)"};var icon=icons[_syncStatus]||"\u25CB";var color=colors[_syncStatus]||"var(--dm)";["syncBadge","syncBadge2"].forEach(function(id){var el=document.getElementById(id);if(!el)return;el.textContent=icon;el.style.color=color;});}
@@ -162,14 +381,19 @@ function fmtTime(s){var m=Math.floor(s/60),ss=s%60;return(m<10?"0"+m:m)+":"+(ss<
 function fmtDate(iso){if(!iso)return"\u2014";var d=new Date(iso+"T12:00:00");return(d.getMonth()+1)+"/"+d.getDate()+"/"+d.getFullYear();}
 function is24Hr(){return LS.get("timeFormat","12")==="24";}
 function fmtTimeStr(t){if(!t)return"TBD";var p=t.split(":");var hr=parseInt(p[0]);if(is24Hr())return(hr<10?"0"+hr:hr)+":"+p[1];var ampm=hr>=12?"PM":"AM";var h12=hr===0?12:hr>12?hr-12:hr;return h12+":"+p[1]+" "+ampm;}
-function todayISO(){return new Date().toISOString().split("T")[0];}
+function toLocalISO(d){var y=d.getFullYear(),m=d.getMonth()+1,day=d.getDate();return y+"-"+(m<10?"0"+m:m)+"-"+(day<10?"0"+day:day);}
+function todayISO(){return toLocalISO(new Date());}
 function clientById(id){return clients.find(function(c){return c.id===id;});}
 function escHtml(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function escJs(s){return String(s||"").replace(/\\/g,"\\\\").replace(/'/g,"\\'").replace(/"/g,'\\"');}
+function safeInitial(name){return name&&name.length>0?name[0].toUpperCase():"?";}
+function roundMoney(n){return Math.round(n*100)/100;}
 function pickChip(el,hiddenId){el.parentElement.querySelectorAll(".chip").forEach(function(c){c.classList.remove("on");});el.classList.add("on");if(hiddenId){var h=$(hiddenId);if(h)h.value=el.textContent.trim();}}
+function pickStatus(el,val){el.parentElement.querySelectorAll(".chip").forEach(function(c){c.classList.remove("on");});el.classList.add("on");var h=$("sSt");if(h)h.value=val;}
 
 // Timer
 var timer={seconds:0,preset:60,running:false,interval:null};
-function timerStart(){if(timer.running)return;if(timer.seconds<=0)timer.seconds=timer.preset;timer.running=true;timer.interval=setInterval(function(){timer.seconds--;timerUpdateUI();if(timer.seconds<=0){timerStop();if(navigator.vibrate)navigator.vibrate([200,100,200]);}},1000);timerUpdateUI();}
+function timerStart(){if(timer.running)return;if(timer.seconds<=0)timer.seconds=timer.preset;timer.running=true;timer.interval=setInterval(function(){timer.seconds--;if(timer.seconds<0)timer.seconds=0;timerUpdateUI();if(timer.seconds<=0){timerStop();if(navigator.vibrate)navigator.vibrate([200,100,200]);}},1000);timerUpdateUI();}
 function timerStop(){clearInterval(timer.interval);timer.running=false;timerUpdateUI();}
 function timerToggle(){if(timer.running)timerStop();else timerStart();}
 function timerReset(){timerStop();timer.seconds=timer.preset;timerUpdateUI();}
@@ -184,17 +408,18 @@ function signOut(){LS.set("userId",null);LS.set("accessToken",null);LS.set("refr
 function isLoggedIn(){return!!LS.get("userId",null);}
 function showAuthScreen(){var app=$("app");if(app)app.style.display="none";var el=$("authScreen");if(!el){el=document.createElement("div");el.id="authScreen";document.body.appendChild(el);}el.style.cssText="position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;background:var(--bg);padding:24px";el.innerHTML='<div style="position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 30%,rgba(212,164,74,0.06),transparent 60%);pointer-events:none"></div><div style="position:relative;width:100%;max-width:340px"><div style="text-align:center;margin-bottom:36px"><div style="width:80px;height:80px;border-radius:20px;background:linear-gradient(135deg,#0e0e14,#1a1a24);border:1px solid var(--borderH);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:38px;font-weight:900;color:var(--acc);box-shadow:0 0 60px var(--accGlow);animation:breathe 4s ease-in-out infinite;margin:0 auto 20px">R</div><div style="font-family:var(--display);font-size:24px;font-weight:700;letter-spacing:0.12em;color:var(--ice)">REGI</div><div style="font-size:9px;color:var(--dm);font-family:var(--mono);letter-spacing:0.2em;margin-top:4px">COACHING STUDIO</div></div><div style="display:flex;gap:0;margin-bottom:20px;border:1px solid var(--border);border-radius:8px;overflow:hidden"><div onclick="switchAuthTab(\'signin\')" id="tabSignin" style="flex:1;padding:10px;text-align:center;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.1em;cursor:pointer;background:rgba(212,164,74,0.1);color:var(--acc)">SIGN IN</div><div onclick="switchAuthTab(\'signup\')" id="tabSignup" style="flex:1;padding:10px;text-align:center;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.1em;cursor:pointer;color:var(--dm)">CREATE ACCOUNT</div></div><div id="authSignin"><div style="margin-bottom:12px"><input id="siEmail" type="email" placeholder="Email" autocomplete="email"></div><div style="margin-bottom:16px"><input id="siPass" type="password" placeholder="Password" autocomplete="current-password"></div><button class="btn" onclick="doSignIn()" id="siBtn">SIGN IN</button></div><div id="authSignup" style="display:none"><div style="margin-bottom:12px"><input id="suName" type="text" placeholder="Your name"></div><div style="margin-bottom:12px"><input id="suEmail" type="email" placeholder="Email" autocomplete="email"></div><div style="margin-bottom:16px"><input id="suPass" type="password" placeholder="Password (min 6 chars)" autocomplete="new-password"></div><button class="btn" onclick="doSignUp()" id="suBtn">CREATE ACCOUNT</button></div><div id="authError" style="margin-top:12px;text-align:center;font-size:11px;color:var(--danger);font-family:var(--mono);min-height:18px"></div></div>';setTimeout(function(){var e=$("siEmail");if(e){e.focus();e.addEventListener("keydown",function(ev){if(ev.key==="Enter")doSignIn();});}var p=$("siPass");if(p)p.addEventListener("keydown",function(ev){if(ev.key==="Enter")doSignIn();});var sp=$("suPass");if(sp)sp.addEventListener("keydown",function(ev){if(ev.key==="Enter")doSignUp();});},100);}
 function switchAuthTab(tab){$("authSignin").style.display=tab==="signin"?"":"none";$("authSignup").style.display=tab==="signup"?"":"none";$("tabSignin").style.background=tab==="signin"?"rgba(212,164,74,0.1)":"transparent";$("tabSignin").style.color=tab==="signin"?"var(--acc)":"var(--dm)";$("tabSignup").style.background=tab==="signup"?"rgba(212,164,74,0.1)":"transparent";$("tabSignup").style.color=tab==="signup"?"var(--acc)":"var(--dm)";}
-async function doSignIn(){var btn=$("siBtn");btn.disabled=true;btn.textContent="SIGNING IN...";var result=await signIn($("siEmail").value.trim(),$("siPass").value);if(result.ok){var el=$("authScreen");if(el)el.remove();$("app").style.display="";await syncFromCloud();render();}else{$("authError").textContent=result.error;btn.disabled=false;btn.textContent="SIGN IN";}}
-async function doSignUp(){var btn=$("suBtn");btn.disabled=true;btn.textContent="CREATING...";var name=$("suName").value.trim(),email=$("suEmail").value.trim(),pass=$("suPass").value;if(!name){$("authError").textContent="Name is required";btn.disabled=false;btn.textContent="CREATE ACCOUNT";return;}if(pass.length<6){$("authError").textContent="Password must be at least 6 characters";btn.disabled=false;btn.textContent="CREATE ACCOUNT";return;}var result=await signUp(email,pass,name);if(result.ok){var el=$("authScreen");if(el)el.remove();$("app").style.display="";render();}else{$("authError").textContent=result.error;btn.disabled=false;btn.textContent="CREATE ACCOUNT";}}
+async function doSignIn(){var btn=$("siBtn");btn.disabled=true;btn.textContent="SIGNING IN...";try{var result=await signIn($("siEmail").value.trim(),$("siPass").value);if(result.ok){var el=$("authScreen");if(el)el.remove();$("app").style.display="";await syncFromCloud();render();}else{$("authError").textContent=result.error;btn.disabled=false;btn.textContent="SIGN IN";}}catch(e){$("authError").textContent="Network error. Check your connection.";btn.disabled=false;btn.textContent="SIGN IN";}}
+async function doSignUp(){var btn=$("suBtn");btn.disabled=true;btn.textContent="CREATING...";var name=$("suName").value.trim(),email=$("suEmail").value.trim(),pass=$("suPass").value;if(!name){$("authError").textContent="Name is required";btn.disabled=false;btn.textContent="CREATE ACCOUNT";return;}if(pass.length<6){$("authError").textContent="Password must be at least 6 characters";btn.disabled=false;btn.textContent="CREATE ACCOUNT";return;}try{var result=await signUp(email,pass,name);if(result.ok){var el=$("authScreen");if(el)el.remove();$("app").style.display="";render();}else{$("authError").textContent=result.error;btn.disabled=false;btn.textContent="CREATE ACCOUNT";}}catch(e){$("authError").textContent="Network error. Check your connection.";btn.disabled=false;btn.textContent="CREATE ACCOUNT";}}
 
 // Tabs + Render
 var TABS=[{k:"home",l:"Home",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1"/></svg>'},{k:"clients",l:"Clients",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>'},{k:"schedule",l:"Schedule",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>'},{k:"sessions",l:"Log",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>'},{k:"guide",l:"Guide",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>'}];
 
 function render(){
+DN=LANGS[getLang()].days;
 var tabsEl=$("tabs");
 var deskLogo='<div class="desk-logo"><div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#0e0e14,#1a1a24);border:1px solid var(--borderH);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:22px;font-weight:900;color:var(--acc);box-shadow:0 0 32px var(--accGlow);animation:breathe 4s ease-in-out infinite;flex-shrink:0">R</div><div><div style="font-family:var(--display);font-size:15px;font-weight:700;letter-spacing:0.1em;color:var(--ice)">REGI</div><div style="font-size:8px;color:var(--dm);font-family:var(--mono);letter-spacing:0.14em;margin-top:2px">COACHING STUDIO</div></div></div>';
-var th="";for(var i=0;i<TABS.length;i++){var t=TABS[i];th+='<div class="ti'+(currentView.tab===t.k?" on":"")+'" onclick="go(\''+t.k+'\')">'+t.svg+'<span>'+t.l+'</span></div>';}
-tabsEl.innerHTML=deskLogo+th+'<div style="display:none;position:absolute;bottom:0;left:0;right:0;padding:18px 24px;border-top:1px solid var(--borderS);font-family:var(--mono);font-size:8px;color:var(--dmL);letter-spacing:0.1em;flex-direction:column;gap:3px"><span style="color:var(--acc)">regi.fitness</span><span>v'+VERSION+'</span></div>';
+var th="";var tabLabels={home:t("home"),clients:t("clients"),schedule:t("schedule"),sessions:t("log"),guide:t("guide")};for(var i=0;i<TABS.length;i++){var tb=TABS[i];th+='<div class="ti'+(currentView.tab===tb.k?" on":"")+'" onclick="go(\''+tb.k+'\')">'+tb.svg+'<span>'+(tabLabels[tb.k]||tb.l)+'</span></div>';}
+tabsEl.innerHTML=deskLogo+th+'<div class="desk-footer" style="display:none;position:absolute;bottom:0;left:0;right:0;padding:18px 24px;border-top:1px solid var(--borderS);font-family:var(--mono);font-size:8px;color:var(--dmL);letter-spacing:0.1em;flex-direction:column;gap:3px"><span style="color:var(--acc)">regi.fitness</span><span>v'+VERSION+' <span id="syncBadge2" style="font-size:12px"></span></span></div>';
 var ct=$("ct");ct.style.animation="none";ct.offsetHeight;ct.style.animation="fadeIn 0.3s ease";
 var renderers={home:renderHome,clients:renderClients,sessions:renderSessions,schedule:renderSchedule,guide:renderGuide,settings:renderSettings};
 ct.innerHTML=(renderers[currentView.tab]||renderHome)();
@@ -203,25 +428,25 @@ timerUpdateUI();updateSyncBadge();
 
 // HOME
 function renderHome(){
-var t=new Date(),mo=t.getMonth(),yr=t.getFullYear();
+var now_=new Date(),mo=now_.getMonth(),yr=now_.getFullYear();
 var moS=sessions.filter(function(s){var d=new Date(s.date+"T12:00:00");return d.getMonth()===mo&&d.getFullYear()===yr&&s.status!=="cancelled";});
-var gross=moS.reduce(function(a,s){return a+parseFloat(s.rate||0);},0);
-var cut=Math.round(gross*getGymCut()),take=gross-cut;
+var gross=roundMoney(moS.reduce(function(a,s){return a+parseFloat(s.rate||0);},0));
+var cut=Math.round(gross*getGymCut()),take=roundMoney(gross-cut);
 var iso=todayISO();
 var todaySched=schedule.filter(function(s){return s.date===iso;}).sort(function(a,b){return(a.time||"").localeCompare(b.time||"");});
-var h=t.getHours(),gr=h<12?"Good morning":h<17?"Good afternoon":"Good evening";
-var html='<div style="margin:-20px -16px 0;padding:44px 28px 36px;position:relative;overflow:hidden;background:linear-gradient(160deg,#181210 0%,#111114 45%,var(--bg) 100%);border-bottom:1px solid var(--borderS)"><div style="position:absolute;top:-80px;right:-60px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(212,164,74,0.1),transparent 55%);pointer-events:none;filter:blur(30px)"></div><div style="position:relative"><div style="font-size:11px;color:var(--dm);font-family:var(--mono);letter-spacing:0.14em;text-transform:uppercase">'+DN[t.getDay()]+' \u00B7 '+t.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"})+'</div><div style="margin-top:16px;font-size:32px;font-weight:800;color:var(--wh);line-height:1.05;font-family:var(--display)">'+gr+',</div><div style="font-size:32px;font-weight:800;line-height:1.15;font-family:var(--display);animation:glowPulse 4s ease-in-out infinite"><span style="background:linear-gradient(135deg,var(--accVib),var(--acc),var(--accD));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Regina</span></div></div></div>';
-html+='<div class="sl" style="margin-top:20px">'+t.toLocaleDateString("en-US",{month:"long"}).toUpperCase()+' EARNINGS</div>';
-html+='<div class="g4"><div class="stat"><b style="color:var(--acc)">'+moS.length+'</b><small>SESSIONS</small></div><div class="stat"><b style="color:var(--ow)">$'+gross+'</b><small>GROSS</small></div><div class="stat"><b style="color:var(--dm)">-$'+cut+'</b><small>GYM '+Math.round(getGymCut()*100)+'%</small></div><div class="stat" style="border-color:var(--accB)"><b style="color:var(--accVib);text-shadow:0 0 16px var(--accGlow)">$'+take+'</b><small>YOURS</small></div></div>';
-if(todaySched.length){html+='<div class="sl" style="margin-top:24px">TODAY\'S SCHEDULE</div>';for(var i=0;i<todaySched.length;i++){var s=todaySched[i];var ic=s.status==="complete",ix=s.status==="cancelled";var bc=ic?"var(--success)":ix?"var(--danger)":"var(--acc)";var cidx=clients.findIndex(function(cc){return cc.id===s.clientId;});html+='<div class="cd" style="display:flex;align-items:center;gap:14px;border-left:3px solid '+bc+'"><div style="min-width:50px;font-family:var(--mono);font-size:13px;font-weight:700;color:'+(ic?"var(--success)":"var(--acc)")+'">'+fmtTimeStr(s.time)+'</div><div style="flex:1;cursor:pointer" onclick="'+(cidx>=0?"navToClient("+cidx+")":"")+'"><div style="font-size:14px;font-weight:600;color:var(--wh)">'+escHtml(s.clientName)+'</div><div style="font-size:10px;color:var(--dm)">'+(s.type||"Training")+(ic?' \u00B7 <span class="status-chip status-complete">COMPLETED</span>':ix?' \u00B7 <span class="status-chip status-cancelled">CANCELLED</span>':"")+'</div></div>'+(!ic&&!ix?'<button class="btn2" onclick="completeScheduled(\''+s.id+'\')" style="padding:5px 10px;font-size:8px">LOG</button>':"")+'<div style="font-size:11px;color:var(--ow);font-family:var(--mono)">$'+(s.rate||70)+'</div></div>';}}
-else html+='<div class="cd" style="text-align:center;padding:22px;margin-top:24px;border:1px dashed var(--border)"><div style="color:var(--dm);margin-bottom:10px">No sessions scheduled today</div><button class="btn2" onclick="go(\'schedule\')">SCHEDULE ONE</button></div>';
-if(sessions.length){html+='<div class="sl" style="margin-top:24px">RECENT SESSIONS</div>';var rec=sessions.slice(-3).reverse();for(var i=0;i<rec.length;i++){var s=rec[i];html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="navToSession(\''+s.id+'\')"><div style="width:34px;height:34px;border-radius:8px;background:var(--accS);border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;font-weight:700;color:var(--accVib)">'+(s.clientName||"?")[0]+'</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(s.clientName)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+s.type+' \u00B7 '+fmtDate(s.date)+'</div></div><div style="font-size:10px;color:var(--ow);font-family:var(--mono)">$'+s.rate+'</div></div>';}}
-html+='<div class="gw"></div><div style="display:flex;justify-content:center;gap:16px;padding:8px 0"><span onclick="go(\'settings\')" style="cursor:pointer;font-size:10px;color:var(--dm);font-family:var(--mono);letter-spacing:.06em">SETTINGS</span><span style="color:var(--borderS)">\u00B7</span><span onclick="exportData()" style="cursor:pointer;font-size:10px;color:var(--dm);font-family:var(--mono);letter-spacing:.06em">BACKUP</span><span style="color:var(--borderS)">\u00B7</span><span onclick="syncFromCloud().then(render)" style="cursor:pointer;font-size:10px;color:var(--dm);font-family:var(--mono);letter-spacing:.06em">SYNC</span><span style="color:var(--borderS)">\u00B7</span><span onclick="signOut()" style="cursor:pointer;font-size:10px;color:var(--danger);font-family:var(--mono);letter-spacing:.06em">SIGN OUT</span></div>';
+var h=now_.getHours(),gr=h<12?t("greetMorn"):h<17?t("greetAfter"):t("greetEve");
+var html='<div style="margin:-20px -16px 0;padding:44px 28px 36px;position:relative;overflow:hidden;background:linear-gradient(160deg,#181210 0%,#111114 45%,var(--bg) 100%);border-bottom:1px solid var(--borderS)"><div style="position:absolute;top:-80px;right:-60px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(212,164,74,0.1),transparent 55%);pointer-events:none;filter:blur(30px)"></div><div style="position:relative"><div style="font-size:11px;color:var(--dm);font-family:var(--mono);letter-spacing:0.14em;text-transform:uppercase">'+DN[now_.getDay()]+' \u00B7 '+now_.toLocaleDateString(getLang()==="hu"?"hu-HU":"en-US",{month:"long",day:"numeric",year:"numeric"})+'</div><div style="margin-top:16px;font-size:32px;font-weight:800;color:var(--wh);line-height:1.05;font-family:var(--display)">'+gr+',</div><div style="font-size:32px;font-weight:800;line-height:1.15;font-family:var(--display);animation:glowPulse 4s ease-in-out infinite"><span style="background:linear-gradient(135deg,var(--accVib),var(--acc),var(--accD));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Regina</span></div></div></div>';
+html+='<div class="sl" style="margin-top:20px">'+now_.toLocaleDateString(getLang()==="hu"?"hu-HU":"en-US",{month:"long"}).toUpperCase()+' '+t("monthlyEarnings")+'</div>';
+html+='<div class="g4"><div class="stat"><b style="color:var(--acc)">'+moS.length+'</b><small>'+t("sessions").toUpperCase()+'</small></div><div class="stat"><b style="color:var(--ow)">$'+gross+'</b><small>'+t("gross").toUpperCase()+'</small></div><div class="stat"><b style="color:var(--dm)">-$'+cut+'</b><small>GYM '+Math.round(getGymCut()*100)+'%</small></div><div class="stat" style="border-color:var(--accB)"><b style="color:var(--accVib);text-shadow:0 0 16px var(--accGlow)">$'+take+'</b><small>'+t("yours").toUpperCase()+'</small></div></div>';
+if(todaySched.length){html+='<div class="sl" style="margin-top:24px">'+t("todaySchedule")+'</div>';for(var i=0;i<todaySched.length;i++){var s=todaySched[i];var ic=s.status==="complete",ix=s.status==="cancelled";var bc=ic?"var(--success)":ix?"var(--danger)":"var(--acc)";var cidx=clients.findIndex(function(cc){return cc.id===s.clientId;});html+='<div class="cd" style="display:flex;align-items:center;gap:14px;border-left:3px solid '+bc+'"><div style="min-width:50px;font-family:var(--mono);font-size:13px;font-weight:700;color:'+(ic?"var(--success)":"var(--acc)")+'">'+fmtTimeStr(s.time)+'</div><div style="flex:1;cursor:pointer" onclick="'+(cidx>=0?"navToClient("+cidx+")":"")+'"><div style="font-size:14px;font-weight:600;color:var(--wh)">'+escHtml(s.clientName)+'</div><div style="font-size:10px;color:var(--dm)">'+escHtml(s.type||"Training")+(ic?' \u00B7 <span class="status-chip status-complete">COMPLETED</span>':ix?' \u00B7 <span class="status-chip status-cancelled">CANCELLED</span>':"")+'</div></div>'+(!ic&&!ix?'<button class="btn2" onclick="completeScheduled(\''+escJs(s.id)+'\')" style="padding:5px 10px;font-size:8px">LOG</button>':"")+'<div style="font-size:11px;color:var(--ow);font-family:var(--mono)">$'+escHtml(s.rate||70)+'</div></div>';}}
+else html+='<div class="cd" style="text-align:center;padding:22px;margin-top:24px;border:1px dashed var(--border)"><div style="color:var(--dm);margin-bottom:10px">'+t("noSessions")+'</div><button class="btn2" onclick="go(\'schedule\')">'+t("scheduleOne")+'</button></div>';
+if(sessions.length){html+='<div class="sl" style="margin-top:24px">'+t("recentSessions")+'</div>';var rec=sessions.slice(-3).reverse();for(var i=0;i<rec.length;i++){var s=rec[i];html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="navToSession(\''+escJs(s.id)+'\')"><div style="width:34px;height:34px;border-radius:8px;background:var(--accS);border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;font-weight:700;color:var(--accVib)">'+safeInitial(s.clientName)+'</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(s.clientName)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+escHtml(s.type)+' \u00B7 '+fmtDate(s.date)+'</div></div><div style="font-size:10px;color:var(--ow);font-family:var(--mono)">$'+escHtml(s.rate)+'</div></div>';}}
+html+='<div class="gw"></div><div style="display:flex;justify-content:center;gap:16px;padding:8px 0"><span onclick="go(\'settings\')" style="cursor:pointer;font-size:10px;color:var(--dm);font-family:var(--mono);letter-spacing:.06em">'+t("settings").toUpperCase()+'</span><span style="color:var(--borderS)">\u00B7</span><span onclick="exportData()" style="cursor:pointer;font-size:10px;color:var(--dm);font-family:var(--mono);letter-spacing:.06em">'+t("backup").toUpperCase()+'</span><span style="color:var(--borderS)">\u00B7</span><span onclick="syncFromCloud().then(render)" style="cursor:pointer;font-size:10px;color:var(--dm);font-family:var(--mono);letter-spacing:.06em">'+t("sync")+'</span><span style="color:var(--borderS)">\u00B7</span><span onclick="signOut()" style="cursor:pointer;font-size:10px;color:var(--danger);font-family:var(--mono);letter-spacing:.06em">'+t("signOut")+'</span></div>';
 html+='<div style="text-align:center;padding:4px 0 8px"><div style="font-size:8px;color:var(--dmL);font-family:var(--mono)">REGI v'+VERSION+' \u00B7 '+clients.length+' clients \u00B7 '+sessions.length+' sessions \u00B7 <span id="syncBadge2"></span></div></div>';
 return html;
 }
 function completeScheduled(schedId){var sched=schedule.find(function(s){return s.id===schedId;});if(!sched)return;navStack=[];currentView={tab:"sessions",view:"main",data:{}};push("new",{prefillClientId:sched.clientId,prefillType:sched.type,prefillRate:sched.rate,prefillDate:sched.date,scheduleId:schedId});}
-function exportData(){var d={clients:clients,sessions:sessions,schedule:schedule,version:VERSION,exported:new Date().toISOString()};var blob=new Blob([JSON.stringify(d,null,2)],{type:"application/json"});var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="regi_backup_"+todayISO()+".json";document.body.appendChild(a);a.click();document.body.removeChild(a);toast("\u2713 Backup ready");}
+function exportData(){var d={clients:clients,sessions:sessions,schedule:schedule,version:VERSION,exported:new Date().toISOString()};var blob=new Blob([JSON.stringify(d,null,2)],{type:"application/json"});var url=URL.createObjectURL(blob);var a=document.createElement("a");a.href=url;a.download="regi_backup_"+todayISO()+".json";document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(function(){URL.revokeObjectURL(url);},1000);toast("\u2713 Backup ready");}
 function importData(event){var file=event.target.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(e){try{var d=JSON.parse(e.target.result);if(d.clients)clients=d.clients;if(d.sessions)sessions=d.sessions;if(d.schedule)schedule=d.schedule;save();toast("\u2713 Restored "+clients.length+" clients");render();}catch(err){toast("\u2717 Invalid file");}};reader.readAsText(file);event.target.value="";}
 
 // CLIENTS
@@ -229,21 +454,21 @@ function renderClients(){
 if(currentView.view==="add")return renderClientAdd();
 if(currentView.view==="edit")return renderClientEdit();
 if(currentView.view==="detail")return renderClientDetail();
-if(!clients.length)return'<div class="pt">Add Your First Client</div><div style="font-size:12px;color:var(--mu);margin-bottom:14px;line-height:1.5">Everything starts here.</div>'+clientFormFields()+'<button class="btn" style="margin-top:16px" onclick="saveNewClient()">SAVE CLIENT</button>';
-var html='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div class="pt" style="margin-bottom:0">Clients <span style="font-size:13px;color:var(--dm);font-family:var(--mono);font-weight:400">'+clients.length+'</span></div><button class="btn2" onclick="push(\'add\')" style="box-shadow:0 0 12px rgba(212,164,74,0.08)">+ ADD</button></div>';
-for(var i=0;i<clients.length;i++){var c=clients[i];var count=sessions.filter(function(x){return x.clientId===c.id;}).length;html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:14px" onclick="push(\'detail\',{clientIdx:'+i+'})"><div style="width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,rgba(212,164,74,0.25),rgba(212,164,74,0.08));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:16px;font-weight:700;color:var(--accBright);flex-shrink:0;box-shadow:0 0 16px rgba(212,164,74,0.08)"">'+c.name[0].toUpperCase()+'</div><div style="flex:1"><div style="font-size:14px;font-weight:600;color:var(--wh)">'+escHtml(c.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+(c.type||"Training")+' \u00B7 $'+(c.rate||70)+'/hr \u00B7 '+count+' session'+(count!==1?"s":"")+'</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}
+if(!clients.length)return'<div class="pt">'+t("addFirstClient")+'</div><div style="font-size:12px;color:var(--mu);margin-bottom:14px;line-height:1.5">'+t("everythingStarts")+'</div>'+clientFormFields()+'<button class="btn" style="margin-top:16px" onclick="saveNewClient()">'+t("save")+'</button>';
+var html='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div class="pt" style="margin-bottom:0">'+t("clients")+' <span style="font-size:13px;color:var(--dm);font-family:var(--mono);font-weight:400">'+clients.length+'</span></div><button class="btn2" onclick="push(\'add\')" style="box-shadow:0 0 12px rgba(212,164,74,0.08)">+ '+t("addClient")+'</button></div>';
+for(var i=0;i<clients.length;i++){var c=clients[i];var count=sessions.filter(function(x){return x.clientId===c.id;}).length;html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:14px" onclick="push(\'detail\',{clientIdx:'+i+'})"><div style="width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,rgba(212,164,74,0.25),rgba(212,164,74,0.08));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:16px;font-weight:700;color:var(--accBright);flex-shrink:0;box-shadow:0 0 16px rgba(212,164,74,0.08)">'+safeInitial(c.name)+'</div><div style="flex:1"><div style="font-size:14px;font-weight:600;color:var(--wh)">'+escHtml(c.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+escHtml(c.type||"Training")+' \u00B7 $'+escHtml(c.rate||70)+'/hr \u00B7 '+count+' '+t("sessions").toLowerCase()+'</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}
 return html;
 }
 function clientFormFields(c){c=c||{};var types=["Training","Mobility","Training + Mobility"];var levels=["Beginner","Some Experience","Intermediate","Advanced"];
 var html='<div class="cd" style="padding:18px"><div class="field"><span class="lb">NAME *</span><input id="cN" placeholder="Full name" value="'+escHtml(c.name||"")+'"></div><div class="g2 field"><div><span class="lb">PHONE</span><input id="cP" placeholder="(555) 123-4567" value="'+escHtml(c.phone||"")+'"></div><div><span class="lb">EMAIL</span><input id="cE" placeholder="email@..." value="'+escHtml(c.email||"")+'"></div></div><div class="g2"><div><span class="lb">AGE</span><input id="cA" type="number" min="0" placeholder="\u2014" value="'+(c.age||"")+'"></div><div><span class="lb">RATE ($/HR)</span><input id="cR" type="number" min="0" value="'+(c.rate||"70")+'"></div></div></div>';
 html+='<div class="sl" style="margin-top:14px">SESSION TYPE</div><div class="cd" style="padding:14px"><div style="display:flex;flex-wrap:wrap;gap:4px">';for(var i=0;i<types.length;i++)html+='<div class="chip'+((c.type||"Training")===types[i]?" on":"")+'" onclick="pickChip(this,\'cTv\')">'+types[i]+'</div>';html+='</div><input type="hidden" id="cTv" value="'+(c.type||"Training")+'"></div>';
 html+='<div class="sl" style="margin-top:14px">EXPERIENCE</div><div class="cd" style="padding:14px"><div style="display:flex;flex-wrap:wrap;gap:4px">';for(var i=0;i<levels.length;i++)html+='<div class="chip'+((c.level||"Beginner")===levels[i]?" on":"")+'" onclick="pickChip(this,\'cLv\')">'+levels[i]+'</div>';html+='</div><input type="hidden" id="cLv" value="'+(c.level||"Beginner")+'"></div>';
-html+='<div class="sl" style="margin-top:14px">HEALTH &amp; HISTORY</div><div class="cd" style="padding:18px"><div class="field"><span class="lb">GOALS</span><textarea id="cG" rows="2" placeholder="What do they want?">'+escHtml(c.goals||"")+'</textarea></div><div class="field"><span class="lb">INJURIES / LIMITATIONS</span><textarea id="cI" rows="2" placeholder="Surgeries, joint issues, chronic pain...">'+escHtml(c.injuries||"")+'</textarea></div><div class="field"><span class="lb">MEDICAL</span><textarea id="cM" rows="1" placeholder="Conditions, medications...">'+escHtml(c.medical||"")+'</textarea></div><div class="field"><span class="lb">CURRENT ACTIVITY</span><textarea id="cAc" rows="1" placeholder="Sedentary, light gym, active...">'+escHtml(c.activity||"")+'</textarea></div><div><span class="lb">NOTES</span><textarea id="cO" rows="2" placeholder="Personality, preferences...">'+escHtml(c.notes||"")+'</textarea></div></div>';
+html+='<div class="sl" style="margin-top:14px">HEALTH &amp; HISTORY</div><div class="cd" style="padding:18px"><div class="field"><span class="lb">GOALS</span><textarea id="cG" rows="2" placeholder="What do they want?">'+escHtml(c.goals||"")+'</textarea></div><div class="field"><span class="lb">INJURIES / LIMITATIONS</span><textarea id="cI" rows="2" placeholder="Surgeries, joint issues, chronic pain...">'+escHtml(c.injuries||"")+'</textarea></div><div class="field"><span class="lb">MEDICAL</span><textarea id="cM" rows="1" placeholder="Conditions, medications...">'+escHtml(c.medical||"")+'</textarea></div><div class="field"><span class="lb">CURRENT ACTIVITY</span><textarea id="cAc" rows="1" placeholder="Sedentary, light gym, active...">'+escHtml(c.activity||"")+'</textarea></div><div class="field"><span class="lb">NOTES</span><textarea id="cO" rows="2" placeholder="Personality, preferences...">'+escHtml(c.notes||"")+'</textarea></div><div><span class="lb">REMINDER MESSAGE (optional)</span><textarea id="cRm" rows="2" placeholder="Custom reminder for this client. Use {name}, {time}, {type}">'+escHtml(c.reminderMsg||"")+'</textarea></div></div>';
 return html;
 }
-function renderClientAdd(){return'<button class="btn2" onclick="pop()" style="margin-bottom:14px">\u2039 Back</button><div class="pt">New Client</div>'+clientFormFields()+'<button class="btn" style="margin-top:16px" onclick="saveNewClient()">SAVE CLIENT</button>';}
-function renderClientEdit(){var c=clients[currentView.data.clientIdx];if(!c){pop();return"";}return'<button class="btn2" onclick="pop()" style="margin-bottom:14px">\u2039 Back</button><div class="pt">Edit Client</div>'+clientFormFields(c)+'<button class="btn" style="margin-top:16px" onclick="saveEditClient()">UPDATE CLIENT</button>';}
-function readClientForm(){return{name:v("cN"),phone:v("cP"),email:v("cE"),type:v("cTv"),rate:v("cR")||"70",age:v("cA"),level:v("cLv"),goals:v("cG"),injuries:v("cI"),medical:v("cM"),activity:v("cAc"),notes:v("cO")};}
+function renderClientAdd(){return'<button class="btn2" onclick="pop()" style="margin-bottom:14px">\u2039 '+t("back")+'</button><div class="pt">'+t("addClient")+'</div>'+clientFormFields()+'<button class="btn" style="margin-top:16px" onclick="saveNewClient()">'+t("save")+'</button>';}
+function renderClientEdit(){var c=clients[currentView.data.clientIdx];if(!c){pop();return"";}return'<button class="btn2" onclick="pop()" style="margin-bottom:14px">\u2039 '+t("back")+'</button><div class="pt">'+t("edit")+' '+t("client")+'</div>'+clientFormFields(c)+'<button class="btn" style="margin-top:16px" onclick="saveEditClient()">'+t("save")+'</button>';}
+function readClientForm(){return{name:v("cN"),phone:v("cP"),email:v("cE"),type:v("cTv"),rate:v("cR")||"70",age:v("cA"),level:v("cLv"),goals:v("cG"),injuries:v("cI"),medical:v("cM"),activity:v("cAc"),notes:v("cO"),reminderMsg:v("cRm")};}
 function saveNewClient(){var data=readClientForm();if(!data.name){toast("Name is required");return;}data.id=Date.now().toString();data.created_at=new Date().toISOString();clients.push(data);save();toast("\u2713 "+data.name+" added");navStack=[];currentView={tab:"clients",view:"detail",data:{clientIdx:clients.length-1}};render();}
 function saveEditClient(){var c=clients[currentView.data.clientIdx];if(!c)return;var data=readClientForm();if(!data.name){toast("Name is required");return;}Object.assign(c,data);save();toast("\u2713 Updated");pop();}
 function renderClientDetail(){
@@ -251,16 +476,16 @@ var idx=currentView.data.clientIdx,c=clients[idx];if(!c){pop();return"";}
 var cs=sessions.filter(function(x){return x.clientId===c.id;});
 var rev=cs.filter(function(x){return x.status!=="cancelled";}).reduce(function(a,x){return a+parseFloat(x.rate||c.rate||70);},0);
 var info=[["Phone",c.phone],["Email",c.email],["Age",c.age],["Goals",c.goals],["Injuries",c.injuries],["Medical",c.medical],["Activity",c.activity],["Notes",c.notes]].filter(function(r){return r[1];});
-var html='<button class="btn2" onclick="pop()" style="margin-bottom:14px">\u2039 Back</button><div style="display:flex;align-items:center;gap:16px;margin-bottom:16px"><div style="width:58px;height:58px;border-radius:14px;background:linear-gradient(135deg,var(--accM),var(--accS));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:var(--wh);font-family:var(--mono)">'+c.name[0].toUpperCase()+'</div><div style="flex:1"><div style="font-size:22px;font-weight:800;font-family:var(--display)">'+escHtml(c.name)+'</div><div style="font-size:12px;color:var(--acc);font-weight:600">'+c.type+' \u00B7 $'+c.rate+'/hr \u00B7 '+(c.level||"Beginner")+'</div></div><button class="btn2" onclick="push(\'edit\',{clientIdx:'+idx+'})" style="padding:6px 10px;font-size:9px">EDIT</button></div>';
-html+='<div class="g3" style="margin-bottom:22px"><div class="stat"><b style="color:var(--acc)">'+cs.length+'</b><small>SESSIONS</small></div><div class="stat"><b style="color:var(--ow)">$'+rev+'</b><small>GROSS</small></div><div class="stat"><b style="color:var(--accVib)">$'+Math.round(rev*(1-getGymCut()))+'</b><small>YOUR CUT</small></div></div>';
-if(info.length){html+='<div class="sl">INFO</div><div class="cd" style="padding:4px 16px">';for(var i=0;i<info.length;i++)html+='<div style="display:flex;justify-content:space-between;padding:11px 0;border-bottom:'+(i<info.length-1?"1px solid var(--borderS)":"none")+';gap:14px"><span style="font-size:11px;color:var(--dm);font-weight:600;min-width:55px">'+info[i][0]+'</span><span style="font-size:12px;color:var(--ow);text-align:right;word-break:break-word;flex:1">'+escHtml(info[i][1])+'</span></div>';html+='</div>';}
-if(cs.length){html+='<div class="sl" style="margin-top:20px">SESSION HISTORY</div>';var rec=cs.slice().reverse().slice(0,10);for(var i=0;i<rec.length;i++){var x=rec[i];var sc=x.status==="cancelled"?' <span class="status-chip status-cancelled">NO CHARGE</span>':x.status==="latecancel"?' <span class="status-chip status-latecancel">LATE CANCEL</span>':x.status==="noshow"?' <span class="status-chip status-noshow">NO-SHOW</span>':"";html+='<div class="cd cd-link" style="display:flex;justify-content:space-between;align-items:center" onclick="navToSession(\''+x.id+'\')"><div><div style="font-size:12px;font-weight:600;color:var(--wh)">'+x.type+sc+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+fmtDate(x.date)+' \u00B7 '+(x.duration||60)+'min</div></div><div style="font-size:10px;color:var(--ow);font-family:var(--mono)">$'+x.rate+'</div></div>';}}
-html+='<div style="display:flex;gap:8px;margin-top:16px"><button class="btn" style="flex:1" onclick="navToLogFromClient(\''+c.id+'\',\''+c.rate+'\',\''+c.type+'\')">LOG SESSION</button><button class="btn2" style="flex:1" onclick="navToScheduleFromClient(\''+c.id+'\')">SCHEDULE</button></div><button class="btn-danger" style="margin-top:10px" onclick="deleteClient('+idx+')">DELETE CLIENT</button>';
+var html='<button class="btn2" onclick="pop()" style="margin-bottom:14px">\u2039 '+t("back")+'</button><div style="display:flex;align-items:center;gap:16px;margin-bottom:16px"><div style="width:58px;height:58px;border-radius:14px;background:linear-gradient(135deg,var(--accM),var(--accS));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:var(--wh);font-family:var(--mono)">'+safeInitial(c.name)+'</div><div style="flex:1"><div style="font-size:22px;font-weight:800;font-family:var(--display)">'+escHtml(c.name)+'</div><div style="font-size:12px;color:var(--acc);font-weight:600">'+escHtml(c.type||"Training")+' \u00B7 $'+escHtml(c.rate||70)+'/hr \u00B7 '+escHtml(c.level||"Beginner")+'</div></div><button class="btn2" onclick="push(\'edit\',{clientIdx:'+idx+'})" style="padding:6px 10px;font-size:9px">'+t("edit")+'</button></div>';
+html+='<div class="g3" style="margin-bottom:22px"><div class="stat"><b style="color:var(--acc)">'+cs.length+'</b><small>'+t("sessions").toUpperCase()+'</small></div><div class="stat"><b style="color:var(--ow)">$'+roundMoney(rev)+'</b><small>'+t("gross").toUpperCase()+'</small></div><div class="stat"><b style="color:var(--accVib)">$'+Math.round(rev*(1-getGymCut()))+'</b><small>'+t("yours").toUpperCase()+'</small></div></div>';
+if(info.length){html+='<div class="sl">'+t("info")+'</div><div class="cd" style="padding:4px 16px">';for(var i=0;i<info.length;i++)html+='<div style="display:flex;justify-content:space-between;padding:11px 0;border-bottom:'+(i<info.length-1?"1px solid var(--borderS)":"none")+';gap:14px"><span style="font-size:11px;color:var(--dm);font-weight:600;min-width:55px">'+info[i][0]+'</span><span style="font-size:12px;color:var(--ow);text-align:right;word-break:break-word;flex:1">'+escHtml(info[i][1])+'</span></div>';html+='</div>';}
+if(cs.length){html+='<div class="sl" style="margin-top:20px">'+t("sessionHistory")+'</div>';var rec=cs.slice().reverse().slice(0,10);for(var i=0;i<rec.length;i++){var x=rec[i];var sc=x.status==="cancelled"?' <span class="status-chip status-cancelled">NO CHARGE</span>':x.status==="latecancel"?' <span class="status-chip status-latecancel">LATE CANCEL</span>':x.status==="noshow"?' <span class="status-chip status-noshow">NO-SHOW</span>':"";html+='<div class="cd cd-link" style="display:flex;justify-content:space-between;align-items:center" onclick="navToSession(\''+escJs(x.id)+'\')"><div><div style="font-size:12px;font-weight:600;color:var(--wh)">'+escHtml(x.type)+sc+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+fmtDate(x.date)+' \u00B7 '+(x.duration||60)+'min</div></div><div style="font-size:10px;color:var(--ow);font-family:var(--mono)">$'+escHtml(x.rate)+'</div></div>';}}
+html+='<div style="display:flex;gap:8px;margin-top:16px"><button class="btn" style="flex:1" onclick="navToLogFromClient(\''+escJs(c.id)+'\',\''+escJs(c.rate)+'\',\''+escJs(c.type)+'\')">'+t("logSession")+'</button><button class="btn2" style="flex:1" onclick="navToScheduleFromClient(\''+escJs(c.id)+'\')">'+t("schedule").toUpperCase()+'</button></div><button class="btn2" style="margin-top:8px;width:100%;background:rgba(212,164,74,0.06);border-color:var(--accB)" onclick="generateClientPDF('+idx+')"><span style="margin-right:6px">\u2193</span>'+t("downloadReport")+'</button><button class="btn-danger" style="margin-top:10px" onclick="deleteClient('+idx+')">'+t("delete")+' '+t("client").toUpperCase()+'</button>';
 return html;
 }
-function deleteClient(idx){if(!confirm("Delete "+clients[idx].name+"?\n\nTheir session history will be preserved."))return;var id=clients[idx].id;var name=clients[idx].name;clients.splice(idx,1);sessions.forEach(function(s){if(s.clientId===id)s.clientName=name+" (removed)";});schedule.forEach(function(s){if(s.clientId===id){s.clientName=name+" (removed)";s.clientId="";}});save();cloudDelete("clients",id);toast("Client removed");pop();}
+function deleteClient(idx){if(!clients[idx])return;if(!confirm("Delete "+clients[idx].name+"?\n\nTheir session history will be preserved."))return;var id=clients[idx].id;var name=clients[idx].name;clients.splice(idx,1);sessions.forEach(function(s){if(s.clientId===id)s.clientName=name+" (removed)";});schedule.forEach(function(s){if(s.clientId===id){s.clientName=name+" (removed)";s.clientId="";}});save();cloudDelete("clients",id);toast("Client removed");pop();}
 function navToLogFromClient(cid,rate,type){navStack=[];currentView={tab:"sessions",view:"main",data:{}};push("new",{prefillClientId:cid,prefillRate:rate,prefillType:type});}
-function navToScheduleFromClient(cid){navStack=[];currentView={tab:"schedule",view:"main",data:{prefillClientId:cid}};render();setTimeout(function(){var el=$("schC");if(el&&cid){el.value=cid;onScheduleClientSelect();}var f=$("schForm");if(f)f.style.display="block";},100);}
+function navToScheduleFromClient(cid){navStack=[];currentView={tab:"schedule",view:"main",data:{prefillClientId:cid}};render();requestAnimationFrame(function(){setTimeout(function(){var el=$("schC");if(el&&cid){el.value=cid;onScheduleClientSelect();}var f=$("schForm");if(f){f.style.display="block";f.scrollIntoView({behavior:"smooth"});}},0);});}
 function navToSession(sid){navStack=[];currentView={tab:'sessions',view:'main',data:{}};push('detail',{sessionId:sid});}
 function navToClient(idx){navStack=[];currentView={tab:"clients",view:"main",data:{}};push("detail",{clientIdx:idx});}
 
@@ -271,30 +496,30 @@ function renderTimerWidget(compact){var presets=[30,45,60,90,120];var ph="";for(
 if(compact)return'<div class="cd" style="padding:12px;margin-bottom:12px;display:flex;align-items:center;gap:10px;border:1px solid var(--accB);flex-wrap:wrap"><span style="font-size:9px;color:var(--dm);font-family:var(--mono)">REST</span><span id="timerDisplay" style="font-family:var(--mono);font-size:22px;font-weight:300;color:var(--ice);flex:1">'+fmtTime(timer.seconds>0?timer.seconds:timer.preset)+'</span><div style="display:flex;gap:3px;flex-wrap:wrap">'+ph+'</div><button class="btn2" onclick="timerToggle()" id="timerBtn" style="padding:5px 10px;font-size:9px">'+(timer.running?"PAUSE":"START")+'</button><button class="btn2" onclick="timerReset()" style="padding:5px 10px;font-size:9px">RESET</button></div>';
 return'<div class="cd" style="padding:16px;margin-bottom:16px;border:1px solid var(--accB)"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span class="sl" style="margin:0">REST TIMER</span><span id="timerDisplay" style="font-family:var(--mono);font-size:28px;font-weight:300;color:var(--ice)">'+fmtTime(timer.seconds>0?timer.seconds:timer.preset)+'</span></div><div style="display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap">'+ph+'</div><div style="display:flex;gap:6px"><button class="btn2" style="flex:1" onclick="timerToggle()" id="timerBtn">'+(timer.running?"PAUSE":"START")+'</button><button class="btn2" style="flex:1" onclick="timerReset()">RESET</button></div></div>';}
 function renderSessionList(){
-if(!clients.length)return'<div class="pt">Session Log</div><div class="cd" style="padding:24px;text-align:center;border:1px dashed var(--border)"><div style="font-size:14px;font-weight:600;color:var(--ow);margin-bottom:6px">No sessions yet</div><button class="btn" onclick="go(\'clients\')" style="max-width:200px;margin:0 auto">ADD FIRST CLIENT</button></div>';
-var html='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div class="pt" style="margin-bottom:0">Session Log <span style="font-size:13px;color:var(--dm);font-family:var(--mono);font-weight:400">'+sessions.length+'</span></div><button class="btn2" onclick="push(\'new\')" style="box-shadow:0 0 12px rgba(212,164,74,0.08)">+ LOG</button></div>';
-if(sessions.length){var rev=sessions.slice().reverse();for(var i=0;i<rev.length;i++){var s=rev[i];var sc=s.status==="cancelled"?' <span class="status-chip status-cancelled">NO CHARGE</span>':s.status==="latecancel"?' <span class="status-chip status-latecancel">LATE CANCEL</span>':s.status==="noshow"?' <span class="status-chip status-noshow">NO-SHOW</span>':"";html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="push(\'detail\',{sessionId:\''+s.id+'\'})"><div style="width:36px;height:36px;border-radius:8px;background:var(--accS);border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;font-weight:700;color:var(--accVib)">'+(s.clientName||"?")[0]+'</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(s.clientName)+sc+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+s.type+' \u00B7 '+(s.duration||60)+'min \u00B7 '+fmtDate(s.date)+'</div></div><div style="font-size:11px;color:var(--ow);font-family:var(--mono)">$'+s.rate+'</div></div>';}}
+if(!clients.length)return'<div class="pt">'+t("log")+'</div><div class="cd" style="padding:24px;text-align:center;border:1px dashed var(--border)"><div style="font-size:14px;font-weight:600;color:var(--ow);margin-bottom:6px">'+t("noSessionsYet")+'</div><button class="btn" onclick="go(\'clients\')" style="max-width:200px;margin:0 auto">'+t("addFirstClient")+'</button></div>';
+var html='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div class="pt" style="margin-bottom:0">'+t("log")+' <span style="font-size:13px;color:var(--dm);font-family:var(--mono);font-weight:400">'+sessions.length+'</span></div><button class="btn2" onclick="push(\'new\')" style="box-shadow:0 0 12px rgba(212,164,74,0.08)">+ '+t("logSession")+'</button></div>';
+if(sessions.length){var rev=sessions.slice().reverse();for(var i=0;i<rev.length;i++){var s=rev[i];var sc=s.status==="cancelled"?' <span class="status-chip status-cancelled">NO CHARGE</span>':s.status==="latecancel"?' <span class="status-chip status-latecancel">LATE CANCEL</span>':s.status==="noshow"?' <span class="status-chip status-noshow">NO-SHOW</span>':"";html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="push(\'detail\',{sessionId:\''+escJs(s.id)+'\'})"><div style="width:36px;height:36px;border-radius:8px;background:var(--accS);border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;font-weight:700;color:var(--accVib)">'+safeInitial(s.clientName)+'</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(s.clientName)+sc+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+escHtml(s.type)+' \u00B7 '+(s.duration||60)+'min \u00B7 '+fmtDate(s.date)+'</div></div><div style="font-size:11px;color:var(--ow);font-family:var(--mono)">$'+escHtml(s.rate)+'</div></div>';}}
 
 return html;
 }
 function setDuration(m,el){document.getElementById('sDu').value=m;el.parentElement.querySelectorAll('.chip').forEach(function(c){c.classList.remove('on');});el.classList.add('on');}
 function renderLogSession(){
-_exCount=0;_sessionRating=0;var data=currentView.data||{};var pfId=data.prefillClientId||"",pfT=data.prefillType||"",pfR=data.prefillRate||"",pfD=data.prefillDate||todayISO();
+_sessionRating=0;var data=currentView.data||{};if(!data._exInit){_exCount=0;data._exInit=true;}var pfId=data.prefillClientId||"",pfT=data.prefillType||"",pfR=data.prefillRate||"",pfD=data.prefillDate||todayISO();
 var opts="";for(var i=0;i<clients.length;i++){var c=clients[i];opts+='<option value="'+c.id+'"'+(pfId===c.id?" selected":"")+'>'+escHtml(c.name)+'</option>';}
 var sc=pfId?clientById(pfId):null;var rate=pfR||(sc?sc.rate:"70");
 var stypes=["Training","Mobility","Training + Mobility","Assessment"];var topts="";for(var i=0;i<stypes.length;i++)topts+='<option'+(pfT===stypes[i]?" selected":"")+'>'+stypes[i]+'</option>';
 var pfEx=data.prefillExercises||[];
 var dots="";for(var i=1;i<=10;i++){var clr=i<=3?"var(--danger)":i<=6?"var(--warn)":"var(--success)";dots+='<div onclick="setRating('+i+')" id="r'+i+'" style="flex:1;height:36px;border-radius:6px;display:flex;align-items:center;justify-content:center;background:rgba(212,164,74,0.03);border:1px solid var(--borderS);color:var(--dm);font-size:11px;font-weight:700;font-family:var(--mono);cursor:pointer;transition:all 0.15s" data-color="'+clr+'">'+i+'</div>';}
-var html='<button class="btn2" onclick="pop()" style="margin-bottom:14px">\u2039 Back</button><div class="pt">Log Session</div>';
+var html='<button class="btn2" onclick="pop()" style="margin-bottom:14px">\u2039 '+t("back")+'</button><div class="pt">'+t("logSession")+'</div>';
 if(pfEx.length)html+='<div class="cd" style="padding:10px;border:1px solid var(--accB);margin-bottom:12px;display:flex;align-items:center;gap:10px"><span style="font-size:10px;color:var(--acc);font-family:var(--mono)">REPEATING PREV SESSION</span><button class="btn2" onclick="prefillExercises()" style="padding:4px 10px;font-size:8px">LOAD '+pfEx.length+' EXERCISES</button></div>';
 html+=renderTimerWidget(true);
-html+='<div class="cd" style="padding:18px"><div class="g2 field"><div><span class="lb">CLIENT *</span><select id="sC" onchange="onClientSelect()"><option value="">Select...</option>'+opts+'</select></div><div><span class="lb">DATE</span><input id="sD" type="date" value="'+pfD+'"></div></div><div class="g2 field"><div><span class="lb">TYPE</span><select id="sT">'+topts+'</select></div><div><span class="lb">DURATION</span><div style="display:flex;gap:3px;flex-wrap:wrap"><div class="chip" onclick="setDuration(30,this)">30m</div><div class="chip" onclick="setDuration(45,this)">45m</div><div class="chip on" onclick="setDuration(60,this)">60m</div><div class="chip" onclick="setDuration(75,this)">75m</div><div class="chip" onclick="setDuration(90,this)">90m</div></div><input type="hidden" id="sDu" value="60"></div></div><div class="field"><span class="lb">PRICE ($)</span><input id="sR" type="number" min="0" value="'+rate+'"></div><div><span class="lb">STATUS</span><div style="display:flex;gap:4px;flex-wrap:wrap"><div class="chip on" onclick="pickChip(this,\'sSt\')">Complete</div><div class="chip" onclick="pickChip(this,\'sSt\')">Late Cancel (Charged)</div><div class="chip" onclick="pickChip(this,\'sSt\')">Cancelled (No Charge)</div><div class="chip" onclick="pickChip(this,\'sSt\')">No-Show (Charged)</div></div><input type="hidden" id="sSt" value="Complete"></div></div>';
-html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px"><div class="sl" style="margin:0">EXERCISES</div><div style="display:flex;gap:4px"><button class="btn2" onclick="addExercise(\'normal\')" style="padding:6px 10px;font-size:8px">+ EXERCISE</button><button class="btn2" onclick="addExercise(\'superset\')" style="padding:6px 10px;font-size:8px;color:#88ccdd;border-color:rgba(120,180,200,0.3)">+ SUPERSET</button><button class="btn2" onclick="addExercise(\'giant\')" style="padding:6px 10px;font-size:8px;color:#cc88ee;border-color:rgba(180,120,200,0.3)">+ GIANT SET</button></div></div><div id="exList" style="margin-top:8px"></div>';
-html+='<div class="sl" style="margin-top:22px">SESSION NOTES</div><div class="cd" style="padding:18px"><div class="field"><span class="lb">NOTES</span><textarea id="sN" rows="3" placeholder="Form notes, adjustments, observations..."></textarea></div><div class="field"><span class="lb">SESSION RATING (1\u201310)</span><div style="display:flex;gap:4px">'+dots+'</div></div><div><span class="lb">NEXT SESSION PLAN</span><textarea id="sNx" rows="2" placeholder="Focus areas, progressions, notes for next time..."></textarea></div></div>';
-html+='<button class="btn" style="margin-top:18px" onclick="doSaveSession()">SAVE SESSION</button><div style="text-align:center;margin-top:10px"><button class="btn2" onclick="doSaveSession(true)" style="font-size:9px">QUICK SAVE (NO EXERCISES)</button></div>';
+html+='<div class="cd" style="padding:18px"><div class="g2 field"><div><span class="lb">'+t("client")+' *</span><select id="sC" onchange="onClientSelect()"><option value="">'+t("selectClient")+'</option>'+opts+'</select></div><div><span class="lb">'+t("date")+'</span><input id="sD" type="date" value="'+pfD+'"></div></div><div class="g2 field"><div><span class="lb">'+t("type")+'</span><select id="sT">'+topts+'</select></div><div><span class="lb">'+t("duration")+'</span><div style="display:flex;gap:3px;flex-wrap:wrap"><div class="chip" onclick="setDuration(30,this)">30m</div><div class="chip" onclick="setDuration(45,this)">45m</div><div class="chip on" onclick="setDuration(60,this)">60m</div><div class="chip" onclick="setDuration(75,this)">75m</div><div class="chip" onclick="setDuration(90,this)">90m</div></div><input type="hidden" id="sDu" value="60"></div></div><div class="field"><span class="lb">'+t("price")+'</span><input id="sR" type="number" min="0" value="'+rate+'"></div><div><span class="lb">'+t("status")+'</span><div style="display:flex;gap:4px;flex-wrap:wrap"><div class="chip on" onclick="pickStatus(this,\'Complete\')">'+t("complete")+'</div><div class="chip" onclick="pickStatus(this,\'Late Cancel\')">'+t("lateCancel")+' ('+t("charged")+')</div><div class="chip" onclick="pickStatus(this,\'Cancelled\')">'+t("cancelled")+' ('+t("noCharge")+')</div><div class="chip" onclick="pickStatus(this,\'No-Show\')">'+t("noShow")+' ('+t("charged")+')</div></div><input type="hidden" id="sSt" value="Complete"></div></div>';
+html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px"><div class="sl" style="margin:0">'+t("exercises")+'</div><div style="display:flex;gap:4px"><button class="btn2" onclick="addExercise(\'normal\')" style="padding:6px 10px;font-size:8px">+ EXERCISE</button><button class="btn2" onclick="addExercise(\'superset\')" style="padding:6px 10px;font-size:8px;color:#88ccdd;border-color:rgba(120,180,200,0.3)">+ SUPERSET</button><button class="btn2" onclick="addExercise(\'giant\')" style="padding:6px 10px;font-size:8px;color:#cc88ee;border-color:rgba(180,120,200,0.3)">+ GIANT SET</button></div></div><div id="exList" style="margin-top:8px"></div>';
+html+='<div class="sl" style="margin-top:22px">'+t("sessionNotes")+'</div><div class="cd" style="padding:18px"><div class="field"><span class="lb">'+t("notes")+'</span><textarea id="sN" rows="3" placeholder="Form notes, adjustments, observations..."></textarea></div><div class="field"><span class="lb">SESSION RATING (1\u201310)</span><div style="display:flex;gap:4px">'+dots+'</div></div><div><span class="lb">'+t("nextSessionPlan")+'</span><textarea id="sNx" rows="2" placeholder="Focus areas, progressions, notes for next time..."></textarea></div></div>';
+html+='<button class="btn" style="margin-top:18px" onclick="doSaveSession()">'+t("save")+'</button><div style="text-align:center;margin-top:10px"><button class="btn2" onclick="doSaveSession(true)" style="font-size:9px">'+t("quickSave")+'</button></div>';
 return html;
 }
-function onClientSelect(){var cId=v("sC"),c=clientById(cId);if(c){var r=$("sR");if(r&&(!r.value||r.value==="70"))r.value=c.rate||"70";var t=$("sT");if(t&&c.type)for(var i=0;i<t.options.length;i++)if(t.options[i].text===c.type){t.selectedIndex=i;break;}}}
+function onClientSelect(){var cId=v("sC"),c=clientById(cId);if(c){var r=$("sR");if(r&&(!r.value||r.value==="70"))r.value=c.rate||"70";var sel=$("sT");if(sel&&c.type)for(var i=0;i<sel.options.length;i++)if(sel.options[i].text===c.type){sel.selectedIndex=i;break;}}}
 function setRating(n){_sessionRating=n;for(var i=1;i<=10;i++){var el=$("r"+i);if(!el)continue;var on=i<=n;var clr=el.dataset.color||"var(--acc)";el.style.background=on?"rgba(212,164,74,"+(0.05+(i/10)*0.18)+")":"rgba(212,164,74,0.03)";el.style.borderColor=on?clr:"var(--borderS)";el.style.color=on?clr:"var(--dm)";}}
 function addExercise(mode){
 mode=mode||"normal";_exCount++;
@@ -310,11 +535,11 @@ d.querySelectorAll(".exGroup").forEach(function(g){addSet(g);});
 function addGiantExercise(btn){var card=btn.closest(".cd");var groups=card.querySelectorAll(".exGroup");var n=groups.length+1;var div=document.createElement("div");div.innerHTML='<div style="text-align:center;font-size:8px;color:var(--dm);font-family:var(--mono);margin:6px 0">\u2193</div><div class="exGroup"><input class="xN" placeholder="Exercise '+String.fromCharCode(64+n)+'" style="margin-bottom:6px;font-weight:600"><div class="xSets"></div><button class="btn2" onclick="addSet(this.closest(\'.exGroup\'))" style="margin-top:4px;padding:4px 10px;font-size:8px">+ SET</button></div>';card.insertBefore(div,btn);addSet(div.querySelector(".exGroup"));}
 function addSet(group){var rows=group.querySelector(".xSets");var n=rows.querySelectorAll(".set-row").length+1;var d=document.createElement("div");d.className="set-row set-normal";d.innerHTML='<div class="set-badge">S'+n+'</div><input class="sw" placeholder="lbs" style="width:55px;padding:8px;font-size:12px;text-align:center"><span style="font-size:10px;color:var(--dmL)">\u00D7</span><input class="sr" placeholder="reps" style="width:48px;padding:8px;font-size:12px;text-align:center"><input class="sn" placeholder="note" style="flex:1;padding:8px;font-size:11px"><span style="font-size:12px;color:var(--danger);cursor:pointer;padding:2px 4px" onclick="this.parentElement.remove()">\u2715</span>';rows.appendChild(d);}
 function collectExercises(){var exercises=[];document.querySelectorAll("#exList .cd").forEach(function(card){var mode=card.dataset.mode||"normal";var nt=(card.querySelector(".xNote")||{}).value||"";var rest=(card.querySelector(".xRest")||{}).value||"";var te=card.querySelector(".chip.on");var tempo=te?te.textContent.trim():"Normal";var groups=[];card.querySelectorAll(".exGroup").forEach(function(g){var nm=(g.querySelector(".xN")||{}).value||"";var sets=[];g.querySelectorAll(".set-row").forEach(function(row){sets.push({w:(row.querySelector(".sw")||{}).value||"",r:(row.querySelector(".sr")||{}).value||"",n:(row.querySelector(".sn")||{}).value||""});});if(nm)groups.push({name:nm,sets:sets});});if(groups.length===1)exercises.push({name:groups[0].name,tempo:tempo,sets:groups[0].sets,note:nt,rest:rest,mode:mode});else if(groups.length>1)exercises.push({name:groups.map(function(g){return g.name;}).join(" + "),tempo:tempo,mode:mode,note:nt,rest:rest,grouped:groups});});return exercises;}
-function prefillExercises(){var pfEx=(currentView.data||{}).prefillExercises||[];for(var i=0;i<pfEx.length;i++){var ex=pfEx[i];var mode=ex.mode||"normal";if(ex.grouped){addExercise(mode);var card=document.getElementById("ex"+_exCount);if(!card)continue;var groups=card.querySelectorAll(".exGroup");for(var g=0;g<Math.min(groups.length,ex.grouped.length);g++){var nm=groups[g].querySelector(".xN");if(nm)nm.value=ex.grouped[g].name||"";var sets=ex.grouped[g].sets||[];for(var j=1;j<sets.length;j++)addSet(groups[g]);var rows=groups[g].querySelectorAll(".set-row");for(var j=0;j<Math.min(rows.length,sets.length);j++){var sw=rows[j].querySelector(".sw");if(sw)sw.value=sets[j].w||"";var sr=rows[j].querySelector(".sr");if(sr)sr.value=sets[j].r||"";}}}else{addExercise("normal");var card=document.getElementById("ex"+_exCount);if(!card)continue;var nm=card.querySelector(".xN");if(nm)nm.value=ex.name||"";var sets=ex.sets||[];for(var j=1;j<sets.length;j++)addSet(card.querySelector(".exGroup"));var rows=card.querySelectorAll(".set-row");for(var j=0;j<Math.min(rows.length,sets.length);j++){var sw=rows[j].querySelector(".sw");if(sw)sw.value=sets[j].w||"";var sr=rows[j].querySelector(".sr");if(sr)sr.value=sets[j].r||"";}}}toast("\u2713 Exercises loaded");}
+function prefillExercises(){var pfEx=(currentView.data||{}).prefillExercises||[];for(var i=0;i<pfEx.length;i++){var ex=pfEx[i];var mode=ex.mode||"normal";if(ex.grouped){addExercise(mode);var card=document.getElementById("ex"+_exCount);if(!card)continue;var groups=card.querySelectorAll(".exGroup");for(var g=0;g<Math.min(groups.length,ex.grouped.length);g++){var nm=groups[g].querySelector(".xN");if(nm)nm.value=ex.grouped[g].name||"";var sets=ex.grouped[g].sets||[];for(var j=1;j<sets.length;j++)addSet(groups[g]);var rows=groups[g].querySelectorAll(".set-row");for(var j=0;j<Math.min(rows.length,sets.length);j++){var sw=rows[j].querySelector(".sw");if(sw)sw.value=sets[j].w||"";var sr=rows[j].querySelector(".sr");if(sr)sr.value=sets[j].r||"";}}}else{addExercise(mode);var card=document.getElementById("ex"+_exCount);if(!card)continue;var nm=card.querySelector(".xN");if(nm)nm.value=ex.name||"";var sets=ex.sets||[];for(var j=1;j<sets.length;j++)addSet(card.querySelector(".exGroup"));var rows=card.querySelectorAll(".set-row");for(var j=0;j<Math.min(rows.length,sets.length);j++){var sw=rows[j].querySelector(".sw");if(sw)sw.value=sets[j].w||"";var sr=rows[j].querySelector(".sr");if(sr)sr.value=sets[j].r||"";}}}toast("\u2713 Exercises loaded");}
 function doSaveSession(quick){var cId=v("sC");if(!cId){toast("Select a client");return;}var cl=clientById(cId);var statusRaw=v("sSt")||"Complete";var status=statusRaw.indexOf("Late Cancel")>=0?"latecancel":statusRaw.indexOf("No Charge")>=0?"cancelled":statusRaw.indexOf("No-Show")>=0?"noshow":"complete";var exercises=quick?[]:collectExercises();var session={id:Date.now().toString(),clientId:cId,clientName:cl?cl.name:"",date:v("sD")||todayISO(),type:v("sT")||"Training",duration:v("sDu")||"60",rate:v("sR")||(cl?cl.rate:"70"),exercises:exercises,notes:v("sN"),energy:_sessionRating,nextPlan:v("sNx"),status:status,created_at:new Date().toISOString()};sessions.push(session);var schedId=currentView.data.scheduleId;if(schedId){var sched=schedule.find(function(s){return s.id===schedId;});if(sched)sched.status="complete";}save();toast("\u2713 Saved");_exCount=0;_sessionRating=0;pop();}
 function renderExerciseSummary(ex){
 if(ex.grouped){var modeClass=ex.mode==="superset"?"superset-card":"giant-card";var h='<div class="ex-summary '+modeClass+'">';h+='<div style="font-size:12px;font-weight:700;color:var(--accVib);margin-bottom:6px">'+escHtml(ex.name)+'</div>';if(ex.mode&&ex.mode!=="normal")h+='<span class="status-chip '+(ex.mode==="superset"?"":"")+ '" style="font-size:8px;margin-bottom:6px;display:inline-block;background:rgba(180,120,200,0.1);border:1px solid rgba(180,120,200,0.2);color:#cc88ee">'+ex.mode.toUpperCase()+'</span> ';for(var g=0;g<ex.grouped.length;g++){var grp=ex.grouped[g];h+='<div style="margin-top:4px"><div style="font-size:11px;font-weight:600;color:var(--wh)">'+escHtml(grp.name)+'</div>';var sts=grp.sets||[];for(var j=0;j<sts.length;j++){var st=sts[j];h+='<div class="ex-summary-line">S'+(j+1)+': '+(st.w||"\u2014")+' lbs \u00D7 '+(st.r||"\u2014")+' reps'+(st.n?" \u00B7 "+escHtml(st.n):"")+'</div>';}h+='</div>';}if(ex.note)h+='<div style="font-size:10px;color:var(--mu);font-style:italic;margin-top:6px">'+escHtml(ex.note)+'</div>';h+='</div>';return h;}
-var h='<div class="ex-summary"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><span style="font-size:13px;font-weight:700;color:var(--wh)">'+escHtml(ex.name)+'</span>';if(ex.tempo&&ex.tempo!=="Normal")h+='<span style="font-size:8px;color:var(--acc);background:var(--accS);border:1px solid var(--accB);padding:2px 6px;border-radius:4px;font-family:var(--mono)">'+ex.tempo+'</span>';h+='</div>';
+var h='<div class="ex-summary"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><span style="font-size:13px;font-weight:700;color:var(--wh)">'+escHtml(ex.name)+'</span>';if(ex.tempo&&ex.tempo!=="Normal")h+='<span style="font-size:8px;color:var(--acc);background:var(--accS);border:1px solid var(--accB);padding:2px 6px;border-radius:4px;font-family:var(--mono)">'+escHtml(ex.tempo)+'</span>';h+='</div>';
 var sts=ex.sets||[];var totalVol=0;for(var j=0;j<sts.length;j++){var st=sts[j];var w=parseFloat(st.w)||0,r=parseFloat(st.r)||0;totalVol+=w*r;h+='<div class="ex-summary-line">S'+(j+1)+': '+(st.w||"\u2014")+' lbs \u00D7 '+(st.r||"\u2014")+' reps'+(st.n?" \u00B7 "+escHtml(st.n):"")+'</div>';}
 if(totalVol>0)h+='<div style="font-size:9px;color:var(--dm);font-family:var(--mono);margin-top:4px">Total volume: '+totalVol.toLocaleString()+' lbs</div>';
 if(ex.rest)h+='<div style="font-size:9px;color:var(--dm);font-family:var(--mono);margin-top:4px">Rest: '+escHtml(ex.rest)+'</div>';if(ex.note)h+='<div style="font-size:10px;color:var(--mu);font-style:italic;margin-top:4px">'+escHtml(ex.note)+'</div>';
@@ -325,12 +550,12 @@ function deleteSession(id){if(!confirm("Delete this session?"))return;sessions=s
 function renderSessionDetail(){
 var s=sessions.find(function(x){return x.id===currentView.data.sessionId;});if(!s){pop();return"";}var client=clientById(s.clientId);
 var sc=s.status==="cancelled"?'<span class="status-chip status-cancelled">NO CHARGE</span>':s.status==="latecancel"?'<span class="status-chip status-latecancel">LATE CANCEL</span>':s.status==="noshow"?'<span class="status-chip status-noshow">NO-SHOW</span>':'<span class="status-chip status-complete">COMPLETE</span>';
-var html='<button class="btn2" onclick="pop()" style="margin-bottom:14px">\u2039 Back</button><div style="margin-bottom:18px"><div style="display:flex;align-items:center;gap:12px;margin-bottom:4px"><div class="pt" style="margin-bottom:0;flex:1">'+escHtml(s.clientName)+'</div>'+sc+'</div><div style="font-size:12px;color:var(--dm);font-family:var(--mono)">'+fmtDate(s.date)+' \u00B7 '+s.type+' \u00B7 '+(s.duration||60)+'min \u00B7 $'+s.rate+'</div>'+(client?'<div style="margin-top:6px"><button class="btn2" onclick="navToClient('+clients.indexOf(client)+')" style="padding:4px 10px;font-size:8px">VIEW CLIENT \u2192</button></div>':"")+'</div>';
+var clientIdx=client?clients.indexOf(client):-1;var html='<button class="btn2" onclick="pop()" style="margin-bottom:14px">\u2039 '+t("back")+'</button><div style="margin-bottom:18px"><div style="display:flex;align-items:center;gap:12px;margin-bottom:4px"><div class="pt" style="margin-bottom:0;flex:1">'+escHtml(s.clientName)+'</div>'+sc+'</div><div style="font-size:12px;color:var(--dm);font-family:var(--mono)">'+fmtDate(s.date)+' \u00B7 '+escHtml(s.type)+' \u00B7 '+(s.duration||60)+'min \u00B7 $'+escHtml(s.rate)+'</div>'+(clientIdx>=0?'<div style="margin-top:6px"><button class="btn2" onclick="navToClient('+clientIdx+')" style="padding:4px 10px;font-size:8px">VIEW CLIENT \u2192</button></div>':"")+'</div>';
 if(s.energy){html+='<div class="cd" style="display:flex;align-items:center;gap:12px;margin-bottom:8px"><span style="font-size:10px;color:var(--dm);font-family:var(--mono)">RATING</span><div style="display:flex;gap:3px;flex:1">';for(var i=0;i<10;i++){var on=i<s.energy;var clr=i<3?"var(--danger)":i<6?"var(--warn)":"var(--success)";html+='<div style="flex:1;height:22px;border-radius:4px;background:'+(on?"rgba(212,164,74,"+(0.05+((i+1)/10)*0.18)+")":"rgba(212,164,74,0.03)")+';border:1px solid '+(on?clr:"var(--borderS)")+';color:'+(on?clr:"var(--dm)")+';font-size:8px;font-weight:700;font-family:var(--mono);display:flex;align-items:center;justify-content:center">'+(i+1)+'</div>';}html+='</div></div>';}
-var exs=s.exercises||[];if(exs.length){html+='<div class="sl">WORKOUT SUMMARY</div>';for(var i=0;i<exs.length;i++)html+=renderExerciseSummary(exs[i]);}
-if(s.notes)html+='<div class="sl" style="margin-top:8px">NOTES</div><div class="cd"><div style="font-size:12px;color:var(--mu);line-height:1.7">'+escHtml(s.notes)+'</div></div>';
-if(s.nextPlan)html+='<div class="sl" style="margin-top:8px">NEXT SESSION PLAN</div><div class="cd" style="border-left:3px solid var(--acc)"><div style="font-size:12px;color:var(--ow);line-height:1.7">'+escHtml(s.nextPlan)+'</div></div>';
-html+='<div style="display:flex;gap:8px;margin-top:18px"><button class="btn" style="flex:1" onclick="repeatSession(\''+s.id+'\')">REPEAT SESSION</button><button class="btn-danger" style="flex:1" onclick="deleteSession(\''+s.id+'\')">DELETE</button></div>';
+var exs=s.exercises||[];if(exs.length){html+='<div class="sl">'+t("workoutSummary")+'</div>';for(var i=0;i<exs.length;i++)html+=renderExerciseSummary(exs[i]);}
+if(s.notes)html+='<div class="sl" style="margin-top:8px">'+t("notes")+'</div><div class="cd"><div style="font-size:12px;color:var(--mu);line-height:1.7">'+escHtml(s.notes)+'</div></div>';
+if(s.nextPlan)html+='<div class="sl" style="margin-top:8px">'+t("nextSessionPlan")+'</div><div class="cd" style="border-left:3px solid var(--acc)"><div style="font-size:12px;color:var(--ow);line-height:1.7">'+escHtml(s.nextPlan)+'</div></div>';
+html+='<div style="display:flex;gap:8px;margin-top:18px"><button class="btn" style="flex:1" onclick="repeatSession(\''+s.id+'\')">'+t("repeatSession")+'</button><button class="btn-danger" style="flex:1" onclick="deleteSession(\''+s.id+'\')">'+t("delete")+'</button></div>';
 return html;
 }
 
@@ -339,38 +564,218 @@ function renderSchedule(){
 if(currentView.view==="edit")return renderScheduleEdit();
 var now=new Date();var startDay=new Date(now);startDay.setDate(now.getDate()-3+(scheduleWeekOffset*7));startDay.setHours(0,0,0,0);
 var days=[];for(var i=0;i<7;i++){var d=new Date(startDay);d.setDate(startDay.getDate()+i);days.push(d);}
-var wl=days[0].toLocaleDateString("en-US",{month:"short",day:"numeric"})+" \u2014 "+days[6].toLocaleDateString("en-US",{month:"short",day:"numeric"});
-var _ws=0,_wr=0;for(var di=0;di<days.length;di++){var dayIso=days[di].toISOString().split("T")[0];schedule.filter(function(s){return s.date===dayIso&&s.status!=="cancelled";}).forEach(function(s){_ws++;_wr+=parseFloat(s.rate||70);});}
-var html='<div style="display:flex;justify-content:space-between;align-items:center"><div class="pt" style="margin-bottom:0">Schedule</div><button class="btn2" onclick="var f=document.getElementById(\'schForm\');if(f){f.style.display=\'block\';f.scrollIntoView({behavior:\'smooth\'});}" style="padding:6px 14px;font-size:10px;box-shadow:0 0 12px rgba(212,164,74,0.08)">+ ADD</button></div>';
-if(_ws)html+='<div style="font-size:11px;color:var(--mu);font-family:var(--mono);margin-bottom:14px">'+_ws+' session'+(_ws!==1?"s":"")+' \u00B7 $'+_wr+' this week</div>';
-html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><button class="btn2" onclick="scheduleWeekOffset--;_selectedDay=null;render()" style="padding:6px 12px">\u2039</button><div style="font-size:11px;color:var(--mu);font-family:var(--mono)">'+wl+(scheduleWeekOffset===0?" \u00B7 THIS WEEK":"")+'</div><button class="btn2" onclick="scheduleWeekOffset++;_selectedDay=null;render()" style="padding:6px 12px">\u203A</button></div>';
+var _loc=getLang()==="hu"?"hu-HU":"en-US";var wl=days[0].toLocaleDateString(_loc,{month:"short",day:"numeric"})+" \u2014 "+days[6].toLocaleDateString(_loc,{month:"short",day:"numeric"});
+var _ws=0,_wr=0;for(var di=0;di<days.length;di++){var dayIso=toLocalISO(days[di]);schedule.filter(function(s){return s.date===dayIso&&s.status!=="cancelled";}).forEach(function(s){_ws++;_wr+=parseFloat(s.rate||70);});}
+var html='<div style="display:flex;justify-content:space-between;align-items:center"><div class="pt" style="margin-bottom:0">'+t("schedule")+'</div><button class="btn2" onclick="var f=document.getElementById(\'schForm\');if(f){f.style.display=\'block\';f.scrollIntoView({behavior:\'smooth\'});}" style="padding:6px 14px;font-size:10px;box-shadow:0 0 12px rgba(212,164,74,0.08)">+ ADD</button></div>';
+if(_ws)html+='<div style="font-size:11px;color:var(--mu);font-family:var(--mono);margin-bottom:14px">'+_ws+' session'+(_ws!==1?"s":"")+' \u00B7 $'+roundMoney(_wr)+' this week</div>';
+html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><button class="btn2" onclick="scheduleWeekOffset--;_selectedDay=null;render()" style="padding:6px 12px">\u2039</button><div style="font-size:11px;color:var(--mu);font-family:var(--mono)">'+wl+(scheduleWeekOffset===0?" \u00B7 "+t("thisWeek"):"")+'</div><button class="btn2" onclick="scheduleWeekOffset++;_selectedDay=null;render()" style="padding:6px 12px">\u203A</button></div>';
 html+='<div style="display:flex;gap:3px;margin-bottom:18px">';
-for(var i=0;i<days.length;i++){var d=days[i];var di=d.toISOString().split("T")[0];var isT=d.toDateString()===now.toDateString();var isSel=_selectedDay===di;var n=schedule.filter(function(s){return s.date===di;}).length;
+for(var i=0;i<days.length;i++){var d=days[i];var di=toLocalISO(d);var isT=d.toDateString()===now.toDateString();var isSel=_selectedDay===di;var n=schedule.filter(function(s){return s.date===di;}).length;
 html+='<div onclick="_selectedDay=(_selectedDay===\''+di+'\'?null:\''+di+'\');render()" style="flex:1;text-align:center;padding:10px 2px;border-radius:10px;background:'+(isSel?"rgba(212,164,74,0.16)":(isT&&!_selectedDay)?"rgba(212,164,74,0.10)":"var(--glass)")+';border:'+(isSel?"2px":(isT&&!_selectedDay)?"2px":"1px")+' solid '+(isSel?"var(--accBright)":(isT&&!_selectedDay)?"var(--acc)":"var(--glassB)")+';cursor:pointer"><div style="font-size:8px;color:'+(isSel?"var(--accBright)":(isT&&!_selectedDay)?"var(--acc)":"var(--dm)")+';font-family:var(--mono);font-weight:700">'+DN[d.getDay()].toUpperCase()+'</div><div style="font-size:18px;font-weight:800;color:'+(isSel?"var(--accBright)":(isT&&!_selectedDay)?"var(--acc)":"var(--ow)")+';font-family:var(--mono);margin:4px 0;line-height:1">'+d.getDate()+'</div>'+(n?'<div style="width:5px;height:5px;border-radius:50%;background:var(--acc);margin:0 auto"></div>':'<div style="height:5px"></div>')+'</div>';}
 html+='</div>';
-if(_selectedDay)html+='<div style="text-align:center;margin-bottom:12px"><button class="btn2" onclick="_selectedDay=null;render()" style="padding:4px 12px;font-size:8px">SHOW ALL DAYS</button></div>';
-for(var i=0;i<days.length;i++){var d=days[i];var di=d.toISOString().split("T")[0];if(_selectedDay&&_selectedDay!==di)continue;var ds=schedule.filter(function(s){return s.date===di;}).sort(function(a,b){return(a.time||"").localeCompare(b.time||"");});
+if(_selectedDay)html+='<div style="text-align:center;margin-bottom:12px"><button class="btn2" onclick="_selectedDay=null;render()" style="padding:4px 12px;font-size:8px">'+t("showAllDays")+'</button></div>';
+for(var i=0;i<days.length;i++){var d=days[i];var di=toLocalISO(d);if(_selectedDay&&_selectedDay!==di)continue;var ds=schedule.filter(function(s){return s.date===di;}).sort(function(a,b){return(a.time||"").localeCompare(b.time||"");});
 html+='<div id="day-'+di+'" style="margin-bottom:14px"><div style="font-size:10px;color:var(--dm);font-family:var(--mono);margin-bottom:6px">'+DN[d.getDay()].toUpperCase()+' \u00B7 '+(d.getMonth()+1)+'/'+d.getDate()+'</div>';
-if(ds.length){for(var j=0;j<ds.length;j++){var s=ds[j];var ic=s.status==="complete",ix=s.status==="cancelled";var bc=ic?"var(--success)":ix?"var(--danger)":"var(--acc)";html+='<div class="cd" style="display:flex;align-items:center;gap:12px;border-left:3px solid '+bc+'"><div style="min-width:48px;font-family:var(--mono);font-size:12px;font-weight:700;color:'+(ic?"var(--success)":"var(--acc)")+'">'+fmtTimeStr(s.time)+'</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(s.clientName)+'</div><div style="font-size:10px;color:var(--dm)">'+(s.type||"Training")+' \u00B7 $'+(s.rate||70)+(ic?' \u00B7 <span class="status-chip status-complete">COMPLETED</span>':ix?' \u00B7 <span class="status-chip status-cancelled">CANCELLED</span>':"")+'</div></div>'+(!ic&&!ix?'<button class="btn2" onclick="completeScheduled(\''+s.id+'\')" style="padding:4px 8px;font-size:8px">LOG</button><button class="btn2" onclick="push(\'edit\',{schedId:\''+s.id+'\'})" style="padding:4px 8px;font-size:8px">EDIT</button>':"")+'<span style="font-size:13px;color:var(--danger);cursor:pointer;padding:4px" onclick="deleteScheduled(\''+s.id+'\')">\u2715</span></div>';}}
+if(ds.length){for(var j=0;j<ds.length;j++){var s=ds[j];var ic=s.status==="complete",ix=s.status==="cancelled";var bc=ic?"var(--success)":ix?"var(--danger)":"var(--acc)";html+='<div class="cd" style="display:flex;align-items:center;gap:12px;border-left:3px solid '+bc+'"><div style="min-width:48px;font-family:var(--mono);font-size:12px;font-weight:700;color:'+(ic?"var(--success)":"var(--acc)")+'">'+fmtTimeStr(s.time)+'</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(s.clientName)+'</div><div style="font-size:10px;color:var(--dm)">'+escHtml(s.type||"Training")+' \u00B7 $'+escHtml(s.rate||70)+(ic?' \u00B7 <span class="status-chip status-complete">COMPLETED</span>':ix?' \u00B7 <span class="status-chip status-cancelled">CANCELLED</span>':"")+'</div></div>'+(!ic&&!ix?'<button class="btn2" onclick="sendClientReminder(\''+escJs(s.id)+'\')" style="padding:4px 8px;font-size:8px;color:var(--accVib);border-color:var(--accB)" title="Send reminder">\u2709</button><button class="btn2" onclick="completeScheduled(\''+escJs(s.id)+'\')" style="padding:4px 8px;font-size:8px">LOG</button><button class="btn2" onclick="push(\'edit\',{schedId:\''+escJs(s.id)+'\'})" style="padding:4px 8px;font-size:8px">EDIT</button>':"")+'<span style="font-size:13px;color:var(--danger);cursor:pointer;padding:4px" onclick="deleteScheduled(\''+escJs(s.id)+'\')">\u2715</span></div>';}}
 else html+='<div style="padding:6px 0;font-size:10px;color:var(--dmL)">No sessions</div>';html+='</div>';}
 var pfcid=(currentView.data||{}).prefillClientId||"";var copts="";for(var i=0;i<clients.length;i++){var c=clients[i];copts+='<option value="'+c.id+'"'+(pfcid===c.id?" selected":"")+'>'+escHtml(c.name)+'</option>';}
-html+='<div class="gw"></div><div id="schForm" style="display:'+(pfcid?"block":"none")+'"><div class="cd" style="padding:18px"><div class="sl" style="margin-bottom:10px">ADD TO SCHEDULE</div><div class="field"><span class="lb">CLIENT *</span><select id="schC" onchange="onScheduleClientSelect()"><option value="">Select...</option>'+copts+'</select></div><div class="g2 field"><div><span class="lb">DATE</span><input id="schD" type="date" value="'+(_selectedDay||todayISO())+'"></div><div><span class="lb">TIME</span><input id="schT" type="time" value="'+getNextHourTime()+'"></div></div><div class="g2 field"><div><span class="lb">TYPE</span><select id="schTy"><option>Training</option><option>Mobility</option><option>Training + Mobility</option><option>Assessment</option></select></div><div><span class="lb">RATE ($)</span><input id="schR" type="number" min="0" value="70"></div></div><div class="field"><span class="lb">RECURRING</span><div style="display:flex;gap:4px;margin-bottom:8px"><div class="chip on" onclick="pickChip(this,\'schRec\');toggleRecurUI()">One-Time</div><div class="chip" onclick="pickChip(this,\'schRec\');toggleRecurUI()">Weekly</div><div class="chip" onclick="pickChip(this,\'schRec\');toggleRecurUI()">Biweekly</div></div><input type="hidden" id="schRec" value="One-Time"><div id="recurDuration" style="display:none;margin-top:6px"><span class="lb">FOR HOW LONG?</span><select id="schRecWeeks"><option value="2">2 weeks</option><option value="4" selected>4 weeks (1 month)</option><option value="6">6 weeks</option><option value="8">8 weeks (2 months)</option><option value="12">12 weeks (3 months)</option><option value="16">16 weeks (4 months)</option><option value="26">26 weeks (6 months)</option></select></div></div><button class="btn" onclick="addToSchedule()">ADD TO SCHEDULE</button></div></div>';
+html+='<div class="gw"></div><div id="schForm" style="display:'+(pfcid?"block":"none")+'"><div class="cd" style="padding:18px"><div class="sl" style="margin-bottom:10px">'+t("addToSchedule")+'</div><div class="field"><span class="lb">'+t("client")+' *</span><select id="schC" onchange="onScheduleClientSelect()"><option value="">'+t("selectClient")+'</option>'+copts+'</select></div><div class="g2 field"><div><span class="lb">'+t("date")+'</span><input id="schD" type="date" value="'+(_selectedDay||todayISO())+'"></div><div><span class="lb">'+t("time")+'</span><input id="schT" type="time" value="'+getNextHourTime()+'"></div></div><div class="g2 field"><div><span class="lb">'+t("type")+'</span><select id="schTy"><option>Training</option><option>Mobility</option><option>Training + Mobility</option><option>Assessment</option></select></div><div><span class="lb">'+t("rate")+'</span><input id="schR" type="number" min="0" value="70"></div></div><div class="field"><span class="lb">'+t("recurring")+'</span><div style="display:flex;gap:4px;margin-bottom:8px"><div class="chip on" onclick="pickRecur(this,\'One-Time\')">'+t("oneTime")+'</div><div class="chip" onclick="pickRecur(this,\'Weekly\')">'+t("weekly")+'</div><div class="chip" onclick="pickRecur(this,\'Biweekly\')">'+t("biweekly")+'</div></div><input type="hidden" id="schRec" value="One-Time"><div id="recurDuration" style="display:none;margin-top:6px"><span class="lb">'+t("forHowLong")+'</span><select id="schRecWeeks"><option value="2">2 '+t("weeks")+'</option><option value="4" selected>4 '+t("weeks")+' (1 '+t("month")+')</option><option value="6">6 '+t("weeks")+'</option><option value="8">8 '+t("weeks")+' (2 '+t("months")+')</option><option value="12">12 '+t("weeks")+' (3 '+t("months")+')</option><option value="16">16 '+t("weeks")+' (4 '+t("months")+')</option><option value="26">26 '+t("weeks")+' (6 '+t("months")+')</option></select></div></div><button class="btn" onclick="addToSchedule()">'+t("addToSchedule")+'</button></div></div>';
 // Auto-scroll to today after render
 setTimeout(function(){var todayEl=document.getElementById('day-'+todayISO());if(todayEl&&!_selectedDay)todayEl.scrollIntoView({behavior:'smooth',block:'center'});},100);
 
 return html;}
-function renderScheduleEdit(){var sched=schedule.find(function(s){return s.id===currentView.data.schedId;});if(!sched){pop();return"";}var copts="";for(var i=0;i<clients.length;i++){var c=clients[i];copts+='<option value="'+c.id+'"'+(c.id===sched.clientId?" selected":"")+'>'+escHtml(c.name)+'</option>';}var stypes=["Training","Mobility","Training + Mobility","Assessment"];var topts="";for(var i=0;i<stypes.length;i++)topts+='<option'+(stypes[i]===sched.type?" selected":"")+'>'+stypes[i]+'</option>';return'<button class="btn2" onclick="pop()" style="margin-bottom:14px">\u2039 Back</button><div class="pt">Edit Session</div><div class="cd" style="padding:18px"><div class="field"><span class="lb">CLIENT</span><select id="schC">'+copts+'</select></div><div class="g2 field"><div><span class="lb">DATE</span><input id="schD" type="date" value="'+sched.date+'"></div><div><span class="lb">TIME</span><input id="schT" type="time" value="'+(sched.time||"10:00")+'"></div></div><div class="g2 field"><div><span class="lb">TYPE</span><select id="schTy">'+topts+'</select></div><div><span class="lb">RATE ($)</span><input id="schR" type="number" min="0" value="'+(sched.rate||70)+'"></div></div><button class="btn" onclick="updateScheduled(\''+sched.id+'\')">SAVE</button><div style="display:flex;gap:8px;margin-top:10px"><button class="btn-success" style="flex:1" onclick="completeScheduled(\''+sched.id+'\')">LOG SESSION</button><button class="btn-danger" style="flex:1" onclick="cancelScheduled(\''+sched.id+'\')">CANCEL</button></div></div>';}
-function getNextHourTime(){var now=new Date(),h=now.getHours()+1;return(h<10?"0"+h:h>23?"08":String(h))+":00";}
+function renderScheduleEdit(){var sched=schedule.find(function(s){return s.id===currentView.data.schedId;});if(!sched){pop();return"";}var copts="";for(var i=0;i<clients.length;i++){var c=clients[i];copts+='<option value="'+c.id+'"'+(c.id===sched.clientId?" selected":"")+'>'+escHtml(c.name)+'</option>';}var stypes=["Training","Mobility","Training + Mobility","Assessment"];var topts="";for(var i=0;i<stypes.length;i++)topts+='<option'+(stypes[i]===sched.type?" selected":"")+'>'+stypes[i]+'</option>';return'<button class="btn2" onclick="pop()" style="margin-bottom:14px">\u2039 '+t("back")+'</button><div class="pt">'+t("editSession")+'</div><div class="cd" style="padding:18px"><div class="field"><span class="lb">'+t("client")+'</span><select id="schC">'+copts+'</select></div><div class="g2 field"><div><span class="lb">'+t("date")+'</span><input id="schD" type="date" value="'+sched.date+'"></div><div><span class="lb">'+t("time")+'</span><input id="schT" type="time" value="'+(sched.time||"10:00")+'"></div></div><div class="g2 field"><div><span class="lb">'+t("type")+'</span><select id="schTy">'+topts+'</select></div><div><span class="lb">'+t("price")+'</span><input id="schR" type="number" min="0" value="'+(sched.rate||70)+'"></div></div><button class="btn" onclick="updateScheduled(\''+sched.id+'\')">'+t("save")+'</button><div style="display:flex;gap:8px;margin-top:10px"><button class="btn-success" style="flex:1" onclick="completeScheduled(\''+sched.id+'\')">'+t("logSession")+'</button><button class="btn-danger" style="flex:1" onclick="cancelScheduled(\''+sched.id+'\')">'+t("cancel")+'</button></div></div>';}
+function getNextHourTime(){var now=new Date(),h=(now.getHours()+1)%24;return(h<10?"0"+h:String(h))+":00";}
+function pickRecur(el,val){el.parentElement.querySelectorAll(".chip").forEach(function(c){c.classList.remove("on");});el.classList.add("on");var h=$("schRec");if(h)h.value=val;toggleRecurUI();}
 function toggleRecurUI(){var f=$("schRec"),d=$("recurDuration");if(f&&d)d.style.display=(f.value==="One-Time")?"none":"block";}
-function onScheduleClientSelect(){var cId=v("schC"),c=clientById(cId);if(c){var r=$("schR");if(r)r.value=c.rate||"70";var t=$("schTy");if(t&&c.type)for(var i=0;i<t.options.length;i++)if(t.options[i].text===c.type){t.selectedIndex=i;break;}}}
-function addToSchedule(){var cId=v("schC");if(!cId){toast("Select a client");return;}var cl=clientById(cId);var rec=v("schRec")||"One-Time";var baseDate=new Date((v("schD")||todayISO())+"T12:00:00");var totalWeeks=1,interval=1;if(rec==="Weekly"){totalWeeks=parseInt(v("schRecWeeks")||"4");interval=1;}else if(rec==="Biweekly"){totalWeeks=parseInt(v("schRecWeeks")||"8");interval=2;}var count=0;for(var w=0;w<totalWeeks;w+=interval){var dd=new Date(baseDate);dd.setDate(dd.getDate()+(w*7));var iso=dd.toISOString().split("T")[0];schedule.push({id:(Date.now()+w).toString(),clientId:cId,clientName:cl?cl.name:"",date:iso,time:v("schT")||"10:00",type:v("schTy")||"Training",rate:v("schR")||(cl?cl.rate:"70"),status:"",created_at:new Date().toISOString()});count++;}save();toast("\u2713 "+count+" session"+(count>1?"s":"")+" scheduled");render();}
+function onScheduleClientSelect(){var cId=v("schC"),c=clientById(cId);if(c){var r=$("schR");if(r)r.value=c.rate||"70";var sel=$("schTy");if(sel&&c.type)for(var i=0;i<sel.options.length;i++)if(sel.options[i].text===c.type){sel.selectedIndex=i;break;}}}
+function addToSchedule(){var cId=v("schC");if(!cId){toast("Select a client");return;}var cl=clientById(cId);var rec=v("schRec")||"One-Time";var baseDate=new Date((v("schD")||todayISO())+"T12:00:00");var totalWeeks=1,interval=1;if(rec==="Weekly"){totalWeeks=parseInt(v("schRecWeeks")||"4");interval=1;}else if(rec==="Biweekly"){totalWeeks=parseInt(v("schRecWeeks")||"8");interval=2;}var count=0;for(var w=0;w<totalWeeks;w+=interval){var dd=new Date(baseDate);dd.setDate(dd.getDate()+(w*7));var iso=toLocalISO(dd);schedule.push({id:(Date.now()+w).toString(),clientId:cId,clientName:cl?cl.name:"",date:iso,time:v("schT")||"10:00",type:v("schTy")||"Training",rate:v("schR")||(cl?cl.rate:"70"),status:"",created_at:new Date().toISOString()});count++;}save();toast("\u2713 "+count+" session"+(count>1?"s":"")+" scheduled");render();}
 function updateScheduled(id){var sched=schedule.find(function(s){return s.id===id;});if(!sched)return;var cId=v("schC"),c=clientById(cId);sched.clientId=cId;sched.clientName=c?c.name:sched.clientName;sched.date=v("schD")||sched.date;sched.time=v("schT")||sched.time;sched.type=v("schTy")||sched.type;sched.rate=v("schR")||sched.rate;save();toast("\u2713 Updated");pop();}
 function deleteScheduled(id){if(!confirm("Remove this?"))return;schedule=schedule.filter(function(x){return x.id!==id;});save();cloudDelete("schedule",id);toast("Removed");render();}
 function cancelScheduled(id){var sched=schedule.find(function(s){return s.id===id;});if(!sched)return;sched.status="cancelled";save();toast("Cancelled");pop();}
 
+// AUTOMATION - Session reminders & notifications
+var _reminderInterval=null;
+function initReminders(){
+if(!("Notification" in window))return;
+if(Notification.permission==="default")Notification.requestPermission();
+if(_reminderInterval)clearInterval(_reminderInterval);
+_reminderInterval=setInterval(checkReminders,60000);
+checkReminders();
+}
+function checkReminders(){
+if(Notification.permission!=="granted")return;
+var now=new Date(),iso=todayISO(),nowMin=now.getHours()*60+now.getMinutes();
+schedule.forEach(function(s){
+if(s.date!==iso||s.status==="complete"||s.status==="cancelled"||!s.time)return;
+var parts=s.time.split(":"),schedMin=parseInt(parts[0])*60+parseInt(parts[1]);
+var diff=schedMin-nowMin;
+var key="reminded_"+s.id+"_"+iso;
+if(diff>0&&diff<=30&&!sessionStorage.getItem(key)){
+sessionStorage.setItem(key,"1");
+var title="REGI \u00B7 Upcoming Session";
+var body=(s.clientName||"Client")+" at "+fmtTimeStr(s.time)+" ("+(s.type||"Training")+")";
+try{new Notification(title,{body:body,icon:"icon.png",badge:"icon.png",tag:s.id});}catch(e){}
+}
+});
+}
+function renderAutomation(){
+var enabled=Notification.permission==="granted";
+var html='<div class="sl" style="margin-top:18px">AUTOMATIONS</div><div class="cd" style="padding:16px">';
+html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><div><div style="font-size:13px;font-weight:600;color:var(--wh)">Session Reminders</div><div style="font-size:10px;color:var(--dm)">Get notified 30 min before sessions</div></div><div style="font-size:10px;font-family:var(--mono);color:'+(enabled?"var(--success)":"var(--warn)")+'">'+( enabled?"ACTIVE":"OFF")+'</div></div>';
+if(!enabled)html+='<button class="btn2" onclick="Notification.requestPermission().then(function(p){if(p===\'granted\'){initReminders();toast(\'\\u2713 Reminders enabled\');}render();})" style="width:100%">ENABLE NOTIFICATIONS</button>';
+else html+='<div style="font-size:10px;color:var(--mu);font-family:var(--mono)">You\'ll receive browser notifications 30 minutes before each scheduled session.</div>';
+html+='</div>';
+// Client reminder templates
+html+='<div class="cd" style="padding:16px;margin-top:8px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><div><div style="font-size:13px;font-weight:600;color:var(--wh)">'+t("clientReminder")+'</div><div style="font-size:10px;color:var(--dm)">'+t("reminderDesc")+'</div></div></div>';
+html+='<div class="field"><span class="lb">'+t("customReminder").toUpperCase()+'</span><textarea id="reminderTemplate" rows="3" placeholder="'+escHtml(t("defaultReminder"))+'" style="font-size:12px">'+escHtml(LS.get("reminderTemplate",t("defaultReminder")))+'</textarea></div>';
+html+='<div style="font-size:9px;color:var(--dm);font-family:var(--mono);margin-bottom:10px">Use {name}, {time}, {type} as placeholders</div>';
+html+='<button class="btn2" onclick="LS.set(\'reminderTemplate\',document.getElementById(\'reminderTemplate\').value);toast(\'\\u2713 \'+t(\'reminderSaved\'))" style="width:100%">'+t("save")+' TEMPLATE</button>';
+html+='</div>';
+return html;}
+
+// CLIENT REMINDER SYSTEM
+function sendClientReminder(schedId){
+var sched=schedule.find(function(s){return s.id===schedId;});
+if(!sched)return;
+var c=clientById(sched.clientId);
+var template=(c&&c.reminderMsg)?c.reminderMsg:LS.get("reminderTemplate",t("defaultReminder"));
+var msg=template.replace(/\{name\}/g,c?c.name:sched.clientName||"").replace(/\{time\}/g,fmtTimeStr(sched.time)).replace(/\{type\}/g,sched.type||"Training").replace(/\{date\}/g,fmtDate(sched.date));
+// Try SMS on mobile, fallback to clipboard
+if(c&&c.phone&&/Mobi|Android|iPhone/i.test(navigator.userAgent)){
+window.open("sms:"+encodeURIComponent(c.phone)+"?body="+encodeURIComponent(msg),"_blank");
+toast("\u2713 Opening messages...");
+}else{
+navigator.clipboard.writeText(msg).then(function(){toast("\u2713 Reminder copied to clipboard");}).catch(function(){
+var ta=document.createElement("textarea");ta.value=msg;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();toast("\u2713 Reminder copied");
+});}}
+
+// PDF EXPORT - Professional branded client reports
+function generateClientPDF(clientIdx){
+var c=clients[clientIdx];if(!c){toast("Client not found");return;}
+var cs=sessions.filter(function(x){return x.clientId===c.id;}).slice().reverse();
+var rev=roundMoney(cs.filter(function(x){return x.status!=="cancelled";}).reduce(function(a,x){return a+parseFloat(x.rate||0);},0));
+if(typeof window.jspdf==="undefined"){toast("PDF library loading...");return;}
+var doc=new window.jspdf.jsPDF({unit:"pt",format:"letter"});
+var W=612,H=792,M=50;var y=0;
+var gold=[212,164,74],darkBg=[8,8,10],cardBg=[20,20,24],white=[240,236,228],muted=[144,136,120],dimmed=[96,88,72];
+// Header band
+doc.setFillColor(darkBg[0],darkBg[1],darkBg[2]);doc.rect(0,0,W,130,"F");
+doc.setFillColor(gold[0],gold[1],gold[2]);doc.rect(0,128,W,3,"F");
+// Logo
+doc.setFillColor(14,14,20);doc.roundedRect(M,30,50,50,8,8,"F");
+doc.setFont("helvetica","bold");doc.setFontSize(28);doc.setTextColor(gold[0],gold[1],gold[2]);doc.text("R",M+17,62);
+// Brand
+doc.setFontSize(22);doc.setTextColor(white[0],white[1],white[2]);doc.text("REGI",M+64,52);
+doc.setFontSize(8);doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);doc.text("COACHING STUDIO",M+65,66);
+// Report title
+doc.setFontSize(9);doc.setTextColor(gold[0],gold[1],gold[2]);doc.text("CLIENT PROGRESS REPORT",W-M,50,{align:"right"});
+doc.setFontSize(8);doc.setTextColor(muted[0],muted[1],muted[2]);doc.text("Generated "+new Date().toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"}),W-M,65,{align:"right"});
+y=155;
+// Client info card
+doc.setFillColor(cardBg[0],cardBg[1],cardBg[2]);doc.roundedRect(M,y,W-M*2,85,6,6,"F");
+doc.setFillColor(gold[0],gold[1],gold[2]);doc.roundedRect(M,y,4,85,2,2,"F");
+doc.setFontSize(20);doc.setTextColor(white[0],white[1],white[2]);doc.setFont("helvetica","bold");doc.text(c.name||"Client",M+20,y+30);
+doc.setFontSize(10);doc.setTextColor(gold[0],gold[1],gold[2]);doc.text((c.type||"Training")+" \u00B7 $"+(c.rate||70)+"/hr \u00B7 "+(c.level||"Beginner"),M+20,y+48);
+var infoLine=[];if(c.phone)infoLine.push(c.phone);if(c.email)infoLine.push(c.email);if(c.age)infoLine.push("Age: "+c.age);
+if(infoLine.length){doc.setFontSize(8);doc.setTextColor(muted[0],muted[1],muted[2]);doc.text(infoLine.join("  \u00B7  "),M+20,y+68);}
+y+=105;
+// Stats row
+var statW=(W-M*2-30)/4;
+var stats=[{v:cs.length,l:"TOTAL SESSIONS"},{v:"$"+rev,l:"GROSS REVENUE"},{v:"$"+Math.round(rev*(1-getGymCut())),l:"YOUR EARNINGS"},{v:(function(){var rated=cs.filter(function(s){return s.energy;});return rated.length>0?Math.round(rated.reduce(function(a,s){return a+s.energy;},0)/rated.length*10)/10:"N/A";})(),l:"AVG RATING"}];
+for(var i=0;i<stats.length;i++){var sx=M+i*(statW+10);doc.setFillColor(cardBg[0],cardBg[1],cardBg[2]);doc.roundedRect(sx,y,statW,55,6,6,"F");doc.setFont("helvetica","bold");doc.setFontSize(16);doc.setTextColor(gold[0],gold[1],gold[2]);doc.text(String(stats[i].v),sx+statW/2,y+24,{align:"center"});doc.setFontSize(6);doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);doc.text(stats[i].l,sx+statW/2,y+40,{align:"center"});}
+y+=75;
+// Goals / Injuries / Notes
+var details=[];if(c.goals)details.push({l:"GOALS",v:c.goals});if(c.injuries)details.push({l:"INJURIES / LIMITATIONS",v:c.injuries});if(c.medical)details.push({l:"MEDICAL",v:c.medical});if(c.notes)details.push({l:"NOTES",v:c.notes});
+if(details.length){doc.setFillColor(gold[0],gold[1],gold[2]);doc.rect(M,y,W-M*2,1,"F");y+=15;
+for(var i=0;i<details.length;i++){doc.setFontSize(7);doc.setFont("helvetica","bold");doc.setTextColor(gold[0],gold[1],gold[2]);doc.text(details[i].l,M,y+10);
+doc.setFontSize(9);doc.setFont("helvetica","normal");doc.setTextColor(white[0],white[1],white[2]);var lines=doc.splitTextToSize(details[i].v,W-M*2);doc.text(lines,M,y+22);y+=22+lines.length*12+8;
+if(y>H-120){doc.addPage();y=50;}}}
+// Session history
+if(cs.length){if(y>H-180){doc.addPage();y=50;}
+doc.setFillColor(gold[0],gold[1],gold[2]);doc.rect(M,y,W-M*2,1,"F");y+=20;
+doc.setFontSize(8);doc.setFont("helvetica","bold");doc.setTextColor(gold[0],gold[1],gold[2]);doc.text("SESSION HISTORY",M,y);y+=15;
+// Table header
+doc.setFillColor(cardBg[0],cardBg[1],cardBg[2]);doc.rect(M,y,W-M*2,20,"F");
+doc.setFontSize(7);doc.setFont("helvetica","bold");doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);
+doc.text("DATE",M+8,y+13);doc.text("TYPE",M+85,y+13);doc.text("DURATION",M+190,y+13);doc.text("RATE",M+270,y+13);doc.text("RATING",M+340,y+13);doc.text("STATUS",M+410,y+13);y+=20;
+var maxRows=Math.min(cs.length,25);
+for(var i=0;i<maxRows;i++){var s=cs[i];if(y>H-60){doc.addPage();y=50;}
+var rowBg=i%2===0;if(rowBg){doc.setFillColor(14,14,16);doc.rect(M,y,W-M*2,18,"F");}
+doc.setFontSize(8);doc.setFont("helvetica","normal");doc.setTextColor(muted[0],muted[1],muted[2]);
+doc.text(fmtDate(s.date),M+8,y+12);doc.text(s.type||"Training",M+85,y+12);doc.text((s.duration||60)+"min",M+190,y+12);
+doc.setTextColor(white[0],white[1],white[2]);doc.text("$"+(s.rate||70),M+270,y+12);
+if(s.energy){var rc=s.energy<=3?[216,120,120]:s.energy<=6?[232,184,120]:[120,200,120];doc.setTextColor(rc[0],rc[1],rc[2]);doc.text(s.energy+"/10",M+340,y+12);}else{doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);doc.text("-",M+340,y+12);}
+var stLabel=s.status==="cancelled"?"No Charge":s.status==="latecancel"?"Late Cancel":s.status==="noshow"?"No-Show":"Complete";
+var stColor=s.status==="cancelled"?[216,120,120]:s.status==="latecancel"?[232,184,120]:s.status==="noshow"?[180,140,100]:[120,200,120];
+doc.setTextColor(stColor[0],stColor[1],stColor[2]);doc.text(stLabel,M+410,y+12);y+=18;}}
+// Footer
+var fy=H-35;doc.setFillColor(gold[0],gold[1],gold[2]);doc.rect(M,fy-10,W-M*2,1,"F");
+doc.setFontSize(7);doc.setFont("helvetica","normal");doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);
+doc.text("REGI COACHING STUDIO  \u00B7  regi.fitness  \u00B7  Confidential",W/2,fy+5,{align:"center"});
+// Save
+var fileName="REGI_"+c.name.replace(/[^a-zA-Z0-9]/g,"_")+"_Report_"+todayISO()+".pdf";
+doc.save(fileName);toast("\u2713 PDF downloaded");}
+
+function generateMonthlyPDF(){
+var now_=new Date(),mo=now_.getMonth(),yr=now_.getFullYear(),moName=now_.toLocaleDateString("en-US",{month:"long",year:"numeric"});
+var moS=sessions.filter(function(s){var d=new Date(s.date+"T12:00:00");return d.getMonth()===mo&&d.getFullYear()===yr;});
+var charged=moS.filter(function(s){return s.status!=="cancelled";});
+var gross=roundMoney(charged.reduce(function(a,s){return a+parseFloat(s.rate||0);},0));
+var cut=Math.round(gross*getGymCut()),take=roundMoney(gross-cut);
+if(typeof window.jspdf==="undefined"){toast("PDF library loading...");return;}
+var doc=new window.jspdf.jsPDF({unit:"pt",format:"letter"});
+var W=612,H=792,M=50;var y=0;
+var gold=[212,164,74],darkBg=[8,8,10],cardBg=[20,20,24],white=[240,236,228],muted=[144,136,120],dimmed=[96,88,72];
+// Header
+doc.setFillColor(darkBg[0],darkBg[1],darkBg[2]);doc.rect(0,0,W,130,"F");
+doc.setFillColor(gold[0],gold[1],gold[2]);doc.rect(0,128,W,3,"F");
+doc.setFillColor(14,14,20);doc.roundedRect(M,30,50,50,8,8,"F");
+doc.setFont("helvetica","bold");doc.setFontSize(28);doc.setTextColor(gold[0],gold[1],gold[2]);doc.text("R",M+17,62);
+doc.setFontSize(22);doc.setTextColor(white[0],white[1],white[2]);doc.text("REGI",M+64,52);
+doc.setFontSize(8);doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);doc.text("COACHING STUDIO",M+65,66);
+doc.setFontSize(9);doc.setTextColor(gold[0],gold[1],gold[2]);doc.text("MONTHLY EARNINGS REPORT",W-M,50,{align:"right"});
+doc.setFontSize(8);doc.setTextColor(muted[0],muted[1],muted[2]);doc.text(moName,W-M,65,{align:"right"});
+y=155;
+// Stats
+var statW=(W-M*2-30)/4;
+var stats=[{v:charged.length,l:"SESSIONS"},{v:"$"+gross,l:"GROSS REVENUE"},{v:"-$"+cut,l:"GYM CUT ("+Math.round(getGymCut()*100)+"%)"},{v:"$"+take,l:"YOUR EARNINGS"}];
+for(var i=0;i<stats.length;i++){var sx=M+i*(statW+10);doc.setFillColor(cardBg[0],cardBg[1],cardBg[2]);doc.roundedRect(sx,y,statW,55,6,6,"F");doc.setFont("helvetica","bold");doc.setFontSize(16);var sc=i===3?gold:i===2?dimmed:white;doc.setTextColor(sc[0],sc[1],sc[2]);doc.text(String(stats[i].v),sx+statW/2,y+24,{align:"center"});doc.setFontSize(6);doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);doc.text(stats[i].l,sx+statW/2,y+40,{align:"center"});}
+y+=75;
+// Session table
+doc.setFillColor(gold[0],gold[1],gold[2]);doc.rect(M,y,W-M*2,1,"F");y+=20;
+doc.setFontSize(8);doc.setFont("helvetica","bold");doc.setTextColor(gold[0],gold[1],gold[2]);doc.text("ALL SESSIONS \u2014 "+moName.toUpperCase(),M,y);y+=15;
+doc.setFillColor(cardBg[0],cardBg[1],cardBg[2]);doc.rect(M,y,W-M*2,20,"F");
+doc.setFontSize(7);doc.setFont("helvetica","bold");doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);
+doc.text("DATE",M+8,y+13);doc.text("CLIENT",M+85,y+13);doc.text("TYPE",M+220,y+13);doc.text("RATE",M+320,y+13);doc.text("STATUS",M+400,y+13);y+=20;
+for(var i=0;i<moS.length;i++){var s=moS[i];if(y>H-60){doc.addPage();y=50;}
+if(i%2===0){doc.setFillColor(14,14,16);doc.rect(M,y,W-M*2,18,"F");}
+doc.setFontSize(8);doc.setFont("helvetica","normal");doc.setTextColor(muted[0],muted[1],muted[2]);
+doc.text(fmtDate(s.date),M+8,y+12);doc.setTextColor(white[0],white[1],white[2]);doc.text((s.clientName||"Unknown").substring(0,22),M+85,y+12);
+doc.setTextColor(muted[0],muted[1],muted[2]);doc.text(s.type||"Training",M+220,y+12);doc.text("$"+(s.rate||70),M+320,y+12);
+var stLabel=s.status==="cancelled"?"No Charge":s.status==="latecancel"?"Late Cancel":s.status==="noshow"?"No-Show":"Complete";
+var stColor=s.status==="cancelled"?[216,120,120]:s.status==="latecancel"?[232,184,120]:s.status==="noshow"?[180,140,100]:[120,200,120];
+doc.setTextColor(stColor[0],stColor[1],stColor[2]);doc.text(stLabel,M+400,y+12);y+=18;}
+// By client breakdown
+if(y>H-120){doc.addPage();y=50;}
+y+=20;doc.setFillColor(gold[0],gold[1],gold[2]);doc.rect(M,y,W-M*2,1,"F");y+=20;
+doc.setFontSize(8);doc.setFont("helvetica","bold");doc.setTextColor(gold[0],gold[1],gold[2]);doc.text("BREAKDOWN BY CLIENT",M,y);y+=15;
+var byClient={};charged.forEach(function(s){var n=s.clientName||"Unknown";if(!byClient[n])byClient[n]={count:0,rev:0};byClient[n].count++;byClient[n].rev+=parseFloat(s.rate||0);});
+var sortedClients=Object.keys(byClient).sort(function(a,b){return byClient[b].rev-byClient[a].rev;});
+for(var i=0;i<sortedClients.length;i++){var cn=sortedClients[i],cd=byClient[cn];if(y>H-60){doc.addPage();y=50;}
+if(i%2===0){doc.setFillColor(14,14,16);doc.rect(M,y,W-M*2,18,"F");}
+doc.setFontSize(8);doc.setFont("helvetica","normal");doc.setTextColor(white[0],white[1],white[2]);doc.text(cn,M+8,y+12);
+doc.setTextColor(muted[0],muted[1],muted[2]);doc.text(cd.count+" session"+(cd.count!==1?"s":""),M+200,y+12);
+doc.setTextColor(gold[0],gold[1],gold[2]);doc.text("$"+roundMoney(cd.rev),M+350,y+12);y+=18;}
+// Footer
+var fy=H-35;doc.setFillColor(gold[0],gold[1],gold[2]);doc.rect(M,fy-10,W-M*2,1,"F");
+doc.setFontSize(7);doc.setFont("helvetica","normal");doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);
+doc.text("REGI COACHING STUDIO  \u00B7  regi.fitness  \u00B7  Confidential",W/2,fy+5,{align:"center"});
+doc.save("REGI_Monthly_"+moName.replace(/ /g,"_")+".pdf");toast("\u2713 Monthly report downloaded");}
+
 // SETTINGS
-function renderSettings(){var tr=sessions.filter(function(s){return s.status!=="cancelled";}).reduce(function(a,s){return a+parseFloat(s.rate||0);},0);var go2=Math.round(tr*getGymCut());var pcts=[10,15,20,25,30],ph="";for(var i=0;i<pcts.length;i++)ph+='<div class="chip'+(Math.round(getGymCut()*100)===pcts[i]?" on":"")+'" onclick="setGymCut('+pcts[i]+')">'+pcts[i]+'%</div>';
-return'<button class="btn2" onclick="go(\'home\')" style="margin-bottom:12px">\u2039 BACK</button><div class="pt">Settings</div><div class="sl">SECURITY</div><div class="cd" style="padding:16px"><div style="margin-bottom:12px"><div style="font-size:13px;font-weight:600;color:var(--wh)">PIN Lock</div><div style="font-size:10px;color:var(--dm)">Quick-access security layer</div></div><div class="g2"><button class="btn2" onclick="changePIN()" style="width:100%">CHANGE PIN</button><button class="btn2" onclick="sessionStorage.removeItem(\'regi_unlocked\');showLockScreen()" style="width:100%">LOCK NOW</button></div></div><div class="sl" style="margin-top:18px">DATA OVERVIEW</div><div class="cd" style="padding:16px"><div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--borderS)"><span style="font-size:12px;color:var(--mu)">Clients</span><span style="font-size:13px;font-weight:700;color:var(--wh);font-family:var(--mono)">'+clients.length+'</span></div><div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--borderS)"><span style="font-size:12px;color:var(--mu)">Sessions Logged</span><span style="font-size:13px;font-weight:700;color:var(--wh);font-family:var(--mono)">'+sessions.length+'</span></div><div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--borderS)"><span style="font-size:12px;color:var(--mu)">All-Time Revenue</span><span style="font-size:13px;font-weight:700;color:var(--accVib);font-family:var(--mono)">$'+tr+'</span></div><div style="display:flex;justify-content:space-between;padding:8px 0"><span style="font-size:12px;color:var(--mu)">Gym Cut Owed</span><span style="font-size:13px;font-weight:700;color:var(--dm);font-family:var(--mono)">$'+go2+'</span></div></div><div class="sl" style="margin-top:18px">BACKUP &amp; RESTORE</div><div class="cd" style="padding:16px"><div class="g2"><button class="btn2" onclick="exportData()" style="width:100%">EXPORT JSON</button><button class="btn2" onclick="$(\'importFile\').click()" style="width:100%">IMPORT</button></div><input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)"></div><div class="sl" style="margin-top:18px">GYM SETTINGS</div><div class="cd" style="padding:16px"><div class="field"><span class="lb">GYM CUT (%)</span><div style="display:flex;gap:4px;flex-wrap:wrap">'+ph+'</div></div><div class="field"><span class="lb">DEFAULT SESSION RATE ($)</span><input id="defRate" type="number" min="0" value="'+LS.get("defaultRate","70")+'" onchange="LS.set(\'defaultRate\',this.value)"></div></div><div class="sl" style="margin-top:18px">DISPLAY</div><div class="cd" style="padding:16px"><div class="field"><span class="lb">TIME FORMAT</span><div style="display:flex;gap:4px"><div class="chip'+(is24Hr()?"":" on")+'" onclick="LS.set(\'timeFormat\',\'12\');render()">12-Hour (7:00 PM)</div><div class="chip'+(is24Hr()?" on":"")+'" onclick="LS.set(\'timeFormat\',\'24\');render()">24-Hour (19:00)</div></div></div></div><div class="sl" style="margin-top:18px">DANGER ZONE</div><div class="cd" style="padding:16px;border:1px solid rgba(216,120,120,0.15)"><div style="font-size:11px;color:var(--danger);margin-bottom:12px">Cannot be undone. Export first.</div><div class="g2"><button class="btn-danger" onclick="if(confirm(\'Delete ALL sessions?\')&&confirm(\'Sure?\')){sessions=[];save();toast(\'Cleared\');render();}">CLEAR SESSIONS</button><button class="btn-danger" onclick="if(confirm(\'RESET EVERYTHING?\')&&confirm(\'Last chance?\')){clients=[];sessions=[];schedule=[];save();toast(\'Reset\');render();}">RESET ALL</button></div></div><div style="text-align:center;padding:20px 0"><div style="font-size:9px;color:var(--dmL);font-family:var(--mono)">REGI COACHING STUDIO v'+VERSION+'</div><div style="font-size:8px;color:var(--dmL);font-family:var(--mono);margin-top:4px">regi.fitness \u00B7 Built by DK Fit Coaching Lab</div></div>';}
+function renderSettings(){var tr=roundMoney(sessions.filter(function(s){return s.status!=="cancelled";}).reduce(function(a,s){return a+parseFloat(s.rate||0);},0));var go2=Math.round(tr*getGymCut());var pcts=[10,15,20,25,30],ph="";for(var i=0;i<pcts.length;i++)ph+='<div class="chip'+(Math.round(getGymCut()*100)===pcts[i]?" on":"")+'" onclick="setGymCut('+pcts[i]+')">'+pcts[i]+'%</div>';
+return'<button class="btn2" onclick="go(\'home\')" style="margin-bottom:12px">\u2039 '+t("back").toUpperCase()+'</button><div class="pt">'+t("settings")+'</div><div class="sl">'+t("security")+'</div><div class="cd" style="padding:16px"><div style="margin-bottom:12px"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+t("pin")+'</div><div style="font-size:10px;color:var(--dm)">Quick-access security layer</div></div><div class="g2"><button class="btn2" onclick="changePIN()" style="width:100%">'+t("changePIN")+'</button><button class="btn2" onclick="sessionStorage.removeItem(\'regi_unlocked\');showLockScreen()" style="width:100%">'+t("lockNow")+'</button></div></div><div class="sl" style="margin-top:18px">'+t("dataOverview")+'</div><div class="cd" style="padding:16px"><div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--borderS)"><span style="font-size:12px;color:var(--mu)">'+t("clients")+'</span><span style="font-size:13px;font-weight:700;color:var(--wh);font-family:var(--mono)">'+clients.length+'</span></div><div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--borderS)"><span style="font-size:12px;color:var(--mu)">'+t("sessions")+'</span><span style="font-size:13px;font-weight:700;color:var(--wh);font-family:var(--mono)">'+sessions.length+'</span></div><div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--borderS)"><span style="font-size:12px;color:var(--mu)">'+t("gross")+'</span><span style="font-size:13px;font-weight:700;color:var(--accVib);font-family:var(--mono)">$'+tr+'</span></div><div style="display:flex;justify-content:space-between;padding:8px 0"><span style="font-size:12px;color:var(--mu)">'+t("gymCut")+'</span><span style="font-size:13px;font-weight:700;color:var(--dm);font-family:var(--mono)">$'+go2+'</span></div></div><div class="sl" style="margin-top:18px">'+t("backupRestore")+'</div><div class="cd" style="padding:16px"><div class="g2"><button class="btn2" onclick="exportData()" style="width:100%">'+t("export")+' JSON</button><button class="btn2" onclick="$(\'importFile\').click()" style="width:100%">'+t("import")+'</button></div><button class="btn2" onclick="generateMonthlyPDF()" style="width:100%;margin-top:8px;background:rgba(212,164,74,0.06);border-color:var(--accB)"><span style="margin-right:6px">\u2193</span>'+t("monthlyPDF")+'</button><input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)"></div><div class="sl" style="margin-top:18px">'+t("gymSettings")+'</div><div class="cd" style="padding:16px"><div class="field"><span class="lb">'+t("gymCut")+'</span><div style="display:flex;gap:4px;flex-wrap:wrap">'+ph+'</div></div><div class="field"><span class="lb">'+t("defaultRate")+'</span><input id="defRate" type="number" min="0" value="'+LS.get("defaultRate","70")+'" onchange="LS.set(\'defaultRate\',this.value)"></div></div><div class="sl" style="margin-top:18px">'+t("display")+'</div><div class="cd" style="padding:16px"><div class="field"><span class="lb">'+t("timeFormat")+'</span><div style="display:flex;gap:4px"><div class="chip'+(is24Hr()?"":" on")+'" onclick="LS.set(\'timeFormat\',\'12\');render()">12-Hour (7:00 PM)</div><div class="chip'+(is24Hr()?" on":"")+'" onclick="LS.set(\'timeFormat\',\'24\');render()">24-Hour (19:00)</div></div></div><div class="field"><span class="lb">'+t("lang").toUpperCase()+'</span><div style="display:flex;gap:4px"><div class="chip'+(getLang()==="en"?" on":"")+'" onclick="LS.set(\'lang\',\'en\');render()">English</div><div class="chip'+(getLang()==="hu"?" on":"")+'" onclick="LS.set(\'lang\',\'hu\');render()">Magyar</div></div></div></div>'+renderAutomation()+'<div class="sl" style="margin-top:18px">'+t("dangerZone")+'</div><div class="cd" style="padding:16px;border:1px solid rgba(216,120,120,0.15)"><div style="font-size:11px;color:var(--danger);margin-bottom:12px">'+t("cannotUndo")+'</div><div class="g2"><button class="btn-danger" onclick="if(confirm(\'Delete ALL sessions?\')&&confirm(\'Sure?\')){sessions=[];save();toast(\'Cleared\');render();}">'+t("clearSessions")+'</button><button class="btn-danger" onclick="if(confirm(\'RESET EVERYTHING?\')&&confirm(\'Last chance?\')){clients=[];sessions=[];schedule=[];save();toast(\'Reset\');render();}">'+t("resetAll")+'</button></div></div><div style="text-align:center;padding:20px 0"><div style="font-size:9px;color:var(--dmL);font-family:var(--mono)">REGI '+t("coachingStudio")+' v'+VERSION+'</div><div style="font-size:8px;color:var(--dmL);font-family:var(--mono);margin-top:4px">regi.fitness \u00B7 Built by DK Fit Coaching Lab</div></div>';}
 function setGymCut(p){LS.set("gymCut",p);toast("\u2713 Gym cut "+p+"%");render();}
 
 // GUIDE - Empowering, professional tone
@@ -437,17 +842,15 @@ var GUIDE_DATA=[
 {t:"Expanding Your Services",d:"Custom programming, macro guidance, weekly check-ins \u2014 these are services you can offer beyond the gym floor. Price based on scope and your time. Frame it as: 'Let me help you with the other 167 hours of your week.' You have the knowledge to do this. Trust yourself."}
 ]}
 ];
-var _guideSec=0,_guideExpanded=false;
 function renderGuide(){
-var html='<div style="display:flex;justify-content:space-between;align-items:center"><div class="pt" style="margin-bottom:0">Training Guide</div><button class="btn2" onclick="toggleAllGuide()" id="guideExpandBtn" style="padding:5px 12px;font-size:8px">EXPAND ALL</button></div><div style="font-size:13px;color:var(--mu);margin-bottom:18px;line-height:1.6;max-width:600px">Your knowledge base. Everything you need, organized and ready.</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:18px">';
+var html='<div style="display:flex;justify-content:space-between;align-items:center"><div class="pt" style="margin-bottom:0">'+t("trainingGuide")+'</div><button class="btn2" onclick="toggleAllGuide()" id="guideExpandBtn" style="padding:5px 12px;font-size:8px">'+t("expandAll")+'</button></div><div style="font-size:13px;color:var(--mu);margin-bottom:18px;line-height:1.6;max-width:600px">'+t("knowledgeBase")+'</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:18px">';
 for(var si=0;si<GUIDE_DATA.length;si++)html+='<div class="chip'+(_guideSec===si?" on":"")+'" onclick="showGuideSec('+si+')" id="gNav'+si+'" style="padding:6px 14px">'+GUIDE_DATA[si].t+'</div>';
 html+='</div><div id="guideBody">'+guideSecHTML(_guideSec)+'</div>';return html;}
 function guideSecHTML(si){var sec=GUIDE_DATA[si];if(!sec)return"";var h="";for(var ii=0;ii<sec.items.length;ii++){var it=sec.items[ii];h+='<div class="cd" style="cursor:pointer" onclick="toggleGuideItem('+si+','+ii+')"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:14px;font-weight:600;color:var(--wh);line-height:1.3">'+it.t+'</span><span style="color:var(--dm);font-size:10px;transition:transform 0.25s;flex-shrink:0;margin-left:12px" id="gia'+si+'_'+ii+'">\u25BC</span></div><div id="git'+si+'_'+ii+'" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--borderS);font-size:13px;color:var(--mu);line-height:1.9">'+it.d+'</div></div>';}return h;}
-function showGuideSec(si){_guideSec=si;_guideExpanded=false;for(var i=0;i<GUIDE_DATA.length;i++){var el=$("gNav"+i);if(el)el.className="chip"+(i===si?" on":"");}var body=$("guideBody");if(body)body.innerHTML=guideSecHTML(si);var btn=$("guideExpandBtn");if(btn)btn.textContent="EXPAND ALL";}
-function toggleAllGuide(){_guideExpanded=!_guideExpanded;var sec=GUIDE_DATA[_guideSec];if(!sec)return;for(var ii=0;ii<sec.items.length;ii++){var el=$("git"+_guideSec+"_"+ii),a=$("gia"+_guideSec+"_"+ii);if(el){el.style.display=_guideExpanded?"block":"none";if(a)a.style.transform=_guideExpanded?"rotate(180deg)":"rotate(0)";}}var btn=$("guideExpandBtn");if(btn)btn.textContent=_guideExpanded?"COLLAPSE ALL":"EXPAND ALL";}
+function showGuideSec(si){_guideSec=si;_guideExpanded=false;for(var i=0;i<GUIDE_DATA.length;i++){var el=$("gNav"+i);if(el)el.className="chip"+(i===si?" on":"");}var body=$("guideBody");if(body)body.innerHTML=guideSecHTML(si);var btn=$("guideExpandBtn");if(btn)btn.textContent=t("expandAll");}
+function toggleAllGuide(){_guideExpanded=!_guideExpanded;var sec=GUIDE_DATA[_guideSec];if(!sec)return;for(var ii=0;ii<sec.items.length;ii++){var el=$("git"+_guideSec+"_"+ii),a=$("gia"+_guideSec+"_"+ii);if(el){el.style.display=_guideExpanded?"block":"none";if(a)a.style.transform=_guideExpanded?"rotate(180deg)":"rotate(0)";}}var btn=$("guideExpandBtn");if(btn)btn.textContent=_guideExpanded?t("collapseAll"):t("expandAll");}
 function toggleGuideItem(si,ii){var el=$("git"+si+"_"+ii),a=$("gia"+si+"_"+ii);if(el){var show=el.style.display==="none";el.style.display=show?"block":"none";if(a)a.style.transform=show?"rotate(180deg)":"rotate(0)";}}
 
-function toggleSection(el){var cd=el.closest('.sl').nextElementSibling;if(!cd)return;if(cd.style.display==='none'){cd.style.display='';el.textContent='\u25BC';}else{cd.style.display='none';el.textContent='\u25B6';}}
 
 // PIN
 var PIN_KEY="regi_pin",DEFAULT_PIN="1234";
@@ -457,7 +860,7 @@ function isUnlocked(){return sessionStorage.getItem("regi_unlocked")==="true";}
 function unlock(){sessionStorage.setItem("regi_unlocked","true");}
 function showLockScreen(){var app=$("app");app.style.display="none";var ld=$("lockScreen");if(!ld){ld=document.createElement("div");ld.id="lockScreen";document.body.appendChild(ld);}var hasCustom=localStorage.getItem(PIN_KEY);ld.style.cssText="position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--bg);padding:24px";ld.innerHTML='<div style="position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 30%,rgba(212,164,74,0.06),transparent 60%);pointer-events:none"></div><div style="position:relative;display:flex;flex-direction:column;align-items:center;width:100%;max-width:320px"><div style="width:80px;height:80px;border-radius:20px;background:linear-gradient(135deg,#0e0e14,#1a1a24);border:1px solid var(--borderH);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:38px;font-weight:900;color:var(--acc);box-shadow:0 0 60px var(--accGlow);animation:breathe 4s ease-in-out infinite;margin-bottom:28px">R</div><div style="font-family:var(--display);font-size:24px;font-weight:700;letter-spacing:0.12em;color:var(--ice);margin-bottom:4px">REGI</div><div style="font-size:9px;color:var(--dm);font-family:var(--mono);letter-spacing:0.2em;margin-bottom:44px">COACHING STUDIO</div><div style="width:100%"><input id="pinInput" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="8" placeholder="\u00B7 \u00B7 \u00B7 \u00B7" style="text-align:center;font-size:22px;letter-spacing:0.5em;font-family:var(--mono);padding:16px;margin-bottom:14px;border-radius:10px"><button class="btn" onclick="tryUnlock()" style="margin-bottom:10px;border-radius:10px">UNLOCK</button><div id="pinError" style="text-align:center;font-size:10px;color:var(--danger);font-family:var(--mono);min-height:18px"></div></div>'+(hasCustom?'':'<div style="margin-top:36px;font-size:9px;color:var(--dmL);font-family:var(--mono)">Default PIN: 1234</div>')+'<div style="margin-top:24px"><span onclick="signOut()" style="font-size:9px;color:var(--dm);font-family:var(--mono);cursor:pointer">Sign out</span></div></div>';setTimeout(function(){var inp=$("pinInput");if(inp){inp.focus();inp.addEventListener("keydown",function(e){if(e.key==="Enter")tryUnlock();});}},100);}
 function tryUnlock(){var inp=$("pinInput"),entered=inp?inp.value.trim():"";if(entered===getPIN()){unlock();var lk=$("lockScreen");if(lk)lk.remove();$("app").style.display="";render();}else{var err=$("pinError");if(err)err.textContent="Incorrect PIN";if(inp){inp.value="";inp.focus();}}}
-function changePIN(){var cur=prompt("Current PIN:");if(cur!==getPIN()){toast("Incorrect");return;}var np=prompt("New PIN (4-8 digits):");if(!np||np.length<4||!/^\d+$/.test(np)){toast("Must be 4-8 digits");return;}var c2=prompt("Confirm:");if(c2!==np){toast("Mismatch");return;}setPIN(np);toast("\u2713 PIN updated");}
+function changePIN(){var cur=prompt("Current PIN:");if(cur!==getPIN()){toast("Incorrect");return;}var np=prompt("New PIN (4-8 digits):");if(!np||np.length<4||np.length>8||!/^\d+$/.test(np)){toast("Must be 4-8 digits");return;}var c2=prompt("Confirm:");if(c2!==np){toast("Mismatch");return;}setPIN(np);toast("\u2713 PIN updated");}
 
 // PWA
 var _deferredPrompt=null;
@@ -473,14 +876,15 @@ if(ver===VERSION)return;
 var overlay=document.createElement("div");
 overlay.id="whatsNew";
 overlay.style.cssText="position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);padding:20px;animation:fadeIn 0.3s ease";
-overlay.innerHTML='<div style="width:100%;max-width:400px;max-height:80vh;overflow-y:auto;background:linear-gradient(160deg,rgba(22,21,26,0.99),rgba(10,9,12,0.99));border:1px solid var(--accB);border-radius:16px;padding:28px;box-shadow:0 0 60px rgba(212,164,74,0.12)"><div style="text-align:center;margin-bottom:20px"><div style="font-family:var(--display);font-size:20px;font-weight:700;color:var(--ice);letter-spacing:0.06em">What\u2019s New</div><div style="font-size:10px;color:var(--acc);font-family:var(--mono);margin-top:4px">VERSION '+VERSION+'</div></div><div style="space-y:12px"><div style="padding:10px 0;border-bottom:1px solid var(--borderS)"><div style="font-size:12px;font-weight:700;color:var(--accBright)">\u2728 Exercise System</div><div style="font-size:11px;color:var(--mu);margin-top:4px;line-height:1.6">Log exercises with sets, reps, and weight. Create supersets and giant sets. Track rest times and tempo.</div></div><div style="padding:10px 0;border-bottom:1px solid var(--borderS)"><div style="font-size:12px;font-weight:700;color:var(--accBright)">\uD83D\uDCC5 Smart Scheduling</div><div style="font-size:11px;color:var(--mu);margin-top:4px;line-height:1.6">Set recurring appointments (weekly or biweekly, up to 6 months). Tap any day to filter. Your current day is always centered.</div></div><div style="padding:10px 0;border-bottom:1px solid var(--borderS)"><div style="font-size:12px;font-weight:700;color:var(--accBright)">\u2713 Cancellation Tracking</div><div style="font-size:11px;color:var(--mu);margin-top:4px;line-height:1.6">Late Cancel (Charged), No-Show (Charged), and Cancelled (No Charge). Revenue updates automatically.</div></div><div style="padding:10px 0;border-bottom:1px solid var(--borderS)"><div style="font-size:12px;font-weight:700;color:var(--accBright)">\u23f1 Rest Timer</div><div style="font-size:11px;color:var(--mu);margin-top:4px;line-height:1.6">Built-in timer with presets (30s to 2min). Available while logging sessions.</div></div><div style="padding:10px 0;border-bottom:1px solid var(--borderS)"><div style="font-size:12px;font-weight:700;color:var(--accBright)">\u21BB Repeat Sessions</div><div style="font-size:11px;color:var(--mu);margin-top:4px;line-height:1.6">One tap to copy a previous workout into a new session with all exercises pre-loaded.</div></div><div style="padding:10px 0"><div style="font-size:12px;font-weight:700;color:var(--accBright)">\u2699 Settings</div><div style="font-size:11px;color:var(--mu);margin-top:4px;line-height:1.6">12/24-hour time format, adjustable gym cut percentage, JSON backup and restore, PIN lock.</div></div></div><button class="btn" style="margin-top:20px" onclick="LS.set(\'seenVersion\',VERSION);document.getElementById(\'whatsNew\').remove()">GOT IT</button></div>';
+overlay.innerHTML='<div style="width:100%;max-width:400px;max-height:80vh;overflow-y:auto;background:linear-gradient(160deg,rgba(22,21,26,0.99),rgba(10,9,12,0.99));border:1px solid var(--accB);border-radius:16px;padding:28px;box-shadow:0 0 60px rgba(212,164,74,0.12)"><div style="text-align:center;margin-bottom:20px"><div style="font-family:var(--display);font-size:20px;font-weight:700;color:var(--ice);letter-spacing:0.06em">What\u2019s New</div><div style="font-size:10px;color:var(--acc);font-family:var(--mono);margin-top:4px">VERSION '+VERSION+'</div></div><div><div style="padding:10px 0;border-bottom:1px solid var(--borderS)"><div style="font-size:12px;font-weight:700;color:var(--accBright)">\u2193 PDF Client Reports</div><div style="font-size:11px;color:var(--mu);margin-top:4px;line-height:1.6">Download beautiful branded PDF reports for each client and monthly earnings summaries.</div></div><div style="padding:10px 0;border-bottom:1px solid var(--borderS)"><div style="font-size:12px;font-weight:700;color:var(--accBright)">\u2709 Client Reminders</div><div style="font-size:11px;color:var(--mu);margin-top:4px;line-height:1.6">Send custom text reminders to clients. Set per-client templates or use the global default. Opens SMS on mobile.</div></div><div style="padding:10px 0;border-bottom:1px solid var(--borderS)"><div style="font-size:12px;font-weight:700;color:var(--accBright)">\uD83D\uDD14 Session Notifications</div><div style="font-size:11px;color:var(--mu);margin-top:4px;line-height:1.6">Get browser notifications 30 minutes before each scheduled session. Enable in Settings.</div></div><div style="padding:10px 0;border-bottom:1px solid var(--borderS)"><div style="font-size:12px;font-weight:700;color:var(--accBright)">\uD83C\uDDED\uD83C\uDDFA Magyar Nyelv</div><div style="font-size:11px;color:var(--mu);margin-top:4px;line-height:1.6">Full Hungarian language support. Switch in Settings > Display.</div></div><div style="padding:10px 0;border-bottom:1px solid var(--borderS)"><div style="font-size:12px;font-weight:700;color:var(--accBright)">\u26A1 Offline Mode</div><div style="font-size:11px;color:var(--mu);margin-top:4px;line-height:1.6">The app now works offline. Your data is cached and syncs when you reconnect.</div></div><div style="padding:10px 0"><div style="font-size:12px;font-weight:700;color:var(--accBright)">\uD83D\uDEE1 Security & Bug Fixes</div><div style="font-size:11px;color:var(--mu);margin-top:4px;line-height:1.6">Major security hardening, timezone fixes, improved error handling, and dozens of stability improvements.</div></div></div><button class="btn" style="margin-top:20px" onclick="LS.set(\'seenVersion\',VERSION);document.getElementById(\'whatsNew\').remove()">GOT IT</button></div>';
 document.body.appendChild(overlay);
 }
 (async function boot(){
 if(!isLoggedIn()){showAuthScreen();return;}
 if(!isUnlocked()){showLockScreen();return;}
-try{$("app").style.display="";render();}catch(e){document.body.innerHTML='<div style="padding:20px;color:red;font-family:monospace">ERROR: '+e.message+'</div>';}
+try{$("app").style.display="";render();}catch(e){var errDiv=document.createElement("div");errDiv.style.cssText="padding:20px;color:red;font-family:monospace";errDiv.textContent="ERROR: "+e.message;document.body.innerHTML="";document.body.appendChild(errDiv);}
 syncFromCloud().then(function(){render();});
+initReminders();
 showWhatsNew();
 })();
 </script></body></html>
