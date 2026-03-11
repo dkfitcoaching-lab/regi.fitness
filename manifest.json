@@ -3,6 +3,7 @@
   "short_name": "REGI",
   "description": "Coaching studio for Regina",
   "start_url": "/",
+  "id": "/",
   "display": "standalone",
   "background_color": "#08080a",
   "theme_color": "#08080a",
@@ -10,15 +11,15 @@
   "icons": [
     {
       "src": "icon.png",
-      "sizes": "192x192",
+      "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "icon.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "maskable"
     }
   ]
 }
