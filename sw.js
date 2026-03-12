@@ -1,4 +1,4 @@
-var CACHE_NAME = 'regi-v3.1';
+var CACHE_NAME = 'regi-v3.3';
 var OFFLINE_URL = '/';
 var ASSETS = ['/', '/index.html', '/icon.png', '/manifest.json'];
 
