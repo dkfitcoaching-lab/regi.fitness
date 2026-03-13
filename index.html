@@ -475,7 +475,16 @@ tapFoodToAdd:"Tap a food above to add here",
 addToMeal:"ADDING TO MEAL",
 build:"BUILD",
 veggies:"Veggies",
-supps:"Supps"
+supps:"Supps",
+womensHealth:"Women's Health",
+mensHealth:"Men's Health",
+presetProtocols:"PRESET PROTOCOLS",
+womensCompPrep:"Women's Comp Prep",
+mensPerformance:"Men's Performance",
+generalWellness:"General Wellness",
+attachSupp:"ATTACH SUPPLEMENT PROTOCOL",
+attachedSupp:"ATTACHED SUPPLEMENTS",
+noSuppProtocols:"No supplement protocols saved yet"
 },
 hu:{
 days:["Vas","H\u00e9t","Kedd","Sze","Cs\u00fct","P\u00e9n","Szo"],
@@ -803,7 +812,16 @@ tapFoodToAdd:"Koppintson egy \u00e9telre a hozz\u00e1ad\u00e1shoz",
 addToMeal:"\u00c9TKEZ\u00c9SHEZ AD\u00c1S",
 build:"\u00c9P\u00cdT\u00c9S",
 veggies:"Z\u00f6lds\u00e9gek",
-supps:"Kieg."
+supps:"Kieg.",
+womensHealth:"N\u0151i Eg\u00e9szs\u00e9g",
+mensHealth:"F\u00e9rfi Eg\u00e9szs\u00e9g",
+presetProtocols:"EL\u0150RE BE\u00c1LL\u00cdTOTT PROTOKOLLOK",
+womensCompPrep:"N\u0151i Verseny El\u0151k\u00e9sz\u00edt\u00e9s",
+mensPerformance:"F\u00e9rfi Teljes\u00edtm\u00e9ny",
+generalWellness:"\u00c1ltal\u00e1nos Eg\u00e9szs\u00e9g",
+attachSupp:"KIEG\u00c9SZ\u00cdT\u0150 PROTOKOLL CSATOL\u00c1SA",
+attachedSupp:"CSATOLT KIEG\u00c9SZ\u00cdT\u0150K",
+noSuppProtocols:"M\u00e9g nincsenek mentett kieg\u00e9sz\u00edt\u0151 protokollok"
 }
 };
 var DN;/* initialized after LS */
@@ -1160,6 +1178,12 @@ var cCardio=(typeof getCardioPlans==="function")?getCardioPlans().filter(functio
 html+='<div class="sl" style="margin-top:20px;display:flex;justify-content:space-between;align-items:center"><span>'+t("cardioBuilder").toUpperCase()+' <span style="font-size:9px;color:var(--dm)">'+cCardio.length+'</span></span><button class="btn2" onclick="navStack=[];currentView={tab:\'tools\',view:\'main\',data:{}};push(\'cardioBuilder\',{clientId:\''+escJs(c.id)+'\'})" style="padding:4px 10px;font-size:8px;margin-top:-4px">+ '+t("newProgram").split(" ")[0]+' '+t("cardioBuilder")+'</button></div>';
 if(cCardio.length){for(var ci2=0;ci2<cCardio.length;ci2++){var cp=cCardio[ci2];html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="navStack=[];currentView={tab:\'tools\',view:\'main\',data:{}};push(\'cardioDetail\',{planId:\''+escJs(cp.id)+'\'})"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(201,168,76,0.18),rgba(201,168,76,0.06));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">\u2764</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(cp.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+escHtml(cp.phase)+' \u00B7 '+cp.frequency+'x/wk \u00B7 '+cp.duration+'min</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}}
 else html+='<div class="cd" style="text-align:center;padding:18px;border:1px dashed var(--border);color:var(--dm);font-size:11px">'+t("noProtocolsSaved")+'</div>';
+
+// Supplement protocols section
+var cSupps=getClientSuppPlans(c.id);
+html+='<div class="sl" style="margin-top:20px;display:flex;justify-content:space-between;align-items:center"><span>'+t("supplementBuilder").toUpperCase()+' <span style="font-size:9px;color:var(--dm)">'+cSupps.length+'</span></span><button class="btn2" onclick="navStack=[];currentView={tab:\'tools\',view:\'main\',data:{}};push(\'supplementBuilder\',{clientId:\''+escJs(c.id)+'\'})" style="padding:4px 10px;font-size:8px;margin-top:-4px">+ '+t("newProgram").split(" ")[0]+' SUPP</button></div>';
+if(cSupps.length){for(var si2=0;si2<cSupps.length;si2++){var sp3=cSupps[si2];html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="navStack=[];currentView={tab:\'tools\',view:\'main\',data:{}};push(\'supplementDetail\',{planId:\''+escJs(sp3.id)+'\'})"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(72,200,120,0.18),rgba(72,200,120,0.06));border:1px solid rgba(72,200,120,0.2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">\uD83D\uDC8A</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(sp3.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+escHtml(sp3.goal)+' \u00B7 '+sp3.supplements.length+' supps</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}}
+else html+='<div class="cd" style="text-align:center;padding:18px;border:1px dashed var(--border);color:var(--dm);font-size:11px">'+t("noSuppProtocols")+'</div>';
 
 html+='<div style="display:flex;gap:8px;margin-top:16px"><button class="btn" style="flex:1" onclick="navToLogFromClient(\''+escJs(c.id)+'\',\''+escJs(c.rate)+'\',\''+escJs(c.type)+'\')">'+t("logSession")+'</button><button class="btn2" style="flex:1" onclick="navToScheduleFromClient(\''+escJs(c.id)+'\')">'+t("schedule").toUpperCase()+'</button></div><div class="g2" style="margin-top:8px"><button class="btn2" style="width:100%;background:rgba(212,164,74,0.06);border-color:var(--accB)" onclick="generateClientPDF('+idx+')"><span style="margin-right:6px">\u2193</span>'+t("clientReportPDF")+'</button><button class="btn2" onclick="sendReminderToClient(\''+escJs(c.id)+'\')" style="width:100%">\u2709 '+t("sendReminder")+'</button></div><div style="margin-top:24px;text-align:center"><span onclick="deleteClient('+idx+')" style="cursor:pointer;font-size:9px;color:var(--dm);font-family:var(--mono);letter-spacing:0.06em">'+t("removeClient")+'</span></div>';
 return html;
@@ -1893,12 +1917,20 @@ var FOOD_DB=[
 {n:"Greek Yogurt 2%",cat:"protein",p:20,c:8,f:4,cal:150,gf:true,sz:"227g",m:"raw"},
 {n:"Cottage Cheese 1%",cat:"protein",p:28,c:6,f:2,cal:160,gf:true,sz:"227g",m:"raw"},
 {n:"Cottage Cheese 4%",cat:"protein",p:26,c:6,f:8,cal:200,gf:true,sz:"227g",m:"raw"},
-// Supplements
-{n:"Whey Protein Isolate",cat:"protein",p:25,c:2,f:1,cal:120,gf:true,sz:"1 scoop",m:"dry"},
-{n:"Whey Protein Concentrate",cat:"protein",p:22,c:4,f:2,cal:130,gf:true,sz:"1 scoop",m:"dry"},
-{n:"Casein Protein",cat:"protein",p:24,c:3,f:1,cal:120,gf:true,sz:"1 scoop",m:"dry"},
-{n:"Plant Protein (pea/rice)",cat:"protein",p:20,c:4,f:2,cal:120,gf:true,sz:"1 scoop",m:"dry"},
+// Protein Powders
+{n:"Whey Protein Isolate",cat:"protein",p:25,c:2,f:1,cal:120,gf:true,sz:"1 scoop (30g)",m:"dry"},
+{n:"Whey Protein Concentrate",cat:"protein",p:22,c:4,f:2,cal:130,gf:true,sz:"1 scoop (33g)",m:"dry"},
+{n:"Casein Protein",cat:"protein",p:24,c:3,f:1,cal:120,gf:true,sz:"1 scoop (33g)",m:"dry"},
+{n:"Plant Protein (pea/rice)",cat:"protein",p:20,c:4,f:2,cal:120,gf:true,sz:"1 scoop (33g)",m:"dry"},
+{n:"Egg White Protein",cat:"protein",p:24,c:2,f:0,cal:110,gf:true,sz:"1 scoop (30g)",m:"dry"},
+{n:"Beef Protein Isolate",cat:"protein",p:23,c:2,f:0,cal:100,gf:true,sz:"1 scoop (33g)",m:"dry"},
 // ══ CARBS — rice/grains measured COOKED, oats/dry goods measured DRY ══
+// Carb Powders
+{n:"Highly Branched Cyclic Dextrin",cat:"carb",p:0,c:25,f:0,cal:100,gf:true,sz:"1 scoop (25g)",m:"dry"},
+{n:"Vitargo (waxy maize)",cat:"carb",p:0,c:35,f:0,cal:140,gf:true,sz:"1 scoop (35g)",m:"dry"},
+{n:"Dextrose Powder",cat:"carb",p:0,c:25,f:0,cal:100,gf:true,sz:"1 scoop (25g)",m:"dry"},
+{n:"Maltodextrin",cat:"carb",p:0,c:25,f:0,cal:100,gf:true,sz:"1 scoop (25g)",m:"dry"},
+{n:"Karbolyn",cat:"carb",p:0,c:50,f:0,cal:200,gf:true,sz:"1 scoop (50g)",m:"dry"},
 // Rice & Grains
 {n:"White Rice",cat:"carb",p:4,c:45,f:0,cal:200,gf:true,sz:"195g",m:"cooked"},
 {n:"Jasmine Rice",cat:"carb",p:4,c:45,f:1,cal:205,gf:true,sz:"195g",m:"cooked"},
@@ -2025,7 +2057,14 @@ else html+='<div style="font-size:11px;color:var(--dm);margin-bottom:16px;font-f
 html+='<div class="cd" style="padding:18px"><div class="field"><span class="lb">'+t("protocolName")+' *</span><input id="mpName" placeholder="e.g. Contest Prep Week 12, Off-Season Bulk"></div>';
 html+='<div class="field"><span class="lb">'+t("dailyTargets")+'</span><div class="g3"><div><span class="lb" style="color:var(--success)">'+t("protein")+' (g)</span><input id="mpTargP" type="number" placeholder="180"></div><div><span class="lb" style="color:var(--warn)">'+t("carbs")+' (g)</span><input id="mpTargC" type="number" placeholder="200"></div><div><span class="lb" style="color:#cc88ee">'+t("fat")+' (g)</span><input id="mpTargF" type="number" placeholder="60"></div></div></div>';
 html+='<div class="field"><span class="lb">'+t("numberOfMeals")+'</span><div style="display:flex;gap:4px"><div class="chip on" onclick="setMealCount(4,this)">4</div><div class="chip" onclick="setMealCount(5,this)">5</div><div class="chip" onclick="setMealCount(6,this)">6</div><div class="chip" onclick="setMealCount(7,this)">7</div></div><input type="hidden" id="mpMealCount" value="4"></div>';
-html+='<div class="field"><span class="lb">'+t("notes").toUpperCase()+'</span><textarea id="mpNotes" rows="2" placeholder="Training days vs rest days, carb cycling notes..."></textarea></div></div>';
+html+='<div class="field"><span class="lb">'+t("notes").toUpperCase()+'</span><textarea id="mpNotes" rows="2" placeholder="Training days vs rest days, carb cycling notes..."></textarea></div>';
+// Attach supplement protocol
+var suppPlans=clientId?getClientSuppPlans(clientId):getSupplementPlans();
+if(suppPlans.length){
+html+='<div class="field"><span class="lb">'+t("attachSupp")+'</span><select id="mpSuppProtocol"><option value="">-- None --</option>';
+for(var spi=0;spi<suppPlans.length;spi++){html+='<option value="'+escHtml(suppPlans[spi].id)+'">'+escHtml(suppPlans[spi].name)+' ('+suppPlans[spi].supplements.length+' supps)</option>';}
+html+='</select></div>';}
+html+='</div>';
 // Food search & add
 html+='<div class="sl" style="margin-top:18px">'+t("buildMeals")+'</div>';
 html+='<div style="margin-bottom:10px"><input id="foodSearch" placeholder="'+t('searchFoods')+'" oninput="filterFoodDB(this.value)" style="font-size:13px"></div>';
@@ -2116,7 +2155,8 @@ function saveMealPlan(clientId){
 var name=v('mpName');if(!name){toast(t("nameRequired"));return;}
 var meals={};var mc=parseInt(v('mpMealCount')||'4');
 for(var i=1;i<=mc;i++)meals[i]=_mealData[i]||[];
-var plan={id:Date.now().toString(),clientId:clientId,name:name,targetP:parseInt(v('mpTargP'))||0,targetC:parseInt(v('mpTargC'))||0,targetF:parseInt(v('mpTargF'))||0,meals:meals,mealCount:mc,notes:v('mpNotes')||'',createdAt:new Date().toISOString()};
+var suppId=v('mpSuppProtocol')||'';
+var plan={id:Date.now().toString(),clientId:clientId,name:name,targetP:parseInt(v('mpTargP'))||0,targetC:parseInt(v('mpTargC'))||0,targetF:parseInt(v('mpTargF'))||0,meals:meals,mealCount:mc,notes:v('mpNotes')||'',supplementProtocolId:suppId,createdAt:new Date().toISOString()};
 var plans=getMealPlans();plans.push(plan);saveMealPlans(plans);
 _mealData={};toast('\u2713 Meal plan saved: '+name);pop();}
 
@@ -2176,6 +2216,15 @@ dayTP+=mp;dayTC+=mc2;dayTF+=mf;dayCal+=mcal;
 html+='<div style="font-size:9px;font-family:var(--mono);margin-top:6px;color:var(--acc)">P'+Math.round(mp)+' C'+Math.round(mc2)+' F'+Math.round(mf)+' | '+Math.round(mcal)+' cal</div></div>';}
 html+='<div class="cd" style="padding:14px;border:1px solid var(--accB);margin-top:4px"><span class="sl" style="margin:0;margin-bottom:8px">'+t("dailyTotals")+'</span><div class="g4"><div class="stat" style="padding:8px"><b style="color:var(--success);font-size:16px">'+Math.round(dayTP)+'g</b><small>PROTEIN</small></div><div class="stat" style="padding:8px"><b style="color:var(--warn);font-size:16px">'+Math.round(dayTC)+'g</b><small>CARBS</small></div><div class="stat" style="padding:8px"><b style="color:#cc88ee;font-size:16px">'+Math.round(dayTF)+'g</b><small>FAT</small></div><div class="stat" style="padding:8px"><b style="color:var(--accVib);font-size:16px">'+Math.round(dayCal)+'</b><small>CALORIES</small></div></div></div>';
 if(plan.notes)html+='<div class="cd" style="margin-top:8px;border-left:3px solid var(--acc);padding:12px"><div style="font-size:12px;color:var(--mu);line-height:1.7">'+escHtml(plan.notes)+'</div></div>';
+// Show attached supplement protocol
+if(plan.supplementProtocolId){var suppPlan=getSupplementPlans().find(function(p){return p.id===plan.supplementProtocolId;});
+if(suppPlan){html+='<div class="cd" style="margin-top:10px;padding:14px;border:1px solid rgba(72,200,120,0.2);border-left:3px solid rgba(72,200,120,0.5)">';
+html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span class="sl" style="margin:0;color:var(--success)">'+t("attachedSupp")+'</span>';
+html+='<span onclick="navStack=[];currentView={tab:\'tools\',view:\'main\',data:{}};push(\'supplementDetail\',{planId:\''+escJs(suppPlan.id)+'\'})" style="font-size:9px;color:var(--acc);cursor:pointer;font-family:var(--mono)">VIEW FULL \u203A</span></div>';
+html+='<div style="font-size:13px;font-weight:700;color:var(--wh);margin-bottom:6px">\uD83D\uDC8A '+escHtml(suppPlan.name)+'</div>';
+for(var ssi=0;ssi<suppPlan.supplements.length;ssi++){var ssp=suppPlan.supplements[ssi];
+html+='<div style="display:flex;justify-content:space-between;padding:3px 0;font-size:11px;border-bottom:1px solid var(--borderS)"><span style="color:var(--ow)">'+escHtml(ssp.name)+'</span><span style="font-family:var(--mono);font-size:9px;color:var(--dm)">'+escHtml(ssp.dose)+' \u00B7 '+escHtml(ssp.timing)+'</span></div>';}
+html+='</div>';}}
 html+='<button class="btn" style="margin-top:16px" onclick="generateMealPlanPDF(\''+escJs(plan.id)+'\')">\u2193 '+t("exportMealPDF")+'</button>';
 html+='<button class="btn-danger" style="margin-top:10px" onclick="deleteMealPlan(\''+escJs(plan.id)+'\')">'+t("deleteMealPlan")+'</button>';
 return html;}
@@ -2206,6 +2255,14 @@ doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);doc.text("P"+Math.round(fd.p*s)+
 doc.setFontSize(8);doc.setTextColor(gold[0],gold[1],gold[2]);doc.text("Subtotal: P"+Math.round(mp)+"g C"+Math.round(mc2)+"g F"+Math.round(mf)+"g | "+Math.round(mcal)+" cal",60,y);y+=18;}
 if(plan.notes){if(y>H-80){doc.addPage();doc.setFillColor(dark[0],dark[1],dark[2]);doc.rect(0,0,W,H,"F");y=50;}
 doc.setFontSize(9);doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);doc.text("Notes: "+plan.notes.substring(0,120),50,y);y+=16;}
+// Attached supplement protocol in PDF
+if(plan.supplementProtocolId){var suppPlan2=getSupplementPlans().find(function(p){return p.id===plan.supplementProtocolId;});
+if(suppPlan2){if(y>H-120){doc.addPage();doc.setFillColor(dark[0],dark[1],dark[2]);doc.rect(0,0,W,H,"F");_pdfDecor(doc,W,H,gold,dimmed);y=50;}
+y+=8;doc.setFontSize(11);doc.setTextColor(gold[0],gold[1],gold[2]);doc.text("SUPPLEMENT PROTOCOL: "+suppPlan2.name,50,y);y+=16;
+for(var spi2=0;spi2<suppPlan2.supplements.length;spi2++){var ssp2=suppPlan2.supplements[spi2];
+if(y>H-40){doc.addPage();doc.setFillColor(dark[0],dark[1],dark[2]);doc.rect(0,0,W,H,"F");_pdfDecor(doc,W,H,gold,dimmed);y=50;}
+doc.setFontSize(9);doc.setTextColor(240,236,228);doc.text(ssp2.name,60,y);
+doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);doc.text(ssp2.dose+" | "+ssp2.timing,W-50,y,{align:"right"});y+=13;}}}
 doc.setFontSize(7);doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);doc.text("Generated by REGI Coaching Studio v"+VERSION+" | regi.fitness",W/2,H-30,{align:"center"});
 var fname="REGI_MealPlan_"+(c?c.name.replace(/[^a-zA-Z0-9]/g,"_")+"_":"")+plan.name.replace(/[^a-zA-Z0-9]/g,"_")+".pdf";
 safePDFSave(doc,fname);}
@@ -2500,11 +2557,70 @@ research:"Regulates circadian rhythm and sleep onset. Low doses (0.5-1mg) are of
 refs:"Costello et al. (2014) Eur J Sport Sci; Ferracioli-Oda et al. (2013) PLoS One"},
 {n:"Electrolyte Complex",cat:"performance",dose:"1-2 scoops",timing:"During training",unit:"scoops",min:1,max:3,def:1,
 research:"Sodium, potassium, magnesium, and calcium lost through sweat during training. A 2% reduction in body water decreases performance by 10-20%. Essential during prolonged sessions, hot environments, or heavy sweaters. Sodium is the primary electrolyte lost — 500-1000mg per liter of sweat.",
-refs:"Sawka et al. (2007) ACSM Position Stand; Thomas et al. (2016) ACSM/AND/DC"}
+refs:"Sawka et al. (2007) ACSM Position Stand; Thomas et al. (2016) ACSM/AND/DC"},
+// ══ WOMEN'S HEALTH ══
+{n:"DIM (Diindolylmethane)",cat:"womens",dose:"100-200mg",timing:"With meal",unit:"mg",min:50,max:300,def:150,
+research:"Supports healthy estrogen metabolism by promoting the 2-hydroxy estrogen pathway over 16-hydroxy. Derived from cruciferous vegetables. Used by top prep coaches like Hany Rambod for female competitors to support hormone balance during contest prep and off-season. Helps with estrogen dominance symptoms.",
+refs:"Thomson et al. (2016) Nutr Rev; Zeligs (1998) J Med Food"},
+{n:"Calcium D-Glucarate",cat:"womens",dose:"500-1500mg",timing:"With meals (split doses)",unit:"mg",min:200,max:2000,def:1000,
+research:"Supports Phase II liver detoxification (glucuronidation) — the pathway that clears excess estrogens. Inhibits beta-glucuronidase enzyme, preventing estrogen recirculation. Critical for female athletes managing estrogen levels during prep. Often stacked with DIM for comprehensive estrogen support.",
+refs:"Walaszek et al. (1997) Nutr Cancer; Hanausek et al. (2003) J Nutr"},
+{n:"Vitex (Chasteberry)",cat:"womens",dose:"200-400mg",timing:"Morning on empty stomach",unit:"mg",min:100,max:600,def:400,
+research:"Modulates pituitary function to support progesterone production. Clinical evidence for improving PMS symptoms, cycle regularity, and luteal phase defects. Used by pro coaches to help female clients maintain regular cycles during intense training phases. Takes 2-3 cycles to see full benefit.",
+refs:"Schellenberg (2001) BMJ; Wuttke et al. (2003) Phytomedicine"},
+{n:"Evening Primrose Oil (GLA)",cat:"womens",dose:"1000-2000mg",timing:"With meals",unit:"mg",min:500,max:3000,def:1500,
+research:"Rich source of gamma-linolenic acid (GLA), an omega-6 that supports anti-inflammatory prostaglandin production. Evidence for reducing breast tenderness, PMS symptoms, and supporting skin health. Used by Hany Rambod and other top coaches for female competitors during peak week and prep.",
+refs:"Mahboubi (2019) J Menopausal Med; Pruthi et al. (2010) Breast Cancer Res Treat"},
+{n:"Iron Bisglycinate",cat:"womens",dose:"18-27mg",timing:"On empty stomach or with vitamin C",unit:"mg",min:10,max:45,def:18,
+research:"Menstruating women lose 15-30mg iron per cycle. Female athletes have even higher needs due to foot-strike hemolysis, sweat losses, and exercise-induced inflammation. Bisglycinate form has 4x better absorption than ferrous sulfate with minimal GI side effects. Test ferritin levels — target 50+ ng/mL for athletes.",
+refs:"DellaValle & Haas (2014) Med Sci Sports Exerc; Burden et al. (2015) Eur J Appl Physiol"},
+{n:"Myo-Inositol",cat:"womens",dose:"2000-4000mg",timing:"Split AM/PM doses",unit:"mg",min:1000,max:6000,def:4000,
+research:"Plays critical role in insulin signaling and ovarian function. Strong evidence for improving insulin sensitivity, menstrual regularity, and hormonal balance in women. Particularly beneficial for athletes with PCOS symptoms or insulin resistance. Supports egg quality and reproductive health.",
+refs:"Unfer et al. (2017) Gynecol Endocrinol; Nestler et al. (1999) N Engl J Med"},
+{n:"Cranberry Extract (PAC 36mg)",cat:"womens",dose:"500mg",timing:"Daily with water",unit:"mg",min:250,max:1000,def:500,
+research:"Proanthocyanidins (PACs) prevent bacterial adhesion to urinary tract walls. Female athletes are at higher risk of UTIs due to sweat, friction, and dehydration during training. 36mg PAC daily shown to reduce UTI recurrence by 50%. Preventive — not a treatment for active infection.",
+refs:"Jepson et al. (2012) Cochrane Review; Vostalova et al. (2015) Br J Nutr"},
+// ══ MEN'S HEALTH ══
+{n:"Tongkat Ali (Eurycoma longifolia)",cat:"mens",dose:"200-400mg",timing:"Morning with breakfast",unit:"mg",min:100,max:600,def:400,
+research:"Standardized hot-water root extract shown to increase free testosterone by 15-37% and reduce cortisol by 16% in 4-week studies. Supports testosterone production via hypothalamic-pituitary-gonadal axis. Also shown to improve stress resilience and body composition. Look for 100:1 or 200:1 standardized extracts.",
+refs:"Talbott et al. (2013) JISSN; Henkel et al. (2014) Andrologia"},
+{n:"Fadogia Agrestis",cat:"mens",dose:"400-600mg",timing:"Morning",unit:"mg",min:200,max:800,def:600,
+research:"West African herb shown to increase testosterone levels in animal models by stimulating Leydig cell function. Used by many pro coaches in men's stacks. Typically cycled 8 weeks on, 4 weeks off. Often stacked with Tongkat Ali for synergistic testosterone support. Third-party testing important for purity.",
+refs:"Yakubu et al. (2005) Asia J Androl; Oridupa et al. (2013) J Ethnopharmacol"},
+{n:"Boron",cat:"mens",dose:"6-10mg",timing:"With meal",unit:"mg",min:3,max:12,def:10,
+research:"Trace mineral that increases free testosterone by reducing SHBG (sex hormone binding globulin) within 7 days. 10mg daily shown to increase free testosterone by 28% and reduce estradiol by 39%. Also supports bone density and joint health. Extremely cost-effective testosterone support.",
+refs:"Naghii et al. (2011) J Trace Elem Med Biol; Pizzorno (2015) Integr Med"},
+{n:"Fenugreek Extract (Testofen)",cat:"mens",dose:"500-600mg",timing:"With breakfast",unit:"mg",min:300,max:900,def:600,
+research:"Standardized furostanolic saponin extract (Testofen) shown to increase free testosterone by inhibiting aromatase and 5-alpha reductase. 12-week RCT showed improved strength, body composition, and libido. Positive testosterone effects confirmed in multiple human trials. Look for Testofen or KSM-66 brands.",
+refs:"Wankhede et al. (2016) JISSN; Wilborn et al. (2010) JISSN"},
+{n:"Saw Palmetto",cat:"mens",dose:"320mg",timing:"With meal",unit:"mg",min:160,max:640,def:320,
+research:"Liposterolic extract inhibits 5-alpha reductase, reducing conversion of testosterone to DHT. Supports prostate health in aging men. May help prevent DHT-related hair loss while maintaining total testosterone levels. Particularly useful for men over 30 using testosterone-supporting supplements.",
+refs:"Bent et al. (2006) N Engl J Med; Suzuki et al. (2009) J Urol"},
+{n:"Turkesterone",cat:"mens",dose:"500-1000mg",timing:"Split AM/PM with meals",unit:"mg",min:250,max:1500,def:500,
+research:"Ecdysteroid derived from Ajuga turkestanica. Proposed to activate estrogen receptor beta pathway for muscle protein synthesis without hormonal side effects. Animal studies show increased lean mass. Human evidence is emerging but limited. Popular in bodybuilding community. Quality and dosing vary widely between brands.",
+refs:"Isenmann et al. (2019) J Int Soc Sports Nutr; Dinan & Lafont (2006) J Insect Sci"}
 ];
 
 function getSupplementPlans(){return LS.get("supplementPlans",[]);}
 function saveSupplementPlans(p){LS.set("supplementPlans",p);}
+function getClientSuppPlans(cid){return getSupplementPlans().filter(function(p){return p.clientId===cid;});}
+
+var SUPP_PRESETS={
+"womensCompPrep":{name:"Women's Comp Prep Protocol",goal:"Competition Prep",supps:["Whey Protein Isolate","Creatine Monohydrate","L-Glutamine","Fish Oil (EPA/DHA)","Vitamin D3","Magnesium Glycinate","Probiotics (Multi-Strain)","Digestive Enzymes","DIM (Diindolylmethane)","Calcium D-Glucarate","Evening Primrose Oil (GLA)","Iron Bisglycinate","Collagen Peptides","Caffeine","Electrolyte Complex"]},
+"mensPerformance":{name:"Men's Performance Protocol",goal:"Performance",supps:["Whey Protein Isolate","Creatine Monohydrate","L-Glutamine","Fish Oil (EPA/DHA)","Vitamin D3","Magnesium Glycinate","Zinc","Caffeine","Ashwagandha (KSM-66)","Citrulline Malate","Beta-Alanine","Tongkat Ali (Eurycoma longifolia)","Boron","Electrolyte Complex","Digestive Enzymes"]},
+"generalWellness":{name:"General Wellness Protocol",goal:"General Health",supps:["Creatine Monohydrate","Fish Oil (EPA/DHA)","Vitamin D3","Magnesium Glycinate","Zinc","Probiotics (Multi-Strain)","Ashwagandha (KSM-66)","Collagen Peptides","Digestive Enzymes"]}
+};
+
+function loadSuppPreset(key){
+var preset=SUPP_PRESETS[key];if(!preset)return;
+for(var i=0;i<SUPPLEMENT_DB.length;i++){var chk=$('suppChk'+i);if(!chk)continue;
+var shouldCheck=preset.supps.indexOf(SUPPLEMENT_DB[i].n)>=0;
+chk.checked=shouldCheck;toggleSuppDetail(i);}
+var goalEl=$('suppGoal');if(goalEl)goalEl.value=preset.goal;
+var nameEl=$('suppName');if(nameEl&&!nameEl.value)nameEl.value=preset.name;
+document.querySelectorAll('#suppList .supp-item').forEach(function(item){item.style.display='';});
+var filterChips=document.querySelectorAll('#suppList').closest?document.querySelectorAll('.chip'):[];
+toast('\u2713 '+preset.name+' loaded \u2014 adjust doses as needed');}
 
 function renderSupplementBuilder(){
 var data=currentView.data||{};var clientId=data.clientId||"";
@@ -2515,8 +2631,15 @@ if(c)html+='<div style="font-size:11px;color:var(--dm);margin-bottom:16px;font-f
 html+='<div class="cd" style="padding:18px"><div class="field"><span class="lb">'+t("protocolName")+'</span><input id="suppName"></div>';
 html+='<div class="field"><span class="lb">'+t("goal")+'</span><div style="display:flex;gap:4px;flex-wrap:wrap"><div class="chip on" data-value="General Health" onclick="pickChip(this,\'suppGoal\')">'+t("generalHealth")+'</div><div class="chip" data-value="Performance" onclick="pickChip(this,\'suppGoal\')">'+t("performance")+'</div><div class="chip" data-value="Recovery" onclick="pickChip(this,\'suppGoal\')">'+t("recovery")+'</div><div class="chip" data-value="Competition Prep" onclick="pickChip(this,\'suppGoal\')">'+t("compPrep")+'</div></div><input type="hidden" id="suppGoal" value="General Health"></div>';
 html+='<div class="field"><span class="lb">'+t("notes").toUpperCase()+'</span><textarea id="suppNotes" rows="2"></textarea></div></div>';
+// Preset protocol buttons
+html+='<div class="sl" style="margin-top:18px">'+t("presetProtocols")+'</div>';
+html+='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px">';
+html+='<button class="btn2" onclick="loadSuppPreset(\'womensCompPrep\')" style="flex:1;min-width:140px;border-color:rgba(255,120,180,0.25);color:#ff88bb">\u2640 '+t("womensCompPrep")+'</button>';
+html+='<button class="btn2" onclick="loadSuppPreset(\'mensPerformance\')" style="flex:1;min-width:140px;border-color:rgba(100,160,255,0.25);color:#88bbff">\u2642 '+t("mensPerformance")+'</button>';
+html+='<button class="btn2" onclick="loadSuppPreset(\'generalWellness\')" style="flex:1;min-width:140px">\u2728 '+t("generalWellness")+'</button>';
+html+='</div>';
 // Category filters
-var cats=[{k:"all",l:t("all")},{k:"performance",l:t("performance")},{k:"protein",l:t("protein")},{k:"recovery",l:t("recovery")},{k:"health",l:t("health")},{k:"adaptogen",l:t("adaptogen")}];
+var cats=[{k:"all",l:t("all")},{k:"performance",l:t("performance")},{k:"protein",l:t("protein")},{k:"recovery",l:t("recovery")},{k:"health",l:t("health")},{k:"adaptogen",l:t("adaptogen")},{k:"womens",l:t("womensHealth")},{k:"mens",l:t("mensHealth")}];
 html+='<div class="sl" style="margin-top:18px">'+t("selectSupplements")+'</div>';
 html+='<div style="display:flex;gap:3px;flex-wrap:wrap;margin-bottom:14px">';
 for(var ci=0;ci<cats.length;ci++){html+='<div class="chip'+(ci===0?" on":"")+'" onclick="filterSupps(\''+cats[ci].k+'\',this)">'+cats[ci].l+'</div>';}
