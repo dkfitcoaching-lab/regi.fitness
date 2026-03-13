@@ -465,7 +465,8 @@ savedSupplements:"SAVED SUPPLEMENT PROTOCOLS",
 noProtocolsSaved:"No protocols saved yet",
 food:"FOOD",
 size:"SIZE",
-mealPlan:"Meal Plan"
+mealPlan:"Meal Plan",
+passwordMin:"Password must be at least 6 characters"
 },
 hu:{
 days:["Vas","H\u00e9t","Kedd","Sze","Cs\u00fct","P\u00e9n","Szo"],
@@ -783,7 +784,8 @@ savedSupplements:"MENTETT KIEG\u00c9SZ\u00cdT\u0150 PROTOKOLLOK",
 noProtocolsSaved:"M\u00e9g nincs mentett protokoll",
 food:"\u00c9TEL",
 size:"M\u00c9RET",
-mealPlan:"\u00c9trend Terv"
+mealPlan:"\u00c9trend Terv",
+passwordMin:"A jelsz\u00f3nak legal\u00e1bb 6 karakternek kell lennie"
 }
 };
 var DN;/* initialized after LS */
@@ -1037,7 +1039,7 @@ function isLoggedIn(){return!!LS.get("userId",null);}
 function showAuthScreen(){var app=$("app");if(app)app.style.display="none";var el=$("authScreen");if(!el){el=document.createElement("div");el.id="authScreen";document.body.appendChild(el);}el.style.cssText="position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;background:var(--bg);padding:24px";el.innerHTML='<div style="position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 30%,rgba(212,164,74,0.06),transparent 60%);pointer-events:none"></div><div style="position:relative;width:100%;max-width:340px"><div style="text-align:center;margin-bottom:36px"><div style="width:80px;height:80px;border-radius:20px;background:linear-gradient(135deg,#0e0e14,#1a1a24);border:1px solid var(--borderH);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:38px;font-weight:900;color:var(--acc);box-shadow:0 0 60px var(--accGlow);animation:breathe 4s ease-in-out infinite;margin:0 auto 20px">R</div><div style="font-family:var(--display);font-size:24px;font-weight:700;letter-spacing:0.12em;color:var(--ice)">REGI</div><div style="font-size:9px;color:var(--dm);font-family:var(--mono);letter-spacing:0.2em;margin-top:4px">COACHING STUDIO</div></div><div style="display:flex;gap:0;margin-bottom:20px;border:1px solid var(--border);border-radius:8px;overflow:hidden"><div onclick="switchAuthTab(\'signin\')" id="tabSignin" style="flex:1;padding:10px;text-align:center;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.1em;cursor:pointer;background:rgba(212,164,74,0.1);color:var(--acc)">SIGN IN</div><div onclick="switchAuthTab(\'signup\')" id="tabSignup" style="flex:1;padding:10px;text-align:center;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.1em;cursor:pointer;color:var(--dm)">CREATE ACCOUNT</div></div><div id="authSignin"><div style="margin-bottom:12px"><input id="siEmail" type="email" placeholder="Email" autocomplete="email"></div><div style="margin-bottom:16px"><input id="siPass" type="password" placeholder="Password" autocomplete="current-password"></div><button class="btn" onclick="doSignIn()" id="siBtn">SIGN IN</button></div><div id="authSignup" style="display:none"><div style="margin-bottom:12px"><input id="suName" type="text" placeholder="Your name"></div><div style="margin-bottom:12px"><input id="suEmail" type="email" placeholder="Email" autocomplete="email"></div><div style="margin-bottom:16px"><input id="suPass" type="password" placeholder="Password (min 6 chars)" autocomplete="new-password"></div><button class="btn" onclick="doSignUp()" id="suBtn">CREATE ACCOUNT</button></div><div id="authError" style="margin-top:12px;text-align:center;font-size:11px;color:var(--danger);font-family:var(--mono);min-height:18px"></div></div>';setTimeout(function(){var e=$("siEmail");if(e){e.focus();e.addEventListener("keydown",function(ev){if(ev.key==="Enter")doSignIn();});}var p=$("siPass");if(p)p.addEventListener("keydown",function(ev){if(ev.key==="Enter")doSignIn();});var sp=$("suPass");if(sp)sp.addEventListener("keydown",function(ev){if(ev.key==="Enter")doSignUp();});},100);}
 function switchAuthTab(tab){$("authSignin").style.display=tab==="signin"?"":"none";$("authSignup").style.display=tab==="signup"?"":"none";$("tabSignin").style.background=tab==="signin"?"rgba(212,164,74,0.1)":"transparent";$("tabSignin").style.color=tab==="signin"?"var(--acc)":"var(--dm)";$("tabSignup").style.background=tab==="signup"?"rgba(212,164,74,0.1)":"transparent";$("tabSignup").style.color=tab==="signup"?"var(--acc)":"var(--dm)";}
 async function doSignIn(){var btn=$("siBtn");btn.disabled=true;btn.textContent=t("signingIn");try{var result=await signIn($("siEmail").value.trim(),$("siPass").value);if(result.ok){var el=$("authScreen");if(el)el.remove();$("app").style.display="";await syncFromCloud();render();}else{$("authError").textContent=result.error;btn.disabled=false;btn.textContent=t("signIn");}}catch(e){$("authError").textContent=t("networkError");btn.disabled=false;btn.textContent=t("signIn");}}
-async function doSignUp(){var btn=$("suBtn");btn.disabled=true;btn.textContent="CREATING...";var name=$("suName").value.trim(),email=$("suEmail").value.trim(),pass=$("suPass").value;if(!name){$("authError").textContent="Name is required";btn.disabled=false;btn.textContent="CREATE ACCOUNT";return;}if(pass.length<6){$("authError").textContent="Password must be at least 6 characters";btn.disabled=false;btn.textContent="CREATE ACCOUNT";return;}try{var result=await signUp(email,pass,name);if(result.ok){var el=$("authScreen");if(el)el.remove();$("app").style.display="";render();}else{$("authError").textContent=result.error;btn.disabled=false;btn.textContent="CREATE ACCOUNT";}}catch(e){$("authError").textContent="Network error. Check your connection.";btn.disabled=false;btn.textContent="CREATE ACCOUNT";}}
+async function doSignUp(){var btn=$("suBtn");btn.disabled=true;btn.textContent=t("signingIn");var name=$("suName").value.trim(),email=$("suEmail").value.trim(),pass=$("suPass").value;if(!name){$("authError").textContent=t("nameRequired");btn.disabled=false;btn.textContent=t("signUp");return;}if(pass.length<6){$("authError").textContent=t("passwordMin");btn.disabled=false;btn.textContent=t("signUp");return;}try{var result=await signUp(email,pass,name);if(result.ok){var el=$("authScreen");if(el)el.remove();$("app").style.display="";render();}else{$("authError").textContent=result.error;btn.disabled=false;btn.textContent=t("signUp");}}catch(e){$("authError").textContent=t("networkError");btn.disabled=false;btn.textContent=t("signUp");}}
 
 // Tabs + Render
 var TABS=[{k:"home",l:"Home",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1"/></svg>'},{k:"clients",l:"Clients",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>'},{k:"schedule",l:"Schedule",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>'},{k:"sessions",l:"Log",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>'},{k:"tools",l:"Pro Tools",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>'},{k:"guide",l:"Guide",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>'}];
@@ -2012,7 +2014,7 @@ html+='</div>';
 // Macro totals bar
 html+='<div class="cd" style="padding:14px;border:1px solid var(--accB);margin-top:10px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span class="sl" style="margin:0">'+t("dailyTotals")+'</span></div>';
 html+='<div class="g4" id="macroTotals"><div class="stat" style="padding:10px"><b style="color:var(--success);font-size:18px" id="totP">0</b><small>PROTEIN</small></div><div class="stat" style="padding:10px"><b style="color:var(--warn);font-size:18px" id="totC">0</b><small>CARBS</small></div><div class="stat" style="padding:10px"><b style="color:#cc88ee;font-size:18px" id="totF">0</b><small>FAT</small></div><div class="stat" style="padding:10px"><b style="color:var(--accVib);font-size:18px" id="totCal">0</b><small>CALORIES</small></div></div></div>';
-html+='<button class="btn" style="margin-top:18px" onclick="saveMealPlan(\''+escJs(clientId)+'\')">SAVE MEAL PLAN</button>';
+html+='<button class="btn" style="margin-top:18px" onclick="saveMealPlan(\''+escJs(clientId)+'\')">'+t("saveMealPlan")+'</button>';
 return html;}
 
 var _currentMealSlot=1,_mealData={1:[],2:[],3:[],4:[]};
@@ -2076,7 +2078,7 @@ function filterFoodDB(q){q=q.toLowerCase();document.querySelectorAll('#foodList 
 function filterFoodCat(cat,el){el.parentElement.querySelectorAll('.chip').forEach(function(c){c.classList.remove('on');});el.classList.add('on');document.querySelectorAll('#foodList .food-item').forEach(function(item){item.style.display=(cat==='all'||item.dataset.cat===cat)?'flex':'none';});}
 
 function saveMealPlan(clientId){
-var name=v('mpName');if(!name){toast('Name is required');return;}
+var name=v('mpName');if(!name){toast(t("nameRequired"));return;}
 var meals={};var mc=parseInt(v('mpMealCount')||'4');
 for(var i=1;i<=mc;i++)meals[i]=_mealData[i]||[];
 var plan={id:Date.now().toString(),clientId:clientId,name:name,targetP:parseInt(v('mpTargP'))||0,targetC:parseInt(v('mpTargC'))||0,targetF:parseInt(v('mpTargF'))||0,meals:meals,mealCount:mc,notes:v('mpNotes')||'',createdAt:new Date().toISOString()};
@@ -2095,7 +2097,7 @@ sel+='</div></div>';
 var el=document.createElement('div');el.innerHTML=sel;document.body.appendChild(el.firstChild);}
 
 function saveCustomFood(){
-var name=v('cfName');if(!name){toast('Name is required');return;}
+var name=v('cfName');if(!name){toast(t("nameRequired"));return;}
 var food={n:name,cat:v('cfCat')||'protein',p:parseFloat(v('cfP'))||0,c:parseFloat(v('cfC'))||0,f:parseFloat(v('cfF'))||0,cal:parseFloat(v('cfCal'))||0,gf:true,sz:v('cfSize')||'1 serving',m:v('cfMeas')||'cooked',custom:true};
 var foods=getCustomFoods();foods.push(food);saveCustomFoods(foods);
 var modal=$('customFoodModal');if(modal)modal.remove();
@@ -2114,7 +2116,7 @@ sel+='</div></div>';
 var el=document.createElement('div');el.innerHTML=sel;document.body.appendChild(el.firstChild);}
 
 function saveCustomExercise(){
-var name=v('ceN');if(!name){toast('Name is required');return;}
+var name=v('ceN');if(!name){toast(t("nameRequired"));return;}
 var ex={n:name,s:v('ceS')||'3x10-12',note:v('ceNote')||'',gender:v('ceGender')||_proGender,group:v('ceGroup')||_proMuscle,custom:true};
 var exs=getCustomExercises();exs.push(ex);saveCustomExercises(exs);
 var modal=$('customExModal');if(modal)modal.remove();
@@ -2173,7 +2175,7 @@ doc.setFontSize(7);doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);doc.text("Gen
 var fname="REGI_MealPlan_"+(c?c.name.replace(/[^a-zA-Z0-9]/g,"_")+"_":"")+plan.name.replace(/[^a-zA-Z0-9]/g,"_")+".pdf";
 safePDFSave(doc,fname);}
 
-function deleteMealPlan(id){if(!confirm('Delete this meal plan?'))return;var plans=getMealPlans().filter(function(p){return p.id!==id;});saveMealPlans(plans);toast('\u2713 Deleted');pop();}
+function deleteMealPlan(id){if(!confirm(t("deleteMealPlan")+'?'))return;var plans=getMealPlans().filter(function(p){return p.id!==id;});saveMealPlans(plans);toast('\u2713 Deleted');pop();}
 
 // ═══════════════════════════════════════════════════════════════════
 // HANY RAMBOD FST-7 OLYMPIAN EXERCISE DATABASE
