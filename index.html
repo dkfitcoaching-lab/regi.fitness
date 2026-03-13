@@ -147,7 +147,7 @@ html{scroll-behavior:smooth}
 
 var SUPA_URL="https://pwopwvvgjflunjxwkkql.supabase.co";
 var SUPA_KEY="sb_publishable_6slliEpPsWV9JXIDvz8pyw_FNPrPMhv";
-var VERSION="5.4";
+var VERSION="5.5";
 var LANGS={
 en:{
 days:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],
@@ -348,7 +348,7 @@ searchClients:"Search clients...",
 proTools:"Pro Tools",
 mealPlanBuilder:"Meal Plan Builder",
 cardioBuilder:"Cardio Protocol Builder",
-fstExercises:"FST-7 Exercise Database",
+fstExercises:"Exercise Database",
 foodDatabase:"Food Database",
 savedMealPlans:"Saved Meal Plans",
 savedCardioProtocols:"Saved Cardio Protocols",
@@ -458,7 +458,9 @@ deleteMealPlan:"DELETE MEAL PLAN",
 proToolsDesc:"Olympian-level coaching tools for your clients.",
 macroBuilder:"GF MACRO BUILDER",
 proCardioBuilder:"PRO CARDIO BUILDER",
-hanyMethod:"HANY RAMBOD METHOD",
+exerciseDatabase:"Exercise Database",
+exerciseDBDesc:"Browse exercises by muscle group. Add directly to programs or sessions.",
+byMuscle:"BY MUSCLE GROUP",
 scienceBacked:"SCIENCE-BACKED",
 savedCardio:"SAVED CARDIO PROTOCOLS",
 savedSupplements:"SAVED SUPPLEMENT PROTOCOLS",
@@ -674,7 +676,7 @@ searchClients:"\u00dcgyfelek keres\u00e9se...",
 proTools:"Pro Eszk\u00f6z\u00f6k",
 mealPlanBuilder:"\u00c9trend Tervez\u0151",
 cardioBuilder:"Kardi\u00f3 Protokoll Tervez\u0151",
-fstExercises:"FST-7 Gyakorlat Adatb\u00e1zis",
+fstExercises:"Gyakorlat Adatb\u00e1zis",
 foodDatabase:"\u00c9tel Adatb\u00e1zis",
 savedMealPlans:"Mentett \u00c9trendek",
 savedCardioProtocols:"Mentett Kardi\u00f3 Protokollok",
@@ -784,7 +786,9 @@ deleteMealPlan:"\u00c9TREND TERV T\u00d6RL\u00c9SE",
 proToolsDesc:"Olimpiai szint\u0171 edz\u0151i eszk\u00f6z\u00f6k az \u00fcgyfeleidnek.",
 macroBuilder:"GF MAKR\u00d3 \u00c9P\u00cdT\u0150",
 proCardioBuilder:"PRO KARDI\u00d3 \u00c9P\u00cdT\u0150",
-hanyMethod:"HANY RAMBOD M\u00d3DSZER",
+exerciseDatabase:"Gyakorlat Adatb\u00e1zis",
+exerciseDBDesc:"Gyakorlatok b\u00f6ng\u00e9sz\u00e9se izomcsoport szerint. K\u00f6zvetlen hozz\u00e1ad\u00e1s programokhoz.",
+byMuscle:"IZOMCSOPORT SZERINT",
 scienceBacked:"TUDOM\u00c1NYOS",
 savedCardio:"MENTETT KARDI\u00d3 PROTOKOLLOK",
 savedSupplements:"MENTETT KIEG\u00c9SZ\u00cdT\u0150 PROTOKOLLOK",
@@ -1108,7 +1112,7 @@ if(currentView.view==="newProgram")return renderProgramBuilder();
 if(currentView.view==="programDetail")return renderProgramDetail();
 if(currentView.view==="programLibrary")return renderProgramLibrary();
 if(!clients.length)return'<div class="pt">'+t("addFirstClient")+'</div><div style="font-size:12px;color:var(--mu);margin-bottom:14px;line-height:1.5">'+t("everythingStarts")+'</div>'+clientFormFields()+'<button class="btn" style="margin-top:16px" onclick="saveNewClient()">'+t("save")+'</button>';
-var html='<div class="gw" style="margin:0 0 18px"></div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div class="pt" style="margin-bottom:0">'+t("clients")+' <span style="font-size:13px;color:var(--dm);font-family:var(--mono);font-weight:400">'+clients.length+'</span></div><div style="display:flex;gap:6px"><button class="btn2" onclick="push(\'programLibrary\')" style="font-size:8px;padding:6px 10px">\uD83D\uDCCB '+t("programs")+'</button><button class="btn2" onclick="push(\'add\')" style="box-shadow:0 0 12px rgba(201,168,76,0.08)">+ '+t("addClient")+'</button></div></div>';
+var html='<div class="gw" style="margin:0 0 18px"></div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div class="pt" style="margin-bottom:0">'+t("clients")+' <span style="font-size:13px;color:var(--dm);font-family:var(--mono);font-weight:400">'+clients.length+'</span></div><div style="display:flex;gap:6px"><button class="btn2" onclick="push(\'programLibrary\')" style="padding:8px 14px;font-size:9px">\uD83D\uDCCB '+t("programs")+'</button><button class="btn2" onclick="push(\'add\')" style="padding:8px 14px;font-size:9px;box-shadow:0 0 12px rgba(201,168,76,0.08)">+ '+t("addClient")+'</button></div></div>';
 if(clients.length>3)html+='<div style="margin-bottom:14px"><input id="clientSearch" placeholder="'+t("searchClients")+'" oninput="filterClients(this.value)" style="padding:10px 14px;font-size:13px"></div>';
 html+='<div id="clientList">';
 for(var i=0;i<clients.length;i++){var c=clients[i];var count=sessions.filter(function(x){return x.clientId===c.id;}).length;html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:14px" onclick="push(\'detail\',{clientIdx:'+i+'})"><div style="width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,rgba(212,164,74,0.25),rgba(212,164,74,0.08));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:16px;font-weight:700;color:var(--accBright);flex-shrink:0;box-shadow:0 0 16px rgba(212,164,74,0.08)">'+safeInitial(c.name)+'</div><div style="flex:1"><div style="font-size:14px;font-weight:600;color:var(--wh)">'+escHtml(c.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+escHtml(c.type||"Training")+' \u00B7 $'+escHtml(c.rate||70)+'/hr \u00B7 '+count+' '+t("sessions").toLowerCase()+'</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}
@@ -1331,8 +1335,9 @@ var days=[];for(var i=0;i<7;i++){var d=new Date(startDay);d.setDate(startDay.get
 var _loc=getLang()==="hu"?"hu-HU":"en-US";var wl=days[0].toLocaleDateString(_loc,{month:"short",day:"numeric"})+" \u2014 "+days[6].toLocaleDateString(_loc,{month:"short",day:"numeric"});
 var _ws=0,_wr=0;for(var di=0;di<days.length;di++){var dayIso=toLocalISO(days[di]);schedule.filter(function(s){return s.date===dayIso&&s.status!=="cancelled";}).forEach(function(s){_ws++;_wr+=parseFloat(s.rate||70);});}
 var html='<div class="gw" style="margin:0 0 18px"></div><div style="display:flex;justify-content:space-between;align-items:center"><div class="pt" style="margin-bottom:0">'+t("schedule")+'</div><button class="btn2" onclick="var f=document.getElementById(\'schForm\');if(f){f.style.display=\'block\';f.scrollIntoView({behavior:\'smooth\'});}" style="padding:6px 14px;font-size:10px;box-shadow:0 0 12px rgba(201,168,76,0.08)">+ ADD</button></div>';
-if(_ws)html+='<div style="font-size:11px;color:var(--mu);font-family:var(--mono);margin-bottom:14px">'+_ws+' '+t("sessions").toLowerCase()+' \u00B7 $'+roundMoney(_wr)+' '+t("thisWeek").toLowerCase()+'</div>';
-html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><button class="btn2" onclick="scheduleWeekOffset--;_selectedDay=null;render()" style="padding:6px 12px">\u2039</button><div style="font-size:11px;color:var(--mu);font-family:var(--mono)">'+wl+(scheduleWeekOffset===0?" \u00B7 "+t("thisWeek"):"")+'</div><button class="btn2" onclick="scheduleWeekOffset++;_selectedDay=null;render()" style="padding:6px 12px">\u203A</button></div>';
+if(_ws)html+='<div style="font-size:11px;color:var(--mu);font-family:var(--mono);margin-bottom:6px">'+_ws+' '+t("sessions").toLowerCase()+' \u00B7 $'+roundMoney(_wr)+' '+t("thisWeek").toLowerCase()+'</div>';
+else html+='<div style="margin-bottom:6px"></div>';
+html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;margin-top:14px"><button class="btn2" onclick="scheduleWeekOffset--;_selectedDay=null;render()" style="padding:8px 14px;font-size:14px">\u2039</button><div style="font-size:11px;color:var(--mu);font-family:var(--mono)">'+wl+(scheduleWeekOffset===0?" \u00B7 "+t("thisWeek"):"")+'</div><button class="btn2" onclick="scheduleWeekOffset++;_selectedDay=null;render()" style="padding:8px 14px;font-size:14px">\u203A</button></div>';
 html+='<div style="display:flex;gap:3px;margin-bottom:18px">';
 for(var i=0;i<days.length;i++){var d=days[i];var di=toLocalISO(d);var isT=d.toDateString()===now.toDateString();var isSel=_selectedDay===di;var n=schedule.filter(function(s){return s.date===di;}).length;
 html+='<div onclick="_selectedDay=(_selectedDay===\''+di+'\'?null:\''+di+'\');render()" style="flex:1;text-align:center;padding:10px 2px;border-radius:10px;background:'+(isSel?"rgba(212,164,74,0.16)":(isT&&!_selectedDay)?"rgba(212,164,74,0.10)":"var(--glass)")+';border:'+(isSel?"2px":(isT&&!_selectedDay)?"2px":"1px")+' solid '+(isSel?"var(--accBright)":(isT&&!_selectedDay)?"var(--acc)":"var(--glassB)")+';cursor:pointer"><div style="font-size:8px;color:'+(isSel?"var(--accBright)":(isT&&!_selectedDay)?"var(--acc)":"var(--dm)")+';font-family:var(--mono);font-weight:700">'+DN[d.getDay()].toUpperCase()+'</div><div style="font-size:18px;font-weight:800;color:'+(isSel?"var(--accBright)":(isT&&!_selectedDay)?"var(--acc)":"var(--ow)")+';font-family:var(--mono);margin:4px 0;line-height:1">'+d.getDate()+'</div>'+(n?'<div style="width:5px;height:5px;border-radius:50%;background:var(--acc);margin:0 auto"></div>':'<div style="height:5px"></div>')+'</div>';}
@@ -2205,28 +2210,28 @@ safePDFSave(doc,fname);}
 function deleteMealPlan(id){if(!confirm(t("deleteMealPlan")+'?'))return;var plans=getMealPlans().filter(function(p){return p.id!==id;});saveMealPlans(plans);toast('\u2713 Deleted');pop();}
 
 // ═══════════════════════════════════════════════════════════════════
-// HANY RAMBOD FST-7 OLYMPIAN EXERCISE DATABASE
+// EXERCISE DATABASE
 // ═══════════════════════════════════════════════════════════════════
 var PRO_EXERCISES={
 women:{
 "Glutes & Hamstrings":[
-{n:"Lying Leg Curl",s:"4x10-12",note:"Pre-exhaust hamstrings before compounds. Squeeze 2s at top.",tech:"FST-7 finisher option"},
+{n:"Lying Leg Curl",s:"4x10-12",note:"Pre-exhaust hamstrings before compounds. Squeeze 2s at top.",tech:"Finisher option"},
 {n:"Stiff-Leg Deadlift",s:"4x10-12",note:"Hinge at hips, slight knee bend. Feel the stretch in hamstrings."},
 {n:"Hip Thrust (Barbell)",s:"4x12-15",note:"Pause and squeeze at top. Drive through heels."},
 {n:"Walking Lunges (Dumbbell)",s:"3x12 each",note:"Long stride to emphasize glutes. Upright torso."},
 {n:"Bulgarian Split Squat",s:"3x10-12 each",note:"Rear foot elevated. Deep stretch at bottom."},
 {n:"Cable Kickback",s:"3x15 each",note:"Slight forward lean. Full squeeze at contraction."},
 {n:"Glute-Ham Raise",s:"3x10-12",note:"Control the negative. Strong hamstring contraction."},
-{n:"Leg Press (High & Wide)",s:"4x12-15",note:"Feet high on platform. Deep ROM. Glute focused.",tech:"FST-7: 7x10-12 as finisher"},
-{n:"Seated Leg Curl",s:"4x12",note:"Slow eccentric 3s. Squeeze at contraction.",tech:"FST-7 finisher option"},
+{n:"Leg Press (High & Wide)",s:"4x12-15",note:"Feet high on platform. Deep ROM. Glute focused.",tech:"7x10-12 finisher"},
+{n:"Seated Leg Curl",s:"4x12",note:"Slow eccentric 3s. Squeeze at contraction.",tech:"Finisher option"},
 {n:"Sumo Squat (Dumbbell)",s:"3x15",note:"Wide stance, toes out. Squeeze inner thighs and glutes."},
-{n:"Reverse Hack Squat (Glute Focus)",s:"3x12",note:"Face the pad. Wide stance. Deep stretch on glutes. Hany signature for women."},
+{n:"Reverse Hack Squat (Glute Focus)",s:"3x12",note:"Face the pad. Wide stance. Deep stretch on glutes."},
 {n:"B-Stance Hip Thrust",s:"3x12 each",note:"Unilateral glute emphasis. One foot forward. Squeeze at top."},
 {n:"Pull-Through (Cable)",s:"3x15",note:"Hinge at hips. Squeeze glutes at lockout. Great glute-ham connection."}
 ],
 "Shoulders (Capped Delts)":[
 {n:"Seated Dumbbell Press",s:"4x10-12",note:"Control the negative. Don't lock out at top."},
-{n:"Lateral Raise (Dumbbell)",s:"4x12-15",note:"Slight forward lean. Lead with elbows. Don't go above parallel.",tech:"FST-7: 7x10-12 as finisher"},
+{n:"Lateral Raise (Dumbbell)",s:"4x12-15",note:"Slight forward lean. Lead with elbows. Don't go above parallel.",tech:"7x10-12 finisher"},
 {n:"Cable Lateral Raise",s:"3x12-15 each",note:"Behind the body for rear emphasis. Constant tension."},
 {n:"Reverse Pec Deck",s:"4x12-15",note:"Squeeze rear delts hard. Slight pause at contraction."},
 {n:"Face Pull (Rope)",s:"3x15",note:"External rotation at top. Rear delt and rotator cuff health."},
@@ -2243,12 +2248,12 @@ women:{
 {n:"Single-Arm Dumbbell Row",s:"3x10-12 each",note:"Full stretch at bottom. Drive elbow past torso."},
 {n:"T-Bar Row",s:"3x10-12",note:"Neutral grip. Keep back flat. Strong contraction."},
 {n:"Dumbbell Pullover",s:"3x12",note:"Cross-bench. Deep stretch. Works lats and serratus. Keep hips low."},
-{n:"Straight Arm Pulldown",s:"3x12-15",note:"Great mind-muscle connection exercise. Keep arms straight.",tech:"FST-7 finisher option"},
+{n:"Straight Arm Pulldown",s:"3x12-15",note:"Great mind-muscle connection exercise. Keep arms straight.",tech:"Finisher option"},
 {n:"Hyperextension",s:"3x15",note:"Squeeze glutes and erectors at top. Add plate for resistance."},
 {n:"Meadows Row",s:"3x10-12 each",note:"Landmine variation. John Meadows special. Elbow drives past hip."}
 ],
 "Quads":[
-{n:"Leg Extension",s:"4x12-15",note:"Pre-exhaust quads. Squeeze at top. Control the negative.",tech:"FST-7: 7x10-12 as finisher"},
+{n:"Leg Extension",s:"4x12-15",note:"Pre-exhaust quads. Squeeze at top. Control the negative.",tech:"7x10-12 finisher"},
 {n:"Hack Squat",s:"4x10-12",note:"Feet shoulder width, mid platform. Full depth."},
 {n:"Leg Press (Narrow Stance)",s:"4x10-12",note:"Feet together, low on platform. Deep ROM for quad sweep."},
 {n:"Smith Machine Squat",s:"3x10-12",note:"Feet slightly forward for quad emphasis. Control the descent."},
@@ -2260,9 +2265,9 @@ women:{
 {n:"Rope Pushdown",s:"3x12-15",note:"Spread the rope at bottom. Squeeze triceps hard."},
 {n:"Hammer Curl (Dumbbell)",s:"3x10-12 each",note:"Controlled tempo. Builds brachialis for arm shape."},
 {n:"Overhead Tricep Extension (Rope)",s:"3x12",note:"Full stretch behind head. Squeeze at lockout."},
-{n:"Concentration Curl",s:"3x12 each",note:"Peak contraction work. Squeeze at top.",tech:"FST-7 finisher option"},
+{n:"Concentration Curl",s:"3x12 each",note:"Peak contraction work. Squeeze at top.",tech:"Finisher option"},
 {n:"Dip Machine (Tricep)",s:"3x12",note:"Lean slightly forward. Control full range."},
-{n:"Spider Curl (Incline Bench)",s:"3x12",note:"Lie face down on incline. Pure isolation, no momentum. Peak contraction.",tech:"FST-7 finisher option"},
+{n:"Spider Curl (Incline Bench)",s:"3x12",note:"Lie face down on incline. Pure isolation, no momentum. Peak contraction.",tech:"Finisher option"},
 {n:"Drag Curl (Barbell)",s:"3x10-12",note:"Pull elbows back as you curl. Emphasizes long head of bicep."}
 ],
 "Abs & Core":[
@@ -2277,11 +2282,11 @@ men:{
 "Chest":[
 {n:"Incline Dumbbell Press",s:"4x8-12",note:"30-degree incline. Full stretch at bottom. Don't lock out."},
 {n:"Flat Barbell Bench Press",s:"4x8-10",note:"Arch back slightly. Control the descent. Drive through chest."},
-{n:"Machine Chest Press (Hammer Strength)",s:"4x10-12",note:"Squeeze at contraction. Full stretch. Controlled negative.",tech:"FST-7: 7x8-12 as finisher"},
+{n:"Machine Chest Press (Hammer Strength)",s:"4x10-12",note:"Squeeze at contraction. Full stretch. Controlled negative.",tech:"7x8-12 finisher"},
 {n:"Incline Dumbbell Flye",s:"3x10-12",note:"Deep stretch. Slight bend in elbows. Squeeze at top."},
-{n:"Cable Crossover (Low to High)",s:"3x12-15",note:"Upper chest emphasis. Squeeze at peak contraction.",tech:"FST-7 finisher option"},
+{n:"Cable Crossover (Low to High)",s:"3x12-15",note:"Upper chest emphasis. Squeeze at peak contraction.",tech:"Finisher option"},
 {n:"Dip (Chest Emphasis)",s:"3x10-12",note:"Lean forward. Wide grip. Deep stretch at bottom."},
-{n:"Pec Deck",s:"3x12-15",note:"Squeeze and hold at contraction. Constant tension.",tech:"FST-7: 7x10-12 as finisher"},
+{n:"Pec Deck",s:"3x12-15",note:"Squeeze and hold at contraction. Constant tension.",tech:"7x10-12 finisher"},
 {n:"Decline Barbell Press",s:"3x8-10",note:"Lower chest development. Controlled negative. Don't bounce."},
 {n:"Svend Press (Plate Squeeze)",s:"3x12-15",note:"Squeeze plates together at chest level. Inner chest activation. Flex between sets."}
 ],
@@ -2291,7 +2296,7 @@ men:{
 {n:"Barbell Row (Overhand)",s:"4x8-10",note:"Slight bend at hips. Pull to lower chest. Squeeze."},
 {n:"Barbell Row (Underhand)",s:"3x8-10",note:"Reverse grip. More lower lat and bicep recruitment. Yates row style."},
 {n:"Hammer Strength Row (Unilateral)",s:"4x10-12 each",note:"Full stretch. Drive elbow behind torso. Big squeeze."},
-{n:"Lat Pulldown (Wide Overhand)",s:"4x10-12",note:"Full stretch at top. Slight lean back. Drive elbows to floor.",tech:"FST-7: 7x10-12 as finisher"},
+{n:"Lat Pulldown (Wide Overhand)",s:"4x10-12",note:"Full stretch at top. Slight lean back. Drive elbows to floor.",tech:"7x10-12 finisher"},
 {n:"Lat Pulldown (Neutral Close)",s:"4x10-12",note:"V-bar. More lower lat emphasis. Full stretch at top."},
 {n:"Lat Pulldown (Reverse Grip)",s:"3x10-12",note:"Underhand close grip. Lower lat and bicep emphasis."},
 {n:"Incline Pulldown",s:"3x12",note:"Prone on incline bench pulling cables. Unique contraction angle."},
@@ -2300,13 +2305,13 @@ men:{
 {n:"T-Bar Row",s:"3x8-10",note:"Heavy compound. Keep back flat. Full range."},
 {n:"Dumbbell Pullover",s:"3x10-12",note:"Cross-bench. Deep lat stretch. Keep hips low for more stretch."},
 {n:"Meadows Row (Landmine)",s:"3x10-12 each",note:"John Meadows special. Landmine setup. Elbow drives past hip."},
-{n:"Straight Arm Pulldown",s:"3x12-15",note:"Lat isolation. Arms stay straight. Mind-muscle connection.",tech:"FST-7 finisher option"},
+{n:"Straight Arm Pulldown",s:"3x12-15",note:"Lat isolation. Arms stay straight. Mind-muscle connection.",tech:"Finisher option"},
 {n:"Rack Pull (Below Knee)",s:"3x6-8",note:"Upper back and trap thickness. Heavy but controlled."}
 ],
 "Shoulders":[
 {n:"Seated Barbell Press (Smith Machine)",s:"4x8-10",note:"Bring bar to chin level. Press through delts. Don't lock out."},
-{n:"Lateral Raise (Dumbbell)",s:"4x10-12",note:"Lead with elbows. Slight forward lean. Controlled tempo.",tech:"FST-7: 7x10-12 as finisher"},
-{n:"Machine Lateral Raise",s:"4x12-15",note:"Constant tension. Great for FST-7 finishing sets.",tech:"FST-7: 7x10-12 as finisher"},
+{n:"Lateral Raise (Dumbbell)",s:"4x10-12",note:"Lead with elbows. Slight forward lean. Controlled tempo.",tech:"7x10-12 finisher"},
+{n:"Machine Lateral Raise",s:"4x12-15",note:"Constant tension. Great for finishing sets.",tech:"7x10-12 finisher"},
 {n:"Rear Delt Flye (Dumbbell, Incline Bench)",s:"4x12-15",note:"Lying face down on incline. Squeeze rear delts."},
 {n:"Cable Front Raise",s:"3x12",note:"One arm at a time. Full range of motion."},
 {n:"Upright Row (Smith Machine)",s:"3x10-12",note:"Wide grip. Pull to chest level. Elbows high."},
@@ -2317,9 +2322,9 @@ men:{
 {n:"Preacher Curl (EZ Bar)",s:"3x10-12",note:"Full stretch at bottom. Don't swing. Control the negative."},
 {n:"Incline Dumbbell Curl",s:"3x10-12",note:"Arms behind torso for long head stretch. Slow negative."},
 {n:"Hammer Curl (Cross Body)",s:"3x10-12 each",note:"Across body for brachialis emphasis. Controlled."},
-{n:"Cable Curl (Straight Bar)",s:"3x12-15",note:"Constant tension. Great for pump work.",tech:"FST-7: 7x10-12 as finisher"},
+{n:"Cable Curl (Straight Bar)",s:"3x12-15",note:"Constant tension. Great for pump work.",tech:"7x10-12 finisher"},
 {n:"Concentration Curl",s:"3x12 each",note:"Peak contraction. Squeeze and hold at top."},
-{n:"Spider Curl (EZ Bar)",s:"3x10-12",note:"Chest on incline bench. Zero momentum. Incredible pump.",tech:"FST-7 finisher option"},
+{n:"Spider Curl (EZ Bar)",s:"3x10-12",note:"Chest on incline bench. Zero momentum. Incredible pump.",tech:"Finisher option"},
 {n:"Drag Curl (Barbell)",s:"3x10",note:"Bar stays close to body. Elbows travel back. Long head emphasis."},
 {n:"Cable Bayesian Curl",s:"3x12 each",note:"Stand facing away from cable. Full stretch at bottom. Lengthened partial option."}
 ],
@@ -2328,30 +2333,30 @@ men:{
 {n:"Rope Pushdown",s:"4x10-12",note:"Spread rope at bottom. Full squeeze. Elbows pinned."},
 {n:"Overhead Dumbbell Extension (Seated)",s:"3x10-12",note:"Full stretch behind head. Control the weight."},
 {n:"Skull Crushers (EZ Bar)",s:"3x10-12",note:"Lower to forehead. Elbows fixed. Full extension."},
-{n:"Dip Machine",s:"3x10-12",note:"Upright torso for tricep emphasis. Full lockout.",tech:"FST-7: 7x10-12 as finisher"},
+{n:"Dip Machine",s:"3x10-12",note:"Upright torso for tricep emphasis. Full lockout.",tech:"7x10-12 finisher"},
 {n:"Single-Arm Cable Pushdown",s:"3x12 each",note:"Supinate at bottom. Squeeze and hold."},
-{n:"Overhead Cable Extension (Rope)",s:"3x12-15",note:"Face away from cable. Big stretch at bottom. Full lockout.",tech:"FST-7 finisher option"},
-{n:"JM Press",s:"3x8-10",note:"Hybrid skull crusher/close-grip press. Advanced. Hany uses for mass."}
+{n:"Overhead Cable Extension (Rope)",s:"3x12-15",note:"Face away from cable. Big stretch at bottom. Full lockout.",tech:"Finisher option"},
+{n:"JM Press",s:"3x8-10",note:"Hybrid skull crusher/close-grip press. Advanced. Advanced mass builder."}
 ],
 "Legs (Quads)":[
-{n:"Leg Extension",s:"4x12-15",note:"Pre-exhaust. Squeeze and hold at top. 3s negative.",tech:"FST-7: 7x10-12 as finisher"},
+{n:"Leg Extension",s:"4x12-15",note:"Pre-exhaust. Squeeze and hold at top. 3s negative.",tech:"7x10-12 finisher"},
 {n:"Hack Squat",s:"4x8-12",note:"Feet mid-platform. Full depth. Drive through heels."},
 {n:"Barbell Back Squat",s:"4x8-10",note:"Break at hips first. Full depth. Drive up explosively."},
-{n:"Leg Press",s:"4x10-12",note:"Feet low and narrow for quad sweep. Deep ROM.",tech:"FST-7: 7x10-12 as finisher"},
+{n:"Leg Press",s:"4x10-12",note:"Feet low and narrow for quad sweep. Deep ROM.",tech:"7x10-12 finisher"},
 {n:"Walking Lunge (Barbell)",s:"3x12 each",note:"Long strides. Control the knee track."},
 {n:"Front Squat",s:"3x8-10",note:"Upright torso. Cross-arm or clean grip. Deep stretch."},
 {n:"Sissy Squat (Weighted)",s:"3x12-15",note:"Finisher movement. Lean back. Constant quad tension."},
-{n:"Pendulum Squat",s:"4x10-12",note:"Machine squat with arc path. Deep stretch. Quad dominant.",tech:"FST-7 finisher option"},
-{n:"Belt Squat",s:"3x10-12",note:"Zero spinal loading. Pure leg drive. Hany uses for joint-friendly quad work."}
+{n:"Pendulum Squat",s:"4x10-12",note:"Machine squat with arc path. Deep stretch. Quad dominant.",tech:"Finisher option"},
+{n:"Belt Squat",s:"3x10-12",note:"Zero spinal loading. Pure leg drive. Joint-friendly quad work."}
 ],
 "Legs (Hamstrings & Calves)":[
 {n:"Lying Leg Curl",s:"4x10-12",note:"Full stretch at bottom. Squeeze and hold at top."},
 {n:"Stiff-Leg Deadlift (Barbell)",s:"4x8-10",note:"Slow negative. Feel the stretch. Don't round back."},
-{n:"Seated Leg Curl",s:"3x10-12",note:"Different angle than lying. Squeeze hard at contraction.",tech:"FST-7: 7x10-12 as finisher"},
+{n:"Seated Leg Curl",s:"3x10-12",note:"Different angle than lying. Squeeze hard at contraction.",tech:"7x10-12 finisher"},
 {n:"Glute-Ham Raise",s:"3x10",note:"Control the negative. Strong hamstring contraction."},
 {n:"Standing Calf Raise",s:"5x10-15",note:"Full stretch at bottom. 2-3s squeeze at top. Heavy."},
 {n:"Seated Calf Raise",s:"4x12-15",note:"Targets soleus. Full stretch. Heavy weight."},
-{n:"Leg Press Calf Raise",s:"3x15-20",note:"Feet at bottom edge. Full range. Squeeze at top.",tech:"FST-7: 7x12-15 as finisher"}
+{n:"Leg Press Calf Raise",s:"3x15-20",note:"Feet at bottom edge. Full range. Squeeze at top.",tech:"7x12-15 finisher"}
 ],
 "Abs":[
 {n:"Hanging Leg Raise",s:"4x15",note:"Control swing. Curl pelvis up at top."},
@@ -2364,17 +2369,17 @@ men:{
 };
 
 // ═══════════════════════════════════════════════════════════════════
-// CARDIO BUILDER — Hany Rambod Protocol
+// CARDIO BUILDER
 // ═══════════════════════════════════════════════════════════════════
 var CARDIO_OPTIONS=[
-{n:"StairMaster / StepMill",desc:"Hany Rambod's #1 choice. Burns fat while building glutes and hamstrings. LISS at moderate pace.",modes:["LISS (Steady State)","Intervals","Skip-a-Step (Glute Focus)"],durations:[20,25,30,35,40,45,50,60],defDur:30,intensity:"Level 6-8 for LISS, 10-12 for intervals"},
+{n:"StairMaster / StepMill",desc:"Burns fat while building glutes and hamstrings. LISS at moderate pace.",modes:["LISS (Steady State)","Intervals","Skip-a-Step (Glute Focus)"],durations:[20,25,30,35,40,45,50,60],defDur:30,intensity:"Level 6-8 for LISS, 10-12 for intervals"},
 {n:"Incline Treadmill Walk",desc:"Low-impact fat burning. 3.0-3.5 mph at 10-15% incline. Hold no handrails for core engagement.",modes:["LISS (Incline Walk)","Power Walk","HIIT Sprints"],durations:[20,25,30,40,45,60],defDur:30,intensity:"3.0-3.5 mph at 10-15% incline"},
 {n:"Assault Bike (Air Bike)",desc:"Full body conditioning. Great for HIIT intervals. Burns massive calories in short sessions.",modes:["LISS (Easy Spin)","Tabata (20/10)","30/30 Intervals","HIIT (All Out)"],durations:[10,15,20,25,30],defDur:15,intensity:"RPE 6-7 LISS, RPE 9-10 intervals"},
 {n:"Recumbent Bike",desc:"Joint-friendly option. Good for active recovery days and clients with knee/back issues.",modes:["LISS (Steady)","Light Intervals","Active Recovery"],durations:[20,25,30,40,45],defDur:30,intensity:"RPE 4-6 steady, comfortable resistance"},
 {n:"Upright Stationary Bike",desc:"Classic bodybuilder cardio. Good for warming up and steady state fat burning.",modes:["LISS (Steady)","Moderate Intervals","Hill Program"],durations:[20,25,30,40,45],defDur:25,intensity:"RPE 5-7, maintain 75-85 RPM"},
 {n:"Elliptical (Cross Trainer)",desc:"Low impact full body cardio. Good alternative when joints are beat up from heavy training.",modes:["LISS (Steady)","Reverse Stride","Intervals"],durations:[20,25,30,40],defDur:25,intensity:"RPE 5-7, resistance level 6-10"},
 {n:"Rowing Machine (Erg)",desc:"Full body compound cardio. Great for back engagement and conditioning.",modes:["LISS (Steady Row)","500m Intervals","Pyramid"],durations:[15,20,25,30],defDur:20,intensity:"22-26 strokes/min steady, 28-32 for intervals"},
-{n:"Outdoor Walk (Fasted)",desc:"Hany's preferred off-day cardio. Early morning fasted walk for fat oxidation.",modes:["Easy Walk","Brisk Walk","Hill Route"],durations:[30,40,45,60],defDur:40,intensity:"Conversational pace. RPE 3-5"}
+{n:"Outdoor Walk (Fasted)",desc:"Preferred off-day cardio. Early morning fasted walk for fat oxidation.",modes:["Easy Walk","Brisk Walk","Hill Route"],durations:[30,40,45,60],defDur:40,intensity:"Conversational pace. RPE 3-5"}
 ];
 
 function getCardioPlans(){return LS.get("cardioPlans",[]);}
@@ -2582,8 +2587,8 @@ var _proGender="women",_proMuscle="";
 
 function renderProExercises(){
 var html='<button class="btn2" onclick="pop()" style="margin-bottom:14px">\u2039 '+t("back")+'</button>';
-html+='<div class="pt">FST-7 Exercise Database</div>';
-html+='<div style="font-size:11px;color:var(--mu);margin-bottom:14px;line-height:1.6">Hany Rambod\'s FST-7 methodology. Fascia Stretch Training \u2014 finish each muscle group with 7 sets of 8-12 reps, 30-45s rest between sets, to stretch the fascia and maximize blood volume.</div>';
+html+='<div class="pt">'+t("exerciseDatabase")+'</div>';
+html+='<div style="font-size:11px;color:var(--mu);margin-bottom:14px;line-height:1.6">'+t("exerciseDBDesc")+'</div>';
 html+='<div style="display:flex;gap:4px;margin-bottom:14px"><div class="chip'+(_proGender==="women"?" on":"")+'" onclick="_proGender=\'women\';_proMuscle=\'\';render()">'+t("women")+'</div><div class="chip'+(_proGender==="men"?" on":"")+'" onclick="_proGender=\'men\';_proMuscle=\'\';render()">'+t("men")+'</div></div>';
 var groups=Object.keys(PRO_EXERCISES[_proGender]);
 html+='<div style="display:flex;gap:3px;flex-wrap:wrap;margin-bottom:14px">';
@@ -2604,7 +2609,7 @@ html+='<button class="btn2" onclick="showAddCustomExercise(\''+escJs(_proGender)
 return html;}
 
 function addProExToSession(name,setsReps){
-push('new',{prefillExercises:[{name:name,sets:[{w:'',r:setsReps||'',n:'FST-7'}],mode:'normal'}]});
+push('new',{prefillExercises:[{name:name,sets:[{w:'',r:setsReps||'',n:''}],mode:'normal'}]});
 toast('\u2713 '+name+' added to session');
 haptic(12);}
 
@@ -2622,22 +2627,30 @@ if(currentView.view==='proExercises')return renderProExercises();
 if(currentView.view==='foodBrowser')return renderFoodBrowser();
 
 var html='<div class="gw" style="margin:0 0 18px"></div><div class="pt">'+t("proTools")+'</div>';
-html+='<div style="font-size:11px;color:var(--mu);margin-bottom:20px;line-height:1.6">'+t("proToolsDesc")+'</div>';
 
-// Quick actions grid
-html+='<div class="sl">'+t("build")+'</div>';
+// ── NUTRITION ──
+html+='<div class="sl">NUTRITION</div>';
 html+='<div class="g2" style="margin-bottom:14px">';
 html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="startMealPlan()"><div style="font-size:28px;margin-bottom:8px">\uD83C\uDF7D</div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("mealPlan")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">'+t("macroBuilder")+'</div></div>';
+html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="push(\'foodBrowser\')"><div style="font-size:28px;margin-bottom:8px">\uD83E\uDD66</div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("foodDatabase")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">'+getAllFoods().length+' '+t("food")+'s</div></div>';
+html+='</div>';
+html+='<div class="g2" style="margin-bottom:14px">';
+html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="startSupplementPlan()"><div style="font-size:28px;margin-bottom:8px">\uD83D\uDC8A</div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("supplementBuilder")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">'+t("scienceBacked")+'</div></div>';
+html+='<div style="padding:20px"></div>';
+html+='</div>';
+
+// ── TRAINING ──
+html+='<div class="sl" style="margin-top:6px">TRAINING</div>';
+html+='<div class="g2" style="margin-bottom:14px">';
+html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="push(\'proExercises\')"><div style="font-size:28px;margin-bottom:8px">\uD83C\uDFCB</div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("exerciseDatabase")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">'+t("byMuscle")+'</div></div>';
 html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="startCardioPlan()"><div style="font-size:28px;margin-bottom:8px">\u2764</div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("cardioBuilder")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">'+t("proCardioBuilder")+'</div></div>';
 html+='</div>';
 
+// ── COACHING ──
+html+='<div class="sl" style="margin-top:6px">COACHING</div>';
 html+='<div class="g2" style="margin-bottom:14px">';
-html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="push(\'proExercises\')"><div style="font-size:28px;margin-bottom:8px">\uD83C\uDFCB</div><div style="font-size:13px;font-weight:700;color:var(--wh)">FST-7</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">'+t("hanyMethod")+'</div></div>';
-html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="startSupplementPlan()"><div style="font-size:28px;margin-bottom:8px">\uD83D\uDC8A</div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("supplementBuilder")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">'+t("scienceBacked")+'</div></div>';
-html+='</div>';
-html+='<div class="g2" style="margin-bottom:14px">';
-html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="push(\'foodBrowser\')"><div style="font-size:28px;margin-bottom:8px">\uD83E\uDD66</div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("foodDatabase")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">'+getAllFoods().length+' '+t("food")+'S</div></div>';
-html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="showTimerModal()"><div style="font-size:28px;margin-bottom:8px">\u23F1</div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("restTimer")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">REST & COACHING</div></div>';
+html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="showTimerModal()"><div style="font-size:28px;margin-bottom:8px">\u23F1</div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("restTimer")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">REST & RECOVERY</div></div>';
+html+='<div style="padding:20px"></div>';
 html+='</div>';
 
 // Saved meal plans
@@ -2850,7 +2863,7 @@ var overlay=document.createElement("div");
 overlay.id="whatsNew";
 overlay.style.cssText="position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.92);backdrop-filter:blur(20px);padding:16px;animation:fadeIn 0.4s ease";
 var wnItems=[
-{icon:"\uD83C\uDFCB",title:"Quick Add Exercise Database",desc:"Tap exercises from the FST-7 database directly into your session. Muscle group filters, gender toggle, instant add."},
+{icon:"\uD83C\uDFCB",title:"Quick Add Exercise Database",desc:"Tap exercises from the database directly into your session. Muscle group filters, gender toggle, instant add."},
 {icon:"\u23F1",title:"Smarter Exercise Picker",desc:"Remembers your last muscle group, shows a running count, closes by tapping outside."},
 {icon:"\uD83C\uDF10",title:"Full Hungarian Translation",desc:"90+ new keys. Every screen, builder, and toast message now fully translated."},
 {icon:"\uD83D\uDD12",title:"Premium Lock Screen",desc:"Gold dot indicators fill as you type. PIN codes now support up to 9 digits."},
