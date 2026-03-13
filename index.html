@@ -138,7 +138,7 @@ html{scroll-behavior:smooth}
 <div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#0e0e14,#1a1a24);border:1px solid var(--borderH);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:20px;font-weight:900;color:var(--acc);box-shadow:0 0 32px var(--accGlow);animation:breathe 4s ease-in-out infinite">R</div>
 <div><div style="font-family:var(--display);font-size:15px;font-weight:700;letter-spacing:0.08em;color:var(--ice)">REGI</div><div style="font-size:8px;color:var(--dm);font-family:var(--mono);letter-spacing:0.12em;margin-top:1px">COACHING STUDIO</div></div>
 </div>
-<div style="display:flex;align-items:center;gap:8px"><span id="syncBadge" onclick="syncFromCloud().then(render)" style="font-size:10px;cursor:pointer;transition:color 0.3s;padding:6px;border-radius:6px;font-family:var(--mono);font-weight:700" title="Tap to sync">&#9675;</span><span onclick="go('settings')" style="cursor:pointer;padding:6px;display:flex;align-items:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--dm)" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></span></div>
+<div style="display:flex;align-items:center;gap:8px"><span id="syncBadge" onclick="syncFromCloud().then(render)" style="font-size:10px;cursor:pointer;transition:color 0.3s;padding:6px;border-radius:6px;font-family:var(--mono);font-weight:700" title="Tap to sync">&#9675;</span></div>
 </div>
 <div class="tabs" id="tabs"></div>
 <div class="ct" id="ct"></div>
@@ -345,7 +345,7 @@ off:"OFF",
 on:"ON",
 saveTemplateLabel:"SAVE TEMPLATE",
 searchClients:"Search clients...",
-proTools:"Pro Tools",
+proTools:"Tools",
 mealPlanBuilder:"Meal Plan Builder",
 cardioBuilder:"Cardio Protocol Builder",
 fstExercises:"Exercise Database",
@@ -455,9 +455,9 @@ targetMacros:"TARGET MACROS",
 meal:"MEAL",
 exportMealPDF:"EXPORT MEAL PLAN PDF",
 deleteMealPlan:"DELETE MEAL PLAN",
-proToolsDesc:"Olympian-level coaching tools for your clients.",
+proToolsDesc:"Coaching tools for your clients.",
 macroBuilder:"GF MACRO BUILDER",
-proCardioBuilder:"PRO CARDIO BUILDER",
+proCardioBuilder:"CARDIO BUILDER",
 exerciseDatabase:"Exercise Database",
 exerciseDBDesc:"Browse exercises by muscle group. Add directly to programs or sessions.",
 byMuscle:"BY MUSCLE GROUP",
@@ -673,7 +673,7 @@ off:"KI",
 on:"BE",
 saveTemplateLabel:"SABLON MENT\u00c9SE",
 searchClients:"\u00dcgyfelek keres\u00e9se...",
-proTools:"Pro Eszk\u00f6z\u00f6k",
+proTools:"Eszk\u00f6z\u00f6k",
 mealPlanBuilder:"\u00c9trend Tervez\u0151",
 cardioBuilder:"Kardi\u00f3 Protokoll Tervez\u0151",
 fstExercises:"Gyakorlat Adatb\u00e1zis",
@@ -783,9 +783,9 @@ targetMacros:"C\u00c9L MAKR\u00d3K",
 meal:"\u00c9TKEZ\u00c9S",
 exportMealPDF:"\u00c9TREND TERV PDF EXPORT",
 deleteMealPlan:"\u00c9TREND TERV T\u00d6RL\u00c9SE",
-proToolsDesc:"Olimpiai szint\u0171 edz\u0151i eszk\u00f6z\u00f6k az \u00fcgyfeleidnek.",
+proToolsDesc:"Edz\u0151i eszk\u00f6z\u00f6k az \u00fcgyfeleidnek.",
 macroBuilder:"GF MAKR\u00d3 \u00c9P\u00cdT\u0150",
-proCardioBuilder:"PRO KARDI\u00d3 \u00c9P\u00cdT\u0150",
+proCardioBuilder:"KARDI\u00d3 \u00c9P\u00cdT\u0150",
 exerciseDatabase:"Gyakorlat Adatb\u00e1zis",
 exerciseDBDesc:"Gyakorlatok b\u00f6ng\u00e9sz\u00e9se izomcsoport szerint. K\u00f6zvetlen hozz\u00e1ad\u00e1s programokhoz.",
 byMuscle:"IZOMCSOPORT SZERINT",
@@ -1062,7 +1062,7 @@ async function doSignIn(){var btn=$("siBtn");btn.disabled=true;btn.textContent=t
 async function doSignUp(){var btn=$("suBtn");btn.disabled=true;btn.textContent=t("signingIn");var name=$("suName").value.trim(),email=$("suEmail").value.trim(),pass=$("suPass").value;if(!name){$("authError").textContent=t("nameRequired");btn.disabled=false;btn.textContent=t("signUp");return;}if(pass.length<6){$("authError").textContent=t("passwordMin");btn.disabled=false;btn.textContent=t("signUp");return;}try{var result=await signUp(email,pass,name);if(result.ok){var el=$("authScreen");if(el)el.remove();$("app").style.display="";render();}else{$("authError").textContent=result.error;btn.disabled=false;btn.textContent=t("signUp");}}catch(e){$("authError").textContent=t("networkError");btn.disabled=false;btn.textContent=t("signUp");}}
 
 // Tabs + Render
-var TABS=[{k:"home",l:"Home",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1"/></svg>'},{k:"clients",l:"Clients",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>'},{k:"schedule",l:"Schedule",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>'},{k:"sessions",l:"Log",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>'},{k:"tools",l:"Pro Tools",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>'},{k:"guide",l:"Guide",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>'}];
+var TABS=[{k:"home",l:"Home",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1"/></svg>'},{k:"clients",l:"Clients",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>'},{k:"schedule",l:"Schedule",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>'},{k:"sessions",l:"Log",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>'},{k:"tools",l:"Tools",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>'},{k:"guide",l:"Guide",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>'}];
 
 function render(){
 DN=LANGS[getLang()].days;
@@ -1096,7 +1096,7 @@ html+='<div class="cd" style="display:flex;align-items:center;gap:12px;border-le
 if(todaySched.length){html+='<div class="sl" style="margin-top:24px">'+t("todaySchedule")+'</div>';for(var i=0;i<todaySched.length;i++){var s=todaySched[i];var ic=s.status==="complete",ix=s.status==="cancelled";var bc=ic?"var(--success)":ix?"var(--danger)":"var(--acc)";var cidx=clients.findIndex(function(cc){return cc.id===s.clientId;});html+='<div class="cd" style="display:flex;align-items:center;gap:14px;border-left:3px solid '+bc+'"><div style="min-width:50px;font-family:var(--mono);font-size:13px;font-weight:700;color:'+(ic?"var(--success)":"var(--acc)")+'">'+fmtTimeStr(s.time)+'</div><div style="flex:1;cursor:pointer" onclick="'+(cidx>=0?"navToClient("+cidx+")":"")+'"><div style="font-size:14px;font-weight:600;color:var(--wh)">'+escHtml(s.clientName)+'</div><div style="font-size:10px;color:var(--dm)">'+escHtml(s.type||"Training")+(ic?' \u00B7 <span class="status-chip status-complete">'+t("complete")+'</span>':ix?' \u00B7 <span class="status-chip status-cancelled">'+t("cancelled")+'</span>':"")+'</div></div>'+(!ic&&!ix?'<button class="btn2" onclick="completeScheduled(\''+escJs(s.id)+'\')" style="padding:5px 10px;font-size:8px">'+t("log2")+'</button>':"")+'<div style="font-size:11px;color:var(--ow);font-family:var(--mono)">$'+escHtml(s.rate||70)+'</div></div>';}}
 else html+='<div class="cd" style="text-align:center;padding:22px;margin-top:24px;border:1px dashed var(--border)"><div style="color:var(--dm);margin-bottom:10px">'+t("noSessions")+'</div><button class="btn2" onclick="go(\'schedule\')">'+t("scheduleOne")+'</button></div>';
 if(sessions.length){html+='<div class="sl" style="margin-top:24px">'+t("recentSessions")+'</div>';var rec=sessions.slice(-3).reverse();for(var i=0;i<rec.length;i++){var s=rec[i];html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="navToSession(\''+escJs(s.id)+'\')"><div style="width:34px;height:34px;border-radius:8px;background:var(--accS);border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;font-weight:700;color:var(--accVib)">'+safeInitial(s.clientName)+'</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(s.clientName)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+escHtml(s.type)+' \u00B7 '+fmtDate(s.date)+'</div></div><div style="font-size:10px;color:var(--ow);font-family:var(--mono)">$'+escHtml(s.rate)+'</div></div>';}}
-html+='<div style="text-align:center;padding:20px 0 8px"><div style="font-size:8px;color:var(--dmL);font-family:var(--mono)">REGI v'+VERSION+'</div></div>';
+html+='<div style="text-align:center;padding:20px 0 8px"><button class="btn2" onclick="go(\'settings\')" style="padding:8px 20px;font-size:9px;margin-bottom:12px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="vertical-align:-2px;margin-right:6px"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>'+t("settings")+'</button><div style="font-size:8px;color:var(--dmL);font-family:var(--mono)">REGI v'+VERSION+'</div></div>';
 return html;
 }
 function completeScheduled(schedId){var sched=schedule.find(function(s){return s.id===schedId;});if(!sched)return;navStack=[];currentView={tab:"sessions",view:"main",data:{}};push("new",{prefillClientId:sched.clientId,prefillType:sched.type,prefillRate:sched.rate,prefillDate:sched.date,scheduleId:schedId});}
