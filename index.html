@@ -147,7 +147,26 @@ html{scroll-behavior:smooth}
 
 var SUPA_URL="https://pwopwvvgjflunjxwkkql.supabase.co";
 var SUPA_KEY="sb_publishable_6slliEpPsWV9JXIDvz8pyw_FNPrPMhv";
-var VERSION="5.5";
+var VERSION="5.6";
+// ═══ GOLDEN SVG ICON SYSTEM ═══
+var IC={
+meal:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 6h18M6 6v-1a2 2 0 012-2h8a2 2 0 012 2v1M5 6c0 6 2 10 7 10s7-4 7-10M12 16v4M8 20h8"/></svg>',
+food:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8 12c0-2.2 1.8-4 4-4M12 3v2M12 19v2M3 12h2M19 12h2"/></svg>',
+supp:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="6" y="3" width="12" height="7" rx="2"/><rect x="6" y="10" width="12" height="11" rx="2"/><path d="M10 3v7M14 3v7M9 14h6M9 17h6"/></svg>',
+dumbbell:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6.5 6.5h11M3 8h3v8H3zM18 8h3v8h-3zM6 6h2v12H6zM16 6h2v12h-2z"/></svg>',
+cardio:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg>',
+timer:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M10 2h4M12 2v3"/></svg>',
+finance:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>',
+palette:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="8" r="1.5" fill="currentColor"/><circle cx="8" cy="12" r="1.5" fill="currentColor"/><circle cx="16" cy="12" r="1.5" fill="currentColor"/><circle cx="12" cy="16" r="1.5" fill="currentColor"/></svg>',
+lock:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>',
+bell:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>',
+database:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3M21 5v14c0 1.66-4 3-9 3s-9-1.34-9-3V5"/></svg>',
+warn:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>',
+trophy:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 9H3V5h3M18 9h3V5h-3M6 5h12v6a6 6 0 01-12 0V5zM12 17v3M8 20h8"/></svg>',
+cooked:'<svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 12c0-4 2-6 4-8M8 12c0-4 2-6 4-8M2 14h12"/></svg>',
+dry:'<svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2c3 4 5 6 5 9a5 5 0 01-10 0c0-3 2-5 5-9z"/></svg>'
+};
+function gIcon(key,size){var s=size||22;return '<span style="display:inline-flex;align-items:center;justify-content:center;color:var(--acc);width:'+s+'px;height:'+s+'px">'+IC[key]+'</span>';}
 var LANGS={
 en:{
 days:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],
@@ -1164,25 +1183,25 @@ if(cs.length){html+='<div class="sl" style="margin-top:20px">'+t("sessionHistory
 // Programs section
 var cProgs=getClientPrograms(c.id);
 html+='<div class="sl" style="margin-top:20px;display:flex;justify-content:space-between;align-items:center"><span>'+t("programs")+' <span style="font-size:9px;color:var(--dm)">'+cProgs.length+'</span></span><button class="btn2" onclick="push(\'newProgram\',{clientIdx:'+idx+'})" style="padding:4px 10px;font-size:8px;margin-top:-4px">+ '+t("newProgram")+'</button></div>';
-if(cProgs.length){for(var pi=0;pi<cProgs.length;pi++){var pr=cProgs[pi];var exCount=(pr.exercises||[]).length;var typeIcon=pr.type===t("mobilityProtocol")||pr.type==="Mobility Protocol"?"\u26A1":pr.type===t("stretchRoutine")||pr.type==="Stretching Routine"?"\u2728":"\uD83C\uDFCB";html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="push(\'programDetail\',{progId:\''+escJs(pr.id)+'\'})"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(212,164,74,0.18),rgba(212,164,74,0.06));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">'+typeIcon+'</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(pr.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+escHtml(pr.type)+' \u00B7 '+exCount+' '+t("exercises").toLowerCase()+'</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}}
+if(cProgs.length){for(var pi=0;pi<cProgs.length;pi++){var pr=cProgs[pi];var exCount=(pr.exercises||[]).length;var typeIcon=IC.dumbbell;html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="push(\'programDetail\',{progId:\''+escJs(pr.id)+'\'})"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(212,164,74,0.18),rgba(212,164,74,0.06));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--acc)">'+typeIcon+'</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(pr.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+escHtml(pr.type)+' \u00B7 '+exCount+' '+t("exercises").toLowerCase()+'</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}}
 else html+='<div class="cd" style="text-align:center;padding:18px;border:1px dashed var(--border);color:var(--dm);font-size:11px">'+t("noPrograms")+'</div>';
 
 // Meal plans section
 var cMeals=getClientMealPlans(c.id);
 html+='<div class="sl" style="margin-top:20px;display:flex;justify-content:space-between;align-items:center"><span>'+t("mealPlan").toUpperCase()+'S <span style="font-size:9px;color:var(--dm)">'+cMeals.length+'</span></span><button class="btn2" onclick="navStack=[];currentView={tab:\'tools\',view:\'main\',data:{}};push(\'mealPlanBuilder\',{clientId:\''+escJs(c.id)+'\'})" style="padding:4px 10px;font-size:8px;margin-top:-4px">+ '+t("newProgram").split(" ")[0]+' '+t("mealPlan")+'</button></div>';
-if(cMeals.length){for(var mi2=0;mi2<cMeals.length;mi2++){var mp=cMeals[mi2];html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="navStack=[];currentView={tab:\'tools\',view:\'main\',data:{}};push(\'mealPlanDetail\',{planId:\''+escJs(mp.id)+'\'})"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(120,200,120,0.18),rgba(120,200,120,0.06));border:1px solid rgba(120,200,120,0.2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">\uD83C\uDF7D</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(mp.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+mp.mealCount+' '+t("meals")+' \u00B7 P'+mp.targetP+'/C'+mp.targetC+'/F'+mp.targetF+' \u00B7 '+(mp.targetP*4+mp.targetC*4+mp.targetF*9)+' cal</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}}
+if(cMeals.length){for(var mi2=0;mi2<cMeals.length;mi2++){var mp=cMeals[mi2];html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="navStack=[];currentView={tab:\'tools\',view:\'main\',data:{}};push(\'mealPlanDetail\',{planId:\''+escJs(mp.id)+'\'})"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(120,200,120,0.18),rgba(120,200,120,0.06));border:1px solid rgba(120,200,120,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--success)">'+IC.meal+'</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(mp.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+mp.mealCount+' '+t("meals")+' \u00B7 P'+mp.targetP+'/C'+mp.targetC+'/F'+mp.targetF+' \u00B7 '+(mp.targetP*4+mp.targetC*4+mp.targetF*9)+' cal</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}}
 else html+='<div class="cd" style="text-align:center;padding:18px;border:1px dashed var(--border);color:var(--dm);font-size:11px">'+t("noMealPlans")+'</div>';
 
 // Cardio plans section
 var cCardio=(typeof getCardioPlans==="function")?getCardioPlans().filter(function(p){return p.clientId===c.id;}):[];
 html+='<div class="sl" style="margin-top:20px;display:flex;justify-content:space-between;align-items:center"><span>'+t("cardioBuilder").toUpperCase()+' <span style="font-size:9px;color:var(--dm)">'+cCardio.length+'</span></span><button class="btn2" onclick="navStack=[];currentView={tab:\'tools\',view:\'main\',data:{}};push(\'cardioBuilder\',{clientId:\''+escJs(c.id)+'\'})" style="padding:4px 10px;font-size:8px;margin-top:-4px">+ '+t("newProgram").split(" ")[0]+' '+t("cardioBuilder")+'</button></div>';
-if(cCardio.length){for(var ci2=0;ci2<cCardio.length;ci2++){var cp=cCardio[ci2];html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="navStack=[];currentView={tab:\'tools\',view:\'main\',data:{}};push(\'cardioDetail\',{planId:\''+escJs(cp.id)+'\'})"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(201,168,76,0.18),rgba(201,168,76,0.06));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">\u2764</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(cp.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+escHtml(cp.phase)+' \u00B7 '+cp.frequency+'x/wk \u00B7 '+cp.duration+'min</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}}
+if(cCardio.length){for(var ci2=0;ci2<cCardio.length;ci2++){var cp=cCardio[ci2];html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="navStack=[];currentView={tab:\'tools\',view:\'main\',data:{}};push(\'cardioDetail\',{planId:\''+escJs(cp.id)+'\'})"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(201,168,76,0.18),rgba(201,168,76,0.06));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--acc)">'+IC.cardio+'</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(cp.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+escHtml(cp.phase)+' \u00B7 '+cp.frequency+'x/wk \u00B7 '+cp.duration+'min</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}}
 else html+='<div class="cd" style="text-align:center;padding:18px;border:1px dashed var(--border);color:var(--dm);font-size:11px">'+t("noProtocolsSaved")+'</div>';
 
 // Supplement protocols section
 var cSupps=getClientSuppPlans(c.id);
 html+='<div class="sl" style="margin-top:20px;display:flex;justify-content:space-between;align-items:center"><span>'+t("supplementBuilder").toUpperCase()+' <span style="font-size:9px;color:var(--dm)">'+cSupps.length+'</span></span><button class="btn2" onclick="navStack=[];currentView={tab:\'tools\',view:\'main\',data:{}};push(\'supplementBuilder\',{clientId:\''+escJs(c.id)+'\'})" style="padding:4px 10px;font-size:8px;margin-top:-4px">+ '+t("newProgram").split(" ")[0]+' SUPP</button></div>';
-if(cSupps.length){for(var si2=0;si2<cSupps.length;si2++){var sp3=cSupps[si2];html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="navStack=[];currentView={tab:\'tools\',view:\'main\',data:{}};push(\'supplementDetail\',{planId:\''+escJs(sp3.id)+'\'})"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(72,200,120,0.18),rgba(72,200,120,0.06));border:1px solid rgba(72,200,120,0.2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">\uD83D\uDC8A</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(sp3.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+escHtml(sp3.goal)+' \u00B7 '+sp3.supplements.length+' supps</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}}
+if(cSupps.length){for(var si2=0;si2<cSupps.length;si2++){var sp3=cSupps[si2];html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="navStack=[];currentView={tab:\'tools\',view:\'main\',data:{}};push(\'supplementDetail\',{planId:\''+escJs(sp3.id)+'\'})"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(72,200,120,0.18),rgba(72,200,120,0.06));border:1px solid rgba(72,200,120,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--success)">'+IC.supp+'</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(sp3.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+escHtml(sp3.goal)+' \u00B7 '+sp3.supplements.length+' supps</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}}
 else html+='<div class="cd" style="text-align:center;padding:18px;border:1px dashed var(--border);color:var(--dm);font-size:11px">'+t("noSuppProtocols")+'</div>';
 
 html+='<div style="display:flex;gap:8px;margin-top:16px"><button class="btn" style="flex:1" onclick="navToLogFromClient(\''+escJs(c.id)+'\',\''+escJs(c.rate)+'\',\''+escJs(c.type)+'\')">'+t("logSession")+'</button><button class="btn2" style="flex:1" onclick="navToScheduleFromClient(\''+escJs(c.id)+'\')">'+t("schedule").toUpperCase()+'</button></div><div class="g2" style="margin-top:8px"><button class="btn2" style="width:100%;background:rgba(212,164,74,0.06);border-color:var(--accB)" onclick="generateClientPDF('+idx+')"><span style="margin-right:6px">\u2193</span>'+t("clientReportPDF")+'</button><button class="btn2" onclick="sendReminderToClient(\''+escJs(c.id)+'\')" style="width:100%">\u2709 '+t("sendReminder")+'</button></div><div style="margin-top:24px;text-align:center"><span onclick="deleteClient('+idx+')" style="cursor:pointer;font-size:9px;color:var(--dm);font-family:var(--mono);letter-spacing:0.06em">'+t("removeClient")+'</span></div>';
@@ -1328,7 +1347,7 @@ function promptSaveTemplate(){var exercises=collectExercises();if(!exercises.len
 var name=prompt(t("templateName"));if(!name||!name.trim())return;saveTemplate(name.trim(),exercises);}
 function doSaveSession(quick){var cId=v("sC");if(!cId){toast(t("selectAClient"));return;}var cl=clientById(cId);var statusRaw=v("sSt")||"Complete";var status=statusRaw==="Late Cancel"?"latecancel":statusRaw==="Cancelled"?"cancelled":statusRaw==="No-Show"?"noshow":"complete";var exercises=quick?[]:collectExercises();
 // PR Detection
-if(exercises.length&&status==="complete"){var prs=checkForPRs(exercises,cId);if(prs.length)setTimeout(function(){toast("\uD83C\uDFC6 NEW PR! "+prs.join(", "));},600);}
+if(exercises.length&&status==="complete"){var prs=checkForPRs(exercises,cId);if(prs.length)setTimeout(function(){toast("\u2605 NEW PR! "+prs.join(", "));},600);}
 var session={id:Date.now().toString(),clientId:cId,clientName:cl?cl.name:"",date:v("sD")||todayISO(),type:v("sT")||"Training",duration:v("sDu")||"60",rate:v("sR")||(cl?cl.rate:"70"),exercises:exercises,notes:v("sN"),energy:_sessionRating,nextPlan:v("sNx"),status:status,created_at:new Date().toISOString()};sessions.push(session);var schedId=currentView.data.scheduleId;if(schedId){var sched=schedule.find(function(s){return s.id===schedId;});if(sched)sched.status="complete";}stopDraftAutoSave();clearDraft();save();toast("\u2713 Saved");_exCount=0;_sessionRating=0;pop();}
 function renderExerciseSummary(ex){
 if(ex.grouped){var modeClass=ex.mode==="superset"?"superset-card":"giant-card";var h='<div class="ex-summary '+modeClass+'">';h+='<div style="font-size:12px;font-weight:700;color:var(--accVib);margin-bottom:6px">'+escHtml(ex.name)+'</div>';if(ex.mode&&ex.mode!=="normal")h+='<span class="status-chip" style="font-size:8px;margin-bottom:6px;display:inline-block;background:rgba(180,120,200,0.1);border:1px solid rgba(180,120,200,0.2);color:#cc88ee">'+ex.mode.toUpperCase()+'</span> ';for(var g=0;g<ex.grouped.length;g++){var grp=ex.grouped[g];h+='<div style="margin-top:4px"><div style="font-size:11px;font-weight:600;color:var(--wh)">'+escHtml(grp.name)+'</div>';var sts=grp.sets||[];for(var j=0;j<sts.length;j++){var st=sts[j];h+='<div class="ex-summary-line">S'+(j+1)+': '+escHtml(st.w||"\u2014")+' '+t("lbs")+' \u00D7 '+escHtml(st.r||"\u2014")+' '+t("reps")+(st.n?" \u00B7 "+escHtml(st.n):"")+'</div>';}h+='</div>';}if(ex.note)h+='<div style="font-size:10px;color:var(--mu);font-style:italic;margin-top:6px">'+escHtml(ex.note)+'</div>';h+='</div>';return h;}
@@ -2074,7 +2093,7 @@ html+='<div style="margin-bottom:10px"><button class="btn2" onclick="showAddCust
 var foods=getAllFoods();
 html+='<div id="foodList" style="max-height:240px;overflow-y:auto;margin-bottom:14px">';
 for(var fi=0;fi<foods.length;fi++){var fd=foods[fi];
-var measLabel=fd.m==="cooked"?"\u{1F525}"+t("cooked"):fd.m==="dry"?"\u{1F33E}"+t("dry"):fd.m==="raw"?t("raw"):"";
+var measLabel=fd.m==="cooked"?'<span style=\"color:var(--warn);font-size:8px\">\u25CF</span> '+t("cooked"):fd.m==="dry"?'<span style=\"color:var(--acc);font-size:8px\">\u25C6</span> '+t("dry"):fd.m==="raw"?t("raw"):"";
 html+='<div class="food-item" data-cat="'+(fd.custom?"custom":fd.cat)+'" style="display:flex;align-items:center;gap:8px;padding:8px 10px;margin-bottom:3px;background:rgba(212,164,74,0.03);border-radius:8px;border:1px solid rgba(212,164,74,0.06);cursor:pointer;transition:all 0.15s" onclick="addFoodToMeal('+fi+')">';
 html+='<div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--wh)">'+escHtml(fd.n)+'</div>';
 html+='<div style="font-size:9px;font-family:var(--mono);margin-top:2px"><span style="color:var(--success)">P'+fd.p+'</span> <span style="color:var(--warn)">C'+fd.c+'</span> <span style="color:#cc88ee">F'+fd.f+'</span> <span style="color:var(--dm)">'+fd.cal+'cal</span> <span style="color:var(--dmL)">'+escHtml(fd.sz||"")+'</span>'+(measLabel?' <span style="color:var(--mu);font-size:8px">'+measLabel+'</span>':'')+'</div></div>';
@@ -2221,7 +2240,7 @@ if(plan.supplementProtocolId){var suppPlan=getSupplementPlans().find(function(p)
 if(suppPlan){html+='<div class="cd" style="margin-top:10px;padding:14px;border:1px solid rgba(72,200,120,0.2);border-left:3px solid rgba(72,200,120,0.5)">';
 html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span class="sl" style="margin:0;color:var(--success)">'+t("attachedSupp")+'</span>';
 html+='<span onclick="navStack=[];currentView={tab:\'tools\',view:\'main\',data:{}};push(\'supplementDetail\',{planId:\''+escJs(suppPlan.id)+'\'})" style="font-size:9px;color:var(--acc);cursor:pointer;font-family:var(--mono)">VIEW FULL \u203A</span></div>';
-html+='<div style="font-size:13px;font-weight:700;color:var(--wh);margin-bottom:6px">\uD83D\uDC8A '+escHtml(suppPlan.name)+'</div>';
+html+='<div style="font-size:13px;font-weight:700;color:var(--wh);margin-bottom:6px">'+IC.supp+' '+escHtml(suppPlan.name)+'</div>';
 for(var ssi=0;ssi<suppPlan.supplements.length;ssi++){var ssp=suppPlan.supplements[ssi];
 html+='<div style="display:flex;justify-content:space-between;padding:3px 0;font-size:11px;border-bottom:1px solid var(--borderS)"><span style="color:var(--ow)">'+escHtml(ssp.name)+'</span><span style="font-family:var(--mono);font-size:9px;color:var(--dm)">'+escHtml(ssp.dose)+' \u00B7 '+escHtml(ssp.timing)+'</span></div>';}
 html+='</div>';}}
@@ -2234,36 +2253,89 @@ var plans=getMealPlans();var plan=plans.find(function(p){return p.id===planId;})
 if(!plan){toast('Plan not found');return;}
 if(!window.jspdf||!window.jspdf.jsPDF){toast("Loading PDF...");ensureJsPDF().then(function(){generateMealPlanPDF(planId);}).catch(function(){toast("Could not load PDF library");});return;}
 var c=clientById(plan.clientId);var doc=new window.jspdf.jsPDF({unit:"pt",format:"letter"});
-var W=612,H=792,gold=[212,164,74],dark=[30,30,34],dimmed=[148,138,122];
+var W=612,H=792,M=40,gold=[212,164,74],darkBg=[14,14,20],white=[240,236,228],dimmed=[148,138,122],green=[120,200,120],warn=[232,168,85],purple=[200,136,238];
+// Page 1 background + header
+doc.setFillColor(darkBg[0],darkBg[1],darkBg[2]);doc.rect(0,0,W,H,"F");
 _pdfDecor(doc,W,H,gold,dimmed);
-doc.setFillColor(dark[0],dark[1],dark[2]);doc.rect(0,0,W,H,"F");_pdfDecor(doc,W,H,gold,dimmed);
-doc.setFontSize(28);doc.setTextColor(gold[0],gold[1],gold[2]);doc.text("REGI",W/2,50,{align:"center"});
-doc.setFontSize(8);doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);doc.text("COACHING STUDIO",W/2,62,{align:"center"});
-doc.setDrawColor(gold[0],gold[1],gold[2]);doc.setLineWidth(0.5);doc.line(200,72,W-200,72);
-doc.setFontSize(18);doc.setTextColor(240,204,112);doc.text(plan.name,W/2,98,{align:"center"});
-if(c){doc.setFontSize(10);doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);doc.text("Client: "+c.name,W/2,114,{align:"center"});}
-var y=c?132:118;
-if(plan.targetP||plan.targetC||plan.targetF){doc.setFontSize(10);doc.setTextColor(gold[0],gold[1],gold[2]);doc.text("DAILY TARGETS: P "+plan.targetP+"g | C "+plan.targetC+"g | F "+plan.targetF+"g",W/2,y,{align:"center"});y+=20;}
+_pdfHeader(doc,W,M,gold,darkBg,white,dimmed,"NUTRITION PROTOCOL");
+// Plan title block
+var y=150;
+doc.setFontSize(20);doc.setTextColor(white[0],white[1],white[2]);doc.text(plan.name,M,y);y+=18;
+if(c){doc.setFontSize(10);doc.setTextColor(gold[0],gold[1],gold[2]);doc.text("Client: "+c.name,M,y);y+=14;}
+doc.setFontSize(8);doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);doc.text("Created "+new Date(plan.createdAt).toLocaleDateString()+" | "+plan.mealCount+" meals/day",M,y);y+=20;
+// Target macros bar
+if(plan.targetP||plan.targetC||plan.targetF){
+doc.setFillColor(22,22,30);doc.roundedRect(M,y,W-M*2,36,6,6,"F");
+doc.setDrawColor(gold[0],gold[1],gold[2]);doc.setLineWidth(0.5);doc.roundedRect(M,y,W-M*2,36,6,6,"S");
+var targCal=plan.targetP*4+plan.targetC*4+plan.targetF*9;
+doc.setFontSize(9);doc.setTextColor(gold[0],gold[1],gold[2]);doc.text("DAILY TARGETS",M+12,y+14);
+doc.setFontSize(10);doc.setTextColor(green[0],green[1],green[2]);doc.text("P "+plan.targetP+"g",M+110,y+14);
+doc.setTextColor(warn[0],warn[1],warn[2]);doc.text("C "+plan.targetC+"g",M+180,y+14);
+doc.setTextColor(purple[0],purple[1],purple[2]);doc.text("F "+plan.targetF+"g",M+250,y+14);
+doc.setTextColor(gold[0],gold[1],gold[2]);doc.text(targCal+" cal",M+320,y+14);
+doc.setFontSize(7);doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);doc.text("P "+(plan.targetP*4)+"cal ("+Math.round(plan.targetP*4/targCal*100)+"%) | C "+(plan.targetC*4)+"cal ("+Math.round(plan.targetC*4/targCal*100)+"%) | F "+(plan.targetF*9)+"cal ("+Math.round(plan.targetF*9/targCal*100)+"%)",M+12,y+28);
+y+=48;}
+// Meals
+var dayTP=0,dayTC=0,dayTF=0,dayCal=0;
 for(var mi=1;mi<=plan.mealCount;mi++){var items=plan.meals[mi]||[];if(!items.length)continue;
-if(y>H-120){doc.addPage();doc.setFillColor(dark[0],dark[1],dark[2]);doc.rect(0,0,W,H,"F");_pdfDecor(doc,W,H,gold,dimmed);y=50;}
-doc.setFontSize(11);doc.setTextColor(gold[0],gold[1],gold[2]);doc.text("MEAL "+mi,50,y);y+=14;
+var blockH=28+items.length*14;
+if(y+blockH>H-60){doc.addPage();doc.setFillColor(darkBg[0],darkBg[1],darkBg[2]);doc.rect(0,0,W,H,"F");_pdfDecor(doc,W,H,gold,dimmed);y=50;}
+// Meal header bar
+doc.setFillColor(22,22,30);doc.roundedRect(M,y,W-M*2,20,4,4,"F");
+doc.setDrawColor(gold[0],gold[1],gold[2]);doc.setLineWidth(0.3);doc.line(M,y+20,W-M,y+20);
+doc.setFontSize(9);doc.setFont("helvetica","bold");doc.setTextColor(gold[0],gold[1],gold[2]);doc.text("MEAL "+mi,M+10,y+13);y+=24;
 var mp=0,mc2=0,mf=0,mcal=0;
 for(var ii=0;ii<items.length;ii++){var it=items[ii];var fd=foodByIdx(it.idx,it.name);if(!fd)continue;
 var s=it.servings;mp+=fd.p*s;mc2+=fd.c*s;mf+=fd.f*s;mcal+=fd.cal*s;
-doc.setFontSize(9);doc.setTextColor(240,236,228);doc.text((s!==1?s+"x ":"")+fd.n+(fd.sz?" ("+fd.sz+(fd.m==="cooked"?" cooked":fd.m==="dry"?" dry":"")+")":""),60,y);
-doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);doc.text("P"+Math.round(fd.p*s)+" C"+Math.round(fd.c*s)+" F"+Math.round(fd.f*s)+" | "+Math.round(fd.cal*s)+"cal",W-50,y,{align:"right"});y+=13;}
-doc.setFontSize(8);doc.setTextColor(gold[0],gold[1],gold[2]);doc.text("Subtotal: P"+Math.round(mp)+"g C"+Math.round(mc2)+"g F"+Math.round(mf)+"g | "+Math.round(mcal)+" cal",60,y);y+=18;}
-if(plan.notes){if(y>H-80){doc.addPage();doc.setFillColor(dark[0],dark[1],dark[2]);doc.rect(0,0,W,H,"F");y=50;}
-doc.setFontSize(9);doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);doc.text("Notes: "+plan.notes.substring(0,120),50,y);y+=16;}
-// Attached supplement protocol in PDF
+// Alternating row subtle tint
+if(ii%2===0){doc.setFillColor(18,18,24);doc.rect(M+4,y-8,W-M*2-8,13,"F");}
+doc.setFont("helvetica","normal");doc.setFontSize(9);doc.setTextColor(white[0],white[1],white[2]);
+var foodLabel=(s!==1?s+"x ":"")+fd.n;if(fd.sz)foodLabel+=" ("+fd.sz+(fd.m==="cooked"?" cooked":fd.m==="dry"?" dry":"")+")";
+doc.text(foodLabel,M+10,y);
+doc.setFontSize(8);doc.setTextColor(green[0],green[1],green[2]);doc.text("P"+Math.round(fd.p*s),W-M-140,y);
+doc.setTextColor(warn[0],warn[1],warn[2]);doc.text("C"+Math.round(fd.c*s),W-M-105,y);
+doc.setTextColor(purple[0],purple[1],purple[2]);doc.text("F"+Math.round(fd.f*s),W-M-70,y);
+doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);doc.text(Math.round(fd.cal*s)+"cal",W-M-10,y,{align:"right"});y+=13;}
+// Meal subtotal
+doc.setFillColor(gold[0],gold[1],gold[2]);doc.rect(M+4,y-4,W-M*2-8,0.5,"F");
+doc.setFont("helvetica","bold");doc.setFontSize(8);doc.setTextColor(gold[0],gold[1],gold[2]);
+doc.text("P"+Math.round(mp)+"g  C"+Math.round(mc2)+"g  F"+Math.round(mf)+"g  |  "+Math.round(mcal)+" cal",M+10,y+8);
+dayTP+=mp;dayTC+=mc2;dayTF+=mf;dayCal+=mcal;y+=22;}
+// Daily totals box
+if(y+50>H-60){doc.addPage();doc.setFillColor(darkBg[0],darkBg[1],darkBg[2]);doc.rect(0,0,W,H,"F");_pdfDecor(doc,W,H,gold,dimmed);y=50;}
+doc.setFillColor(22,22,30);doc.roundedRect(M,y,W-M*2,40,6,6,"F");
+doc.setDrawColor(gold[0],gold[1],gold[2]);doc.setLineWidth(0.8);doc.roundedRect(M,y,W-M*2,40,6,6,"S");
+doc.setFont("helvetica","bold");doc.setFontSize(10);doc.setTextColor(gold[0],gold[1],gold[2]);doc.text("DAILY TOTALS",M+12,y+16);
+doc.setFontSize(11);doc.setTextColor(green[0],green[1],green[2]);doc.text("P "+Math.round(dayTP)+"g",M+130,y+16);
+doc.setTextColor(warn[0],warn[1],warn[2]);doc.text("C "+Math.round(dayTC)+"g",M+210,y+16);
+doc.setTextColor(purple[0],purple[1],purple[2]);doc.text("F "+Math.round(dayTF)+"g",M+290,y+16);
+doc.setFontSize(12);doc.setTextColor(gold[0],gold[1],gold[2]);doc.text(Math.round(dayCal)+" cal",W-M-10,y+16,{align:"right"});
+// Variance from targets
+if(plan.targetP){doc.setFontSize(7);doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);
+var diffP=Math.round(dayTP)-plan.targetP,diffC=Math.round(dayTC)-plan.targetC,diffF=Math.round(dayTF)-plan.targetF;
+doc.text("vs Target: P "+(diffP>=0?"+":"")+diffP+"g | C "+(diffC>=0?"+":"")+diffC+"g | F "+(diffF>=0?"+":"")+diffF+"g",M+12,y+30);}
+y+=52;
+// Notes
+if(plan.notes){if(y+30>H-60){doc.addPage();doc.setFillColor(darkBg[0],darkBg[1],darkBg[2]);doc.rect(0,0,W,H,"F");_pdfDecor(doc,W,H,gold,dimmed);y=50;}
+doc.setFillColor(22,22,30);doc.roundedRect(M,y,W-M*2,28,4,4,"F");
+doc.setDrawColor(gold[0],gold[1],gold[2]);doc.setLineWidth(0.3);doc.line(M,y,M+3,y);doc.line(M,y,M,y+28);
+doc.setFont("helvetica","bold");doc.setFontSize(8);doc.setTextColor(gold[0],gold[1],gold[2]);doc.text("NOTES",M+10,y+12);
+doc.setFont("helvetica","normal");doc.setFontSize(8);doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);doc.text(plan.notes.substring(0,200),M+50,y+12);y+=36;}
+// Attached supplement protocol
 if(plan.supplementProtocolId){var suppPlan2=getSupplementPlans().find(function(p){return p.id===plan.supplementProtocolId;});
-if(suppPlan2){if(y>H-120){doc.addPage();doc.setFillColor(dark[0],dark[1],dark[2]);doc.rect(0,0,W,H,"F");_pdfDecor(doc,W,H,gold,dimmed);y=50;}
-y+=8;doc.setFontSize(11);doc.setTextColor(gold[0],gold[1],gold[2]);doc.text("SUPPLEMENT PROTOCOL: "+suppPlan2.name,50,y);y+=16;
+if(suppPlan2){if(y+40+suppPlan2.supplements.length*13>H-60){doc.addPage();doc.setFillColor(darkBg[0],darkBg[1],darkBg[2]);doc.rect(0,0,W,H,"F");_pdfDecor(doc,W,H,gold,dimmed);y=50;}
+// Section header
+doc.setFillColor(22,22,30);doc.roundedRect(M,y,W-M*2,20,4,4,"F");
+doc.setDrawColor(green[0],green[1],green[2]);doc.setLineWidth(0.5);doc.line(M,y+20,W-M,y+20);
+doc.setFont("helvetica","bold");doc.setFontSize(9);doc.setTextColor(green[0],green[1],green[2]);doc.text("SUPPLEMENT PROTOCOL: "+suppPlan2.name.toUpperCase(),M+10,y+13);y+=24;
 for(var spi2=0;spi2<suppPlan2.supplements.length;spi2++){var ssp2=suppPlan2.supplements[spi2];
-if(y>H-40){doc.addPage();doc.setFillColor(dark[0],dark[1],dark[2]);doc.rect(0,0,W,H,"F");_pdfDecor(doc,W,H,gold,dimmed);y=50;}
-doc.setFontSize(9);doc.setTextColor(240,236,228);doc.text(ssp2.name,60,y);
-doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);doc.text(ssp2.dose+" | "+ssp2.timing,W-50,y,{align:"right"});y+=13;}}}
-doc.setFontSize(7);doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);doc.text("Generated by REGI Coaching Studio v"+VERSION+" | regi.fitness",W/2,H-30,{align:"center"});
+if(y>H-50){doc.addPage();doc.setFillColor(darkBg[0],darkBg[1],darkBg[2]);doc.rect(0,0,W,H,"F");_pdfDecor(doc,W,H,gold,dimmed);y=50;}
+if(spi2%2===0){doc.setFillColor(18,18,24);doc.rect(M+4,y-8,W-M*2-8,13,"F");}
+doc.setFont("helvetica","normal");doc.setFontSize(9);doc.setTextColor(white[0],white[1],white[2]);doc.text(ssp2.name,M+10,y);
+doc.setFontSize(8);doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);doc.text(ssp2.dose+" | "+ssp2.timing,W-M-10,y,{align:"right"});y+=13;}
+y+=8;}}
+// Footer
+_pdfFooter(doc,W,H,M,gold,dimmed);
 var fname="REGI_MealPlan_"+(c?c.name.replace(/[^a-zA-Z0-9]/g,"_")+"_":"")+plan.name.replace(/[^a-zA-Z0-9]/g,"_")+".pdf";
 safePDFSave(doc,fname);}
 
@@ -2623,6 +2695,7 @@ var filterChips=document.querySelectorAll('#suppList').closest?document.querySel
 toast('\u2713 '+preset.name+' loaded \u2014 adjust doses as needed');}
 
 function renderSupplementBuilder(){
+_customSupps=[];
 var data=currentView.data||{};var clientId=data.clientId||"";
 var c=clientById(clientId);
 var html='<button class="btn2" onclick="pop()" style="margin-bottom:14px">\u2039 '+t("back")+'</button>';
@@ -2634,9 +2707,9 @@ html+='<div class="field"><span class="lb">'+t("notes").toUpperCase()+'</span><t
 // Preset protocol buttons
 html+='<div class="sl" style="margin-top:18px">'+t("presetProtocols")+'</div>';
 html+='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px">';
-html+='<button class="btn2" onclick="loadSuppPreset(\'womensCompPrep\')" style="flex:1;min-width:140px;border-color:rgba(255,120,180,0.25);color:#ff88bb">\u2640 '+t("womensCompPrep")+'</button>';
-html+='<button class="btn2" onclick="loadSuppPreset(\'mensPerformance\')" style="flex:1;min-width:140px;border-color:rgba(100,160,255,0.25);color:#88bbff">\u2642 '+t("mensPerformance")+'</button>';
-html+='<button class="btn2" onclick="loadSuppPreset(\'generalWellness\')" style="flex:1;min-width:140px">\u2728 '+t("generalWellness")+'</button>';
+html+='<button class="btn2" onclick="loadSuppPreset(\'womensCompPrep\')" style="flex:1;min-width:140px;border-color:rgba(255,120,180,0.25);color:#ff88bb">'+t("womensCompPrep")+'</button>';
+html+='<button class="btn2" onclick="loadSuppPreset(\'mensPerformance\')" style="flex:1;min-width:140px;border-color:rgba(100,160,255,0.25);color:#88bbff">'+t("mensPerformance")+'</button>';
+html+='<button class="btn2" onclick="loadSuppPreset(\'generalWellness\')" style="flex:1;min-width:140px">'+t("generalWellness")+'</button>';
 html+='</div>';
 // Category filters
 var cats=[{k:"all",l:t("all")},{k:"performance",l:t("performance")},{k:"protein",l:t("protein")},{k:"recovery",l:t("recovery")},{k:"health",l:t("health")},{k:"adaptogen",l:t("adaptogen")},{k:"womens",l:t("womensHealth")},{k:"mens",l:t("mensHealth")}];
@@ -2666,8 +2739,33 @@ html+='<div style="font-size:11px;color:var(--ow);line-height:1.7">'+sp.research
 html+='<div style="font-size:9px;color:var(--dm);font-family:var(--mono);margin-top:6px;font-style:italic">'+sp.refs+'</div>';
 html+='</div></div></div>';}
 html+='</div>';
+// Custom supplement add section
+html+='<div class="cd" style="padding:16px;margin-top:14px;border:1px dashed var(--accB)">';
+html+='<div class="sl" style="margin-bottom:10px">ADD CUSTOM SUPPLEMENT</div>';
+html+='<div style="font-size:10px;color:var(--dm);margin-bottom:10px;font-family:var(--mono)">For supplements not in the database</div>';
+html+='<div id="customSuppList"></div>';
+html+='<div class="g2" style="gap:6px;margin-bottom:6px"><div><span class="lb">NAME *</span><input id="csName" placeholder="e.g. Vitamin K2 MK-7"></div><div><span class="lb">DOSE *</span><input id="csDose" placeholder="e.g. 200mcg"></div></div>';
+html+='<div class="g2" style="gap:6px;margin-bottom:8px"><div><span class="lb">TIMING</span><input id="csTiming" placeholder="e.g. With meal"></div><div><span class="lb">CATEGORY</span><select id="csCat"><option value="health">Health</option><option value="performance">Performance</option><option value="recovery">Recovery</option><option value="womens">Women\'s</option><option value="mens">Men\'s</option></select></div></div>';
+html+='<button class="btn2" onclick="addCustomSuppToProtocol()" style="width:100%">+ ADD TO PROTOCOL</button>';
+html+='</div>';
 html+='<button class="btn" style="margin-top:18px" onclick="saveSupplementProtocol(\''+escJs(clientId||'')+'\')">'+t("saveSupplementProtocol")+'</button>';
 return html;}
+
+var _customSupps=[];
+function addCustomSuppToProtocol(){
+var name=v('csName'),dose=v('csDose');
+if(!name||!dose){toast('Name and dose required');return;}
+_customSupps.push({name:name,dose:dose,timing:v('csTiming')||'As directed',category:v('csCat')||'health'});
+var list=$('customSuppList');if(list){var h='';
+for(var i=0;i<_customSupps.length;i++){var cs=_customSupps[i];
+h+='<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;margin-bottom:4px;background:rgba(212,164,74,0.06);border-radius:8px;border:1px solid rgba(212,164,74,0.12)">';
+h+='<div><span style="font-size:12px;font-weight:700;color:var(--wh)">'+escHtml(cs.name)+'</span>';
+h+='<span style="font-size:10px;color:var(--acc);font-family:var(--mono);margin-left:8px">'+escHtml(cs.dose)+' \u00B7 '+escHtml(cs.timing)+'</span></div>';
+h+='<span onclick="_customSupps.splice('+i+',1);addCustomSuppToProtocol.call?$(\'customSuppList\').innerHTML=\'\':0;render();" style="color:var(--danger);cursor:pointer;font-size:12px;padding:2px 6px">\u2715</span></div>';}
+list.innerHTML=h;}
+var nameEl=$('csName'),doseEl=$('csDose'),timingEl=$('csTiming');
+if(nameEl)nameEl.value='';if(doseEl)doseEl.value='';if(timingEl)timingEl.value='';
+toast('\u2713 '+name+' added to protocol');}
 
 function filterSupps(cat,el){el.parentElement.querySelectorAll('.chip').forEach(function(c){c.classList.remove('on');});el.classList.add('on');document.querySelectorAll('#suppList .supp-item').forEach(function(item){item.style.display=(cat==='all'||item.dataset.cat===cat)?'':'none';});}
 function toggleSuppDetail(idx){var chk=$('suppChk'+idx);var det=$('suppDetail'+idx);if(det)det.style.display=chk&&chk.checked?'block':'none';}
@@ -2676,9 +2774,12 @@ function saveSupplementProtocol(clientId){
 var name=v('suppName');if(!name){toast(t("nameRequired"));return;}
 var supplements=[];
 for(var i=0;i<SUPPLEMENT_DB.length;i++){var chk=$('suppChk'+i);if(chk&&chk.checked){var doseEl=$('suppDose'+i);supplements.push({name:SUPPLEMENT_DB[i].n,category:SUPPLEMENT_DB[i].cat,dose:(doseEl?doseEl.value:SUPPLEMENT_DB[i].def)+' '+SUPPLEMENT_DB[i].unit,timing:SUPPLEMENT_DB[i].timing,research:SUPPLEMENT_DB[i].research.substring(0,120)+'...'});}}
+// Include custom supplements
+for(var ci=0;ci<_customSupps.length;ci++){var cs=_customSupps[ci];supplements.push({name:cs.name,category:cs.category,dose:cs.dose,timing:cs.timing,research:'Custom supplement',custom:true});}
 if(!supplements.length){toast(t("selectAtLeastOne"));return;}
 var plan={id:Date.now().toString(),clientId:clientId,name:name,goal:v('suppGoal')||'General Health',supplements:supplements,notes:v('suppNotes')||'',createdAt:new Date().toISOString()};
 var plans=getSupplementPlans();plans.push(plan);saveSupplementPlans(plans);
+_customSupps=[];
 toast('\u2713 Supplement protocol saved');pop();}
 
 function renderSupplementDetail(){
@@ -2692,8 +2793,44 @@ html+='<div class="cd" style="padding:14px;border-left:3px solid var(--acc)"><di
 if(sp.research)html+='<div style="font-size:10px;color:var(--mu);margin-top:8px;padding:8px;background:rgba(72,200,120,0.03);border-radius:6px;border:1px solid rgba(72,200,120,0.08);line-height:1.5"><span style="color:var(--success);font-family:var(--mono);font-size:8px">\u2713 '+t("evidence")+':</span> '+escHtml(sp.research)+'</div>';
 html+='</div>';}
 if(plan.notes)html+='<div class="cd" style="margin-top:10px;border-left:3px solid var(--acc);padding:12px"><div style="font-size:12px;color:var(--mu);line-height:1.7">'+escHtml(plan.notes)+'</div></div>';
-html+='<button class="btn-danger" style="margin-top:16px" onclick="deleteSupplementProtocol(\''+escJs(plan.id)+'\')">'+t("deleteProtocol")+'</button>';
+html+='<button class="btn" style="margin-top:16px" onclick="generateSuppPDF(\''+escJs(plan.id)+'\')">\u2193 EXPORT SUPPLEMENT PDF</button>';
+html+='<button class="btn-danger" style="margin-top:10px" onclick="deleteSupplementProtocol(\''+escJs(plan.id)+'\')">'+t("deleteProtocol")+'</button>';
 return html;}
+
+function generateSuppPDF(planId){
+var plans=getSupplementPlans();var plan=plans.find(function(p){return p.id===planId;});
+if(!plan){toast('Protocol not found');return;}
+if(!window.jspdf||!window.jspdf.jsPDF){toast("Loading PDF...");ensureJsPDF().then(function(){generateSuppPDF(planId);}).catch(function(){toast("Could not load PDF library");});return;}
+var c=clientById(plan.clientId);var doc=new window.jspdf.jsPDF({unit:"pt",format:"letter"});
+var W=612,H=792,M=40,gold=[212,164,74],darkBg=[14,14,20],white=[240,236,228],dimmed=[148,138,122],green=[120,200,120];
+doc.setFillColor(darkBg[0],darkBg[1],darkBg[2]);doc.rect(0,0,W,H,"F");
+_pdfDecor(doc,W,H,gold,dimmed);
+_pdfHeader(doc,W,M,gold,darkBg,white,dimmed,"SUPPLEMENT PROTOCOL");
+var y=150;
+doc.setFontSize(20);doc.setTextColor(white[0],white[1],white[2]);doc.text(plan.name,M,y);y+=18;
+if(c){doc.setFontSize(10);doc.setTextColor(gold[0],gold[1],gold[2]);doc.text("Client: "+c.name,M,y);y+=14;}
+doc.setFontSize(8);doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);doc.text(plan.goal+" | "+plan.supplements.length+" supplements | Created "+new Date(plan.createdAt).toLocaleDateString(),M,y);y+=24;
+// Table header
+doc.setFillColor(22,22,30);doc.roundedRect(M,y,W-M*2,18,4,4,"F");
+doc.setDrawColor(gold[0],gold[1],gold[2]);doc.setLineWidth(0.3);doc.line(M,y+18,W-M,y+18);
+doc.setFont("helvetica","bold");doc.setFontSize(7);doc.setTextColor(gold[0],gold[1],gold[2]);
+doc.text("SUPPLEMENT",M+10,y+12);doc.text("DOSE",M+220,y+12);doc.text("TIMING",M+310,y+12);doc.text("CATEGORY",W-M-10,y+12,{align:"right"});y+=24;
+// Supplements list
+for(var i=0;i<plan.supplements.length;i++){var sp=plan.supplements[i];
+if(y>H-80){doc.addPage();doc.setFillColor(darkBg[0],darkBg[1],darkBg[2]);doc.rect(0,0,W,H,"F");_pdfDecor(doc,W,H,gold,dimmed);y=50;}
+if(i%2===0){doc.setFillColor(18,18,24);doc.rect(M+4,y-9,W-M*2-8,16,"F");}
+doc.setFont("helvetica","normal");doc.setFontSize(9);doc.setTextColor(white[0],white[1],white[2]);doc.text(sp.name,M+10,y);
+doc.setFontSize(8);doc.setTextColor(green[0],green[1],green[2]);doc.text(sp.dose,M+220,y);
+doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);doc.text(sp.timing,M+310,y);
+doc.setFontSize(7);doc.text(sp.category.toUpperCase(),W-M-10,y,{align:"right"});y+=16;}
+// Notes
+if(plan.notes){y+=10;if(y>H-60){doc.addPage();doc.setFillColor(darkBg[0],darkBg[1],darkBg[2]);doc.rect(0,0,W,H,"F");_pdfDecor(doc,W,H,gold,dimmed);y=50;}
+doc.setFillColor(22,22,30);doc.roundedRect(M,y,W-M*2,28,4,4,"F");
+doc.setFont("helvetica","bold");doc.setFontSize(8);doc.setTextColor(gold[0],gold[1],gold[2]);doc.text("NOTES",M+10,y+12);
+doc.setFont("helvetica","normal");doc.setFontSize(8);doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);doc.text(plan.notes.substring(0,200),M+50,y+12);}
+_pdfFooter(doc,W,H,M,gold,dimmed);
+var fname="REGI_Supplements_"+(c?c.name.replace(/[^a-zA-Z0-9]/g,"_")+"_":"")+plan.name.replace(/[^a-zA-Z0-9]/g,"_")+".pdf";
+safePDFSave(doc,fname);}
 
 function deleteSupplementProtocol(id){if(!confirm(t("deleteConfirmSupp")))return;var plans=getSupplementPlans().filter(function(p){return p.id!==id;});saveSupplementPlans(plans);toast('\u2713 Deleted');pop();}
 
@@ -2757,25 +2894,25 @@ var html='<div class="gw" style="margin:0 0 18px"></div><div class="pt">'+t("pro
 // ── NUTRITION ──
 html+='<div class="sl">NUTRITION</div>';
 html+='<div class="g2" style="margin-bottom:14px">';
-html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="startMealPlan()"><div style="font-size:28px;margin-bottom:8px">\uD83C\uDF7D</div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("mealPlan")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">'+t("macroBuilder")+'</div></div>';
-html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="push(\'foodBrowser\')"><div style="font-size:28px;margin-bottom:8px">\uD83E\uDD66</div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("foodDatabase")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">'+getAllFoods().length+' '+t("food")+'s</div></div>';
+html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="startMealPlan()"><div style="margin-bottom:8px;display:flex;justify-content:center"><span style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,rgba(120,200,120,0.15),rgba(120,200,120,0.04));border:1px solid rgba(120,200,120,0.2);display:flex;align-items:center;justify-content:center;color:var(--success)">'+IC.meal+'</span></div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("mealPlan")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">'+t("macroBuilder")+'</div></div>';
+html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="push(\'foodBrowser\')"><div style="margin-bottom:8px;display:flex;justify-content:center"><span style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,rgba(212,164,74,0.15),rgba(212,164,74,0.04));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;color:var(--acc)">'+IC.food+'</span></div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("foodDatabase")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">'+getAllFoods().length+' '+t("food")+'s</div></div>';
 html+='</div>';
 html+='<div class="g2" style="margin-bottom:14px">';
-html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="startSupplementPlan()"><div style="font-size:28px;margin-bottom:8px">\uD83D\uDC8A</div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("supplementBuilder")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">'+t("scienceBacked")+'</div></div>';
+html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="startSupplementPlan()"><div style="margin-bottom:8px;display:flex;justify-content:center"><span style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,rgba(72,200,120,0.15),rgba(72,200,120,0.04));border:1px solid rgba(72,200,120,0.2);display:flex;align-items:center;justify-content:center;color:var(--success)">'+IC.supp+'</span></div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("supplementBuilder")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">'+t("scienceBacked")+'</div></div>';
 html+='<div style="padding:20px"></div>';
 html+='</div>';
 
 // ── TRAINING ──
 html+='<div class="sl" style="margin-top:6px">TRAINING</div>';
 html+='<div class="g2" style="margin-bottom:14px">';
-html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="push(\'proExercises\')"><div style="font-size:28px;margin-bottom:8px">\uD83C\uDFCB</div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("exerciseDatabase")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">'+t("byMuscle")+'</div></div>';
-html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="startCardioPlan()"><div style="font-size:28px;margin-bottom:8px">\u2764</div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("cardioBuilder")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">'+t("proCardioBuilder")+'</div></div>';
+html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="push(\'proExercises\')"><div style="margin-bottom:8px;display:flex;justify-content:center"><span style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,rgba(212,164,74,0.15),rgba(212,164,74,0.04));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;color:var(--acc)">'+IC.dumbbell+'</span></div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("exerciseDatabase")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">'+t("byMuscle")+'</div></div>';
+html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="startCardioPlan()"><div style="margin-bottom:8px;display:flex;justify-content:center"><span style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,rgba(212,164,74,0.15),rgba(212,164,74,0.04));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;color:var(--acc)">'+IC.cardio+'</span></div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("cardioBuilder")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">'+t("proCardioBuilder")+'</div></div>';
 html+='</div>';
 
 // ── COACHING ──
 html+='<div class="sl" style="margin-top:6px">COACHING</div>';
 html+='<div class="g2" style="margin-bottom:14px">';
-html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="showTimerModal()"><div style="font-size:28px;margin-bottom:8px">\u23F1</div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("restTimer")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">REST & RECOVERY</div></div>';
+html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="showTimerModal()"><div style="margin-bottom:8px;display:flex;justify-content:center"><span style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,rgba(212,164,74,0.15),rgba(212,164,74,0.04));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;color:var(--acc)">'+IC.timer+'</span></div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("restTimer")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">REST & RECOVERY</div></div>';
 html+='<div style="padding:20px"></div>';
 html+='</div>';
 
@@ -2784,21 +2921,21 @@ var allMealPlans=getMealPlans();
 if(allMealPlans.length){
 html+='<div class="sl" style="margin-top:18px">'+t("mealPlan").toUpperCase()+'S ('+allMealPlans.length+')</div>';
 for(var i=allMealPlans.length-1;i>=Math.max(0,allMealPlans.length-5);i--){var mp=allMealPlans[i];var c=clientById(mp.clientId);
-html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="push(\'mealPlanDetail\',{planId:\''+escJs(mp.id)+'\'})"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(120,200,120,0.18),rgba(120,200,120,0.06));border:1px solid rgba(120,200,120,0.2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">\uD83C\uDF7D</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(mp.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+(c?escHtml(c.name)+' \u00B7 ':'')+mp.mealCount+' meals \u00B7 P'+mp.targetP+'/C'+mp.targetC+'/F'+mp.targetF+'</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}}
+html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="push(\'mealPlanDetail\',{planId:\''+escJs(mp.id)+'\'})"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(120,200,120,0.18),rgba(120,200,120,0.06));border:1px solid rgba(120,200,120,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--success)">'+IC.meal+'</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(mp.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+(c?escHtml(c.name)+' \u00B7 ':'')+mp.mealCount+' meals \u00B7 P'+mp.targetP+'/C'+mp.targetC+'/F'+mp.targetF+'</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}}
 
 // Saved cardio plans
 var allCardioPlan=getCardioPlans();
 if(allCardioPlan.length){
 html+='<div class="sl" style="margin-top:18px">'+t("savedCardio")+' ('+allCardioPlan.length+')</div>';
 for(var i=allCardioPlan.length-1;i>=Math.max(0,allCardioPlan.length-5);i--){var cp=allCardioPlan[i];var c=clientById(cp.clientId);
-html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="push(\'cardioDetail\',{planId:\''+escJs(cp.id)+'\'})"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(201,168,76,0.18),rgba(201,168,76,0.06));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">\u2764</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(cp.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+(c?escHtml(c.name)+' \u00B7 ':'')+cp.phase+' \u00B7 '+cp.frequency+'x/wk</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}}
+html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="push(\'cardioDetail\',{planId:\''+escJs(cp.id)+'\'})"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(201,168,76,0.18),rgba(201,168,76,0.06));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--acc)">'+IC.cardio+'</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(cp.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+(c?escHtml(c.name)+' \u00B7 ':'')+cp.phase+' \u00B7 '+cp.frequency+'x/wk</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}}
 
 // Saved supplement plans
 var allSuppPlans=getSupplementPlans();
 if(allSuppPlans.length){
 html+='<div class="sl" style="margin-top:18px">'+t("savedSupplements")+' ('+allSuppPlans.length+')</div>';
 for(var i=allSuppPlans.length-1;i>=Math.max(0,allSuppPlans.length-5);i--){var sp2=allSuppPlans[i];var c2=clientById(sp2.clientId);
-html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="push(\'supplementDetail\',{planId:\''+escJs(sp2.id)+'\'})"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(72,200,120,0.18),rgba(72,200,120,0.06));border:1px solid rgba(72,200,120,0.2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">\uD83D\uDC8A</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(sp2.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+(c2?escHtml(c2.name)+' \u00B7 ':'')+sp2.goal+' \u00B7 '+sp2.supplements.length+' supps</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}}
+html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="push(\'supplementDetail\',{planId:\''+escJs(sp2.id)+'\'})"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(72,200,120,0.18),rgba(72,200,120,0.06));border:1px solid rgba(72,200,120,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--success)">'+IC.supp+'</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(sp2.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+(c2?escHtml(c2.name)+' \u00B7 ':'')+sp2.goal+' \u00B7 '+sp2.supplements.length+' supps</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}}
 
 return html;}
 
@@ -2832,7 +2969,7 @@ html+='<div class="cd" style="padding:0;overflow:hidden">';
 html+='<div style="display:grid;grid-template-columns:1fr 55px 35px 35px 35px 40px;padding:8px 12px;background:rgba(212,164,74,0.08);font-size:8px;font-weight:700;color:var(--acc);font-family:var(--mono)"><span>'+t("food")+'</span><span style="text-align:center">'+t("size")+'</span><span style="text-align:center">P</span><span style="text-align:center">C</span><span style="text-align:center">F</span><span style="text-align:right">CAL</span></div>';
 html+='<div id="foodBrowseList">';
 for(var i=0;i<foods.length;i++){var fd=foods[i];
-var measTag=fd.m==="cooked"?"\u{1F525}":fd.m==="dry"?"\u{1F33E}":"";
+var measTag=fd.m==="cooked"?"\u25CF ":fd.m==="dry"?"\u25C6 ":"";
 html+='<div class="food-browse-item" data-cat="'+(fd.custom?"custom":fd.cat)+'" style="display:grid;grid-template-columns:1fr 55px 35px 35px 35px 40px;padding:8px 12px;border-bottom:1px solid var(--borderS);font-size:11px;align-items:center">';
 html+='<span style="color:var(--wh);font-weight:500">'+escHtml(fd.n)+(fd.custom?' <span style="font-size:7px;color:var(--acc)">C</span>':'')+'</span>';
 html+='<span style="text-align:center;color:var(--dmL);font-family:var(--mono);font-size:8px">'+measTag+(fd.sz||'')+'</span>';
@@ -2854,29 +2991,29 @@ var html='<div class="gw" style="margin:0 0 18px"></div><button class="btn2" onc
 html+='<div class="cd" style="padding:18px;border:1px solid var(--accB);background:linear-gradient(160deg,rgba(12,12,20,0.99),rgba(6,6,12,0.99));margin-bottom:18px"><div class="g3"><div class="stat"><b style="color:var(--acc);font-size:20px">'+clients.length+'</b><small>'+t("clients").toUpperCase()+'</small></div><div class="stat"><b style="color:var(--ow);font-size:20px">'+sessions.length+'</b><small>'+t("sessions").toUpperCase()+'</small></div><div class="stat"><b style="color:var(--accVib);font-size:20px">$'+net+'</b><small>NET</small></div></div></div>';
 
 // ── BUSINESS & FINANCE ──
-html+='<div class="sl">\uD83D\uDCB0 BUSINESS & FINANCE</div>';
+html+='<div class="sl"><span style="display:inline-flex;vertical-align:middle;margin-right:6px;color:var(--acc)">'+IC.finance+'</span>BUSINESS & FINANCE</div>';
 html+='<div class="cd" style="padding:16px"><div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--borderS)"><span style="font-size:12px;color:var(--mu)">'+t("gross")+'</span><span style="font-size:13px;font-weight:700;color:var(--accVib);font-family:var(--mono)">$'+tr+'</span></div><div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--borderS)"><span style="font-size:12px;color:var(--mu)">'+t("gymCut")+'</span><span style="font-size:13px;font-weight:700;color:var(--dm);font-family:var(--mono)">$'+go2+'</span></div><div style="display:flex;justify-content:space-between;padding:8px 0"><span style="font-size:12px;color:var(--mu)">NET INCOME</span><span style="font-size:13px;font-weight:700;color:var(--success);font-family:var(--mono)">$'+net+'</span></div></div>';
 html+='<div class="cd" style="padding:16px"><div class="field"><span class="lb">'+t("gymCut")+'</span><div style="display:flex;gap:4px;flex-wrap:wrap">'+ph+'</div></div><div class="field" style="margin-bottom:0"><span class="lb">'+t("defaultRate")+'</span><input id="defRate" type="number" min="0" value="'+LS.get("defaultRate","70")+'" onchange="LS.set(\'defaultRate\',this.value)"></div></div>';
 html+='<div class="cd" style="padding:16px"><div class="g2"><button class="btn2" onclick="generateMonthlyPDF()" style="width:100%;background:rgba(201,168,76,0.05);border-color:var(--accB)">\u2193 '+t("monthlyPDF")+'</button><button class="btn" onclick="showEarningsReportPicker()" style="width:100%;font-size:10px;padding:10px 14px">\u2193 TAX REPORT</button></div></div>';
 
 // ── DISPLAY & PREFERENCES ──
-html+='<div class="sl" style="margin-top:22px">\uD83C\uDFA8 DISPLAY & PREFERENCES</div>';
+html+='<div class="sl" style="margin-top:22px"><span style="display:inline-flex;vertical-align:middle;margin-right:6px;color:var(--acc)">'+IC.palette+'</span>DISPLAY & PREFERENCES</div>';
 html+='<div class="cd" style="padding:16px"><div class="field"><span class="lb">'+t("name").toUpperCase()+'</span><input id="coachNameInput" value="'+escHtml(getCoachName())+'" placeholder="Your name" onchange="LS.set(\'coachName\',this.value);render()"></div><div class="field"><span class="lb">'+t("timeFormat")+'</span><div style="display:flex;gap:4px"><div class="chip'+(is24Hr()?"":" on")+'" onclick="LS.set(\'timeFormat\',\'12\');render()">12-Hour</div><div class="chip'+(is24Hr()?" on":"")+'" onclick="LS.set(\'timeFormat\',\'24\');render()">24-Hour</div></div></div><div class="field" style="margin-bottom:0"><span class="lb">'+t("lang").toUpperCase()+'</span><div style="display:flex;gap:4px"><div class="chip'+(getLang()==="en"?" on":"")+'" onclick="LS.set(\'lang\',\'en\');render()">English</div><div class="chip'+(getLang()==="hu"?" on":"")+'" onclick="LS.set(\'lang\',\'hu\');render()">Magyar</div></div></div></div>';
 
 // ── SECURITY ──
-html+='<div class="sl" style="margin-top:22px">\uD83D\uDD12 '+t("security")+'</div>';
+html+='<div class="sl" style="margin-top:22px"><span style="display:inline-flex;vertical-align:middle;margin-right:6px;color:var(--acc)">'+IC.lock+'</span>'+t("security")+'</div>';
 html+='<div class="cd" style="padding:16px"><div style="margin-bottom:12px"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+t("pin")+'</div><div style="font-size:10px;color:var(--dm)">'+t("quickAccessSecurity")+'</div></div><div class="g2"><button class="btn2" onclick="changePIN()" style="width:100%">'+t("changePIN")+'</button><button class="btn2" onclick="sessionStorage.removeItem(\'regi_unlocked\');showLockScreen()" style="width:100%">'+t("lockNow")+'</button></div></div>';
 
 // ── NOTIFICATIONS ──
-html+='<div class="sl" style="margin-top:22px">\uD83D\uDD14 NOTIFICATIONS</div>';
+html+='<div class="sl" style="margin-top:22px"><span style="display:inline-flex;vertical-align:middle;margin-right:6px;color:var(--acc)">'+IC.bell+'</span>NOTIFICATIONS</div>';
 html+=renderAutomation();
 
 // ── DATA & BACKUP ──
-html+='<div class="sl" style="margin-top:22px">\uD83D\uDCBE DATA & BACKUP</div>';
+html+='<div class="sl" style="margin-top:22px"><span style="display:inline-flex;vertical-align:middle;margin-right:6px;color:var(--acc)">'+IC.database+'</span>DATA & BACKUP</div>';
 html+='<div class="cd" style="padding:16px"><div class="g2"><button class="btn2" onclick="exportData()" style="width:100%">'+t("export")+' JSON</button><button class="btn2" onclick="$(\'importFile\').click()" style="width:100%">'+t("import")+'</button></div><input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)"></div>';
 
 // ── DANGER ZONE ──
-html+='<div class="sl" style="margin-top:22px">\u26A0 '+t("dangerZone")+'</div>';
+html+='<div class="sl" style="margin-top:22px"><span style="display:inline-flex;vertical-align:middle;margin-right:6px;color:var(--danger)">'+IC.warn+'</span>'+t("dangerZone")+'</div>';
 html+='<div class="cd" style="padding:16px;border:1px solid rgba(224,88,88,0.12)"><div style="font-size:11px;color:var(--danger);margin-bottom:12px">'+t("cannotUndo")+'</div><div class="g2"><button class="btn-danger" onclick="if(confirm(\'Delete ALL sessions?\')&&confirm(\'Sure?\')){sessions=[];save();toast(\'Cleared\');render();}">'+t("clearSessions")+'</button><button class="btn-danger" onclick="if(confirm(\'RESET EVERYTHING?\')&&confirm(\'Last chance?\')){clients=[];sessions=[];schedule=[];save();toast(\'Reset\');render();}">'+t("resetAll")+'</button></div></div>';
 
 // ── FOOTER ──
@@ -2989,18 +3126,18 @@ var overlay=document.createElement("div");
 overlay.id="whatsNew";
 overlay.style.cssText="position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.92);backdrop-filter:blur(20px);padding:16px;animation:fadeIn 0.4s ease";
 var wnItems=[
-{icon:"\uD83C\uDFCB",title:"Quick Add Exercise Database",desc:"Tap exercises from the database directly into your session. Muscle group filters, gender toggle, instant add."},
-{icon:"\u23F1",title:"Smarter Exercise Picker",desc:"Remembers your last muscle group, shows a running count, closes by tapping outside."},
-{icon:"\uD83C\uDF10",title:"Full Hungarian Translation",desc:"90+ new keys. Every screen, builder, and toast message now fully translated."},
-{icon:"\uD83D\uDD12",title:"Premium Lock Screen",desc:"Gold dot indicators fill as you type. PIN codes now support up to 9 digits."},
-{icon:"\u2728",title:"Refined Backgrounds",desc:"Deeper gradients, richer glow effects, and cleaner card surfaces across the entire app."},
-{icon:"\uD83D\uDEE1",title:"Security Hardened",desc:"4 XSS vulnerabilities patched. All user content properly escaped."},
-{icon:"\uD83D\uDE80",title:"200+ Changes",desc:"Mobile touch targets, empty states, consistent spacing, and micro-interaction polish throughout."}
+{icon:IC.dumbbell,title:"Quick Add Exercise Database",desc:"Tap exercises from the database directly into your session. Muscle group filters, gender toggle, instant add."},
+{icon:IC.timer,title:"Smarter Exercise Picker",desc:"Remembers your last muscle group, shows a running count, closes by tapping outside."},
+{icon:IC.palette,title:"Full Hungarian Translation",desc:"90+ new keys. Every screen, builder, and toast message now fully translated."},
+{icon:IC.lock,title:"Premium Lock Screen",desc:"Gold dot indicators fill as you type. PIN codes now support up to 9 digits."},
+{icon:IC.food,title:"Refined Backgrounds",desc:"Deeper gradients, richer glow effects, and cleaner card surfaces across the entire app."},
+{icon:IC.lock,title:"Security Hardened",desc:"4 XSS vulnerabilities patched. All user content properly escaped."},
+{icon:IC.cardio,title:"200+ Changes",desc:"Mobile touch targets, empty states, consistent spacing, and micro-interaction polish throughout."}
 ];
 var wnHtml='';
 for(var wi=0;wi<wnItems.length;wi++){var wn=wnItems[wi];
 wnHtml+='<div style="display:flex;gap:14px;padding:14px 0;'+(wi<wnItems.length-1?'border-bottom:1px solid rgba(212,164,74,0.06)':'')+';animation:slideUp 0.4s ease '+(wi*0.05)+'s both">';
-wnHtml+='<div style="width:36px;height:36px;border-radius:10px;background:rgba(212,164,74,0.06);border:1px solid rgba(212,164,74,0.12);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">'+wn.icon+'</div>';
+wnHtml+='<div style="width:36px;height:36px;border-radius:10px;background:rgba(212,164,74,0.06);border:1px solid rgba(212,164,74,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--acc)">'+wn.icon+'</div>';
 wnHtml+='<div style="flex:1;padding-top:2px"><div style="font-size:13px;font-weight:700;color:var(--ice);line-height:1.3">'+wn.title+'</div>';
 wnHtml+='<div style="font-size:11px;color:var(--mu);margin-top:4px;line-height:1.65">'+wn.desc+'</div></div></div>';}
 overlay.innerHTML='<div style="width:100%;max-width:440px;max-height:85vh;overflow-y:auto;background:linear-gradient(170deg,rgba(14,14,20,0.99) 0%,rgba(8,8,12,0.99) 40%,rgba(4,4,8,0.99) 100%);border:1px solid rgba(212,164,74,0.20);border-radius:20px;padding:0;box-shadow:0 0 100px rgba(212,164,74,0.12),0 0 2px rgba(212,164,74,0.25),0 40px 80px rgba(0,0,0,0.8)">'
