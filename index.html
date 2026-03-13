@@ -22,7 +22,7 @@
 --accS:rgba(201,168,76,0.06);--accB:rgba(201,168,76,0.18);--accM:rgba(201,168,76,0.30);
 --accGlow:rgba(201,168,76,0.22);--accGlow2:rgba(232,204,106,0.14);
 --ice:#f0f0f8;--wh:#e2e2ec;--ow:#b0b0c0;--mu:#7a7a90;--dm:#50506a;--dmL:#2e2e44;
---glass:rgba(201,168,76,0.03);--glassB:rgba(201,168,76,0.07);
+--glass:rgba(201,168,76,0.03);--glassB:rgba(201,168,76,0.07);--modalBg:linear-gradient(170deg,rgba(14,14,20,0.99) 0%,rgba(8,8,12,0.99) 50%,rgba(4,4,8,0.99) 100%);
 --warn:#e8a855;--danger:#e05858;--success:#48c878;
 --display:'Cinzel',serif;--body:'Rajdhani',sans-serif;--mono:'IBM Plex Mono',monospace;
 --sidebar:260px;
@@ -48,11 +48,11 @@ button{font-family:var(--body);cursor:pointer;border:none;outline:none;transitio
 .btn-danger{background:rgba(216,120,120,0.05);border:1px solid rgba(216,120,120,0.15);color:var(--danger);font-family:var(--mono);font-size:10px;font-weight:700;padding:12px;border-radius:8px;width:100%;letter-spacing:0.08em}
 .btn-danger:hover{background:rgba(216,120,120,0.1);border-color:rgba(216,120,120,0.3)}
 .btn-success{background:rgba(120,200,120,0.08);border:1px solid rgba(120,200,120,0.2);color:var(--success);font-family:var(--mono);font-size:10px;font-weight:700;padding:12px;border-radius:8px;width:100%;letter-spacing:0.08em}
-.cd{background:linear-gradient(160deg,rgba(10,10,16,0.99),rgba(4,4,8,0.99));border:1px solid rgba(212,168,72,0.08);border-radius:14px;padding:16px;margin-bottom:10px;transition:border-color 0.25s,box-shadow 0.25s;box-shadow:0 2px 24px rgba(0,0,0,0.7),0 0 1px rgba(212,168,72,0.05),inset 0 1px 0 rgba(255,255,255,0.015);border-top:1px solid rgba(212,168,72,0.10)}
+.cd{background:linear-gradient(165deg,rgba(12,12,18,0.98) 0%,rgba(8,8,12,0.99) 40%,rgba(4,4,8,0.99) 100%);border:1px solid rgba(212,168,72,0.08);border-radius:14px;padding:16px;margin-bottom:10px;transition:border-color 0.25s,box-shadow 0.25s;box-shadow:0 2px 24px rgba(0,0,0,0.7),0 0 1px rgba(212,168,72,0.05),inset 0 1px 0 rgba(255,255,255,0.02);border-top:1px solid rgba(212,168,72,0.12)}
 .cd-link{cursor:pointer;transition:border-color 0.25s,box-shadow 0.25s,transform 0.15s}.cd-link:hover{border-color:var(--borderH);box-shadow:0 4px 28px rgba(0,0,0,0.4),0 0 12px rgba(212,164,74,0.06);transform:translateY(-1px)}
 .cd-link:active{transform:scale(0.995) translateY(0);border-color:var(--accB)}
-.gw{height:1px;background:linear-gradient(90deg,transparent,var(--accDeep),var(--acc),var(--accBright),var(--acc),var(--accDeep),transparent);box-shadow:0 0 20px var(--accGlow),0 0 40px rgba(201,168,76,0.06);margin:28px 0;position:relative}
-.gw::after{content:'';position:absolute;top:-1px;left:25%;right:25%;height:3px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.12),transparent);filter:blur(3px)}
+.gw{height:1px;background:linear-gradient(90deg,transparent 5%,var(--accDeep) 20%,var(--acc) 40%,var(--accBright) 50%,var(--acc) 60%,var(--accDeep) 80%,transparent 95%);box-shadow:0 0 24px var(--accGlow),0 0 48px rgba(201,168,76,0.05);margin:28px 0;position:relative}
+.gw::after{content:'';position:absolute;top:-2px;left:20%;right:20%;height:5px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.10),transparent);filter:blur(4px)}
 .sl{font-size:10px;font-weight:700;color:var(--acc);letter-spacing:0.22em;font-family:var(--mono);text-shadow:0 0 24px var(--accGlow),0 0 48px rgba(212,164,74,0.06);margin-bottom:12px;text-transform:uppercase}
 .pt{font-size:24px;font-weight:700;color:var(--ice);font-family:var(--display);letter-spacing:0.04em;margin-bottom:20px;line-height:1.2}
 .lb{font-size:10px;font-weight:700;color:var(--acc);font-family:var(--mono);letter-spacing:0.1em;display:block;margin-bottom:7px;text-transform:uppercase}
@@ -66,9 +66,9 @@ button{font-family:var(--body);cursor:pointer;border:none;outline:none;transitio
 .status-noshow{background:rgba(180,140,100,0.08);border:1px solid rgba(180,140,100,0.2);color:#c4a070}
 .status-latecancel{background:rgba(232,184,120,0.08);border:1px solid rgba(232,184,120,0.2);color:var(--warn)}
 #app{max-width:640px;margin:0 auto;min-height:100vh;min-height:100dvh;position:relative;z-index:1}
-.hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 12px;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(2,2,4,0.97);backdrop-filter:blur(36px);z-index:10}
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 12px;border-bottom:1px solid var(--border);position:sticky;top:0;background:linear-gradient(180deg,rgba(4,4,8,0.98),rgba(2,2,4,0.97));backdrop-filter:blur(40px) saturate(1.2);z-index:10}
 .ct{padding:20px 16px 110px}
-.tabs{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:640px;background:rgba(2,2,4,0.98);backdrop-filter:blur(36px);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:10px 0 max(10px,env(safe-area-inset-bottom));z-index:10}
+.tabs{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:640px;background:linear-gradient(0deg,rgba(4,4,8,0.99),rgba(2,2,4,0.98));backdrop-filter:blur(40px) saturate(1.2);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:10px 0 max(10px,env(safe-area-inset-bottom));z-index:10}
 .ti{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:6px 10px;font-size:9px;font-weight:700;font-family:var(--mono);letter-spacing:0.04em;color:var(--dm);position:relative;user-select:none;transition:color 0.2s,transform 0.15s;min-width:44px;min-height:44px;justify-content:center}
 .ti:active{transform:scale(0.92)}
 .ti.on{color:var(--acc);filter:drop-shadow(0 0 12px var(--accGlow))}
@@ -77,7 +77,7 @@ button{font-family:var(--body);cursor:pointer;border:none;outline:none;transitio
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
 .g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px}
 .field{margin-bottom:18px}
-.stat{padding:18px 10px;text-align:center;background:linear-gradient(160deg,rgba(10,10,16,0.98),rgba(4,4,8,0.99));border-radius:14px;border:1px solid rgba(212,168,72,0.08);border-top:1px solid rgba(212,168,72,0.14);transition:border-color 0.2s,box-shadow 0.2s;box-shadow:0 4px 24px rgba(0,0,0,0.6),0 0 1px rgba(212,168,72,0.04);position:relative;overflow:hidden}
+.stat{padding:18px 10px;text-align:center;background:linear-gradient(165deg,rgba(12,12,18,0.98) 0%,rgba(8,8,12,0.99) 50%,rgba(4,4,8,0.99) 100%);border-radius:14px;border:1px solid rgba(212,168,72,0.08);border-top:1px solid rgba(212,168,72,0.14);transition:border-color 0.2s,box-shadow 0.2s;box-shadow:0 4px 28px rgba(0,0,0,0.65),0 0 1px rgba(212,168,72,0.06);position:relative;overflow:hidden}
 .stat::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:40%;height:1px;background:linear-gradient(90deg,transparent,rgba(212,168,72,0.25),transparent)}
 .stat:hover{border-color:var(--accB);box-shadow:0 0 32px rgba(212,168,72,0.06)}
 .stat b{font-size:26px;font-weight:800;font-family:var(--mono);display:block;line-height:1;letter-spacing:-0.02em}
@@ -87,7 +87,7 @@ button{font-family:var(--body);cursor:pointer;border:none;outline:none;transitio
 .timer-bar{position:fixed;top:0;left:0;right:0;height:2px;z-index:200;pointer-events:none;opacity:0;transition:opacity 0.3s}
 .timer-bar.active{opacity:1}
 .timer-bar-fill{height:100%;background:linear-gradient(90deg,var(--accDeep),var(--accBright));transition:width 1s linear;box-shadow:0 0 8px var(--accGlow)}
-.toast{position:fixed;top:64px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,rgba(12,12,20,0.98),rgba(18,18,30,0.98));color:var(--accBright);border:1px solid var(--accB);font-family:var(--mono);font-size:11px;font-weight:700;padding:11px 28px;border-radius:12px;z-index:1000;animation:toastIn 0.3s ease;box-shadow:0 8px 36px rgba(0,0,0,0.6),0 0 16px rgba(201,168,76,0.06);letter-spacing:0.08em;pointer-events:none;max-width:90vw;overflow-wrap:break-word;text-align:center}
+.toast{position:fixed;top:64px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,rgba(12,12,20,0.98),rgba(16,16,26,0.99));color:var(--accBright);border:1px solid var(--accB);font-family:var(--mono);font-size:11px;font-weight:700;padding:12px 28px;border-radius:12px;z-index:1000;animation:toastIn 0.3s ease;box-shadow:0 8px 40px rgba(0,0,0,0.7),0 0 20px rgba(201,168,76,0.08),inset 0 1px 0 rgba(255,255,255,0.02);letter-spacing:0.08em;pointer-events:none;max-width:90vw;overflow-wrap:break-word;text-align:center;backdrop-filter:blur(12px)}
 .set-row{display:flex;gap:6px;align-items:center;margin-bottom:6px;padding:8px 10px;background:rgba(212,164,74,0.03);border-radius:8px;border:1px solid rgba(212,164,74,0.08)}
 .set-badge{min-width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;font-family:var(--mono);flex-shrink:0;background:rgba(212,164,74,0.08);color:var(--acc);border:1px solid rgba(212,164,74,0.18)}
 .ex-summary{padding:14px 16px;background:rgba(212,164,74,0.03);border-radius:10px;border:1px solid rgba(212,164,74,0.1);margin-top:8px;box-shadow:0 1px 6px rgba(0,0,0,0.2)}
@@ -114,7 +114,7 @@ html{scroll-behavior:smooth}
 @media(min-width:900px){
 #app{max-width:100%}
 .hdr{display:none}
-.tabs{position:fixed;left:0;top:0;bottom:0;width:var(--sidebar);max-width:var(--sidebar);flex-direction:column;justify-content:flex-start;padding:0;border-top:none;border-right:1px solid var(--border);background:rgba(10,9,12,0.99);transform:none}
+.tabs{position:fixed;left:0;top:0;bottom:0;width:var(--sidebar);max-width:var(--sidebar);flex-direction:column;justify-content:flex-start;padding:0;border-top:none;border-right:1px solid var(--border);background:linear-gradient(180deg,rgba(10,10,16,0.99) 0%,rgba(6,6,10,0.99) 100%);transform:none}
 .ti{flex-direction:row;justify-content:flex-start;gap:14px;padding:14px 26px;font-size:12px;letter-spacing:0.08em;width:100%;border-radius:0;min-height:48px}
 .ti:hover{color:var(--ow);background:rgba(212,164,74,0.04)}
 .ti.on{color:var(--acc);background:rgba(212,164,74,0.06);filter:none}
@@ -130,7 +130,7 @@ html{scroll-behavior:smooth}
 </style>
 </head>
 <body>
-<div style="position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 80% 40% at 50% -20%,rgba(212,168,72,0.04) 0%,transparent 50%),radial-gradient(ellipse 40% 30% at 100% 50%,rgba(15,15,30,0.12) 0%,transparent 40%),radial-gradient(ellipse 50% 60% at -10% 100%,rgba(10,10,25,0.10) 0%,transparent 45%),var(--bg)"></div>
+<div style="position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 70% 35% at 50% -10%,rgba(212,168,72,0.05) 0%,rgba(201,168,76,0.015) 40%,transparent 65%),radial-gradient(ellipse 35% 45% at 100% 40%,rgba(8,8,20,0.20) 0%,transparent 50%),radial-gradient(ellipse 40% 50% at 0% 80%,rgba(8,8,22,0.16) 0%,transparent 50%),radial-gradient(ellipse 60% 30% at 50% 100%,rgba(154,112,32,0.025) 0%,transparent 60%),var(--bg)"></div>
 <div class="timer-bar" id="timerBar"><div class="timer-bar-fill" id="timerBarFill" style="width:100%"></div></div>
 <div id="app" style="display:none">
 <div class="hdr" id="hdr">
@@ -147,7 +147,7 @@ html{scroll-behavior:smooth}
 
 var SUPA_URL="https://pwopwvvgjflunjxwkkql.supabase.co";
 var SUPA_KEY="sb_publishable_6slliEpPsWV9JXIDvz8pyw_FNPrPMhv";
-var VERSION="5.2";
+var VERSION="5.3";
 var LANGS={
 en:{
 days:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],
@@ -334,8 +334,8 @@ sessionsScheduled:"sessions scheduled",
 createFromProfiles:"Create programs from client profiles",
 currentPIN:"Current PIN:",
 incorrect:"Incorrect",
-newPINPrompt:"New PIN (4-8 digits):",
-mustBe4to8:"Must be 4-8 digits",
+newPINPrompt:"New PIN (4-9 digits):",
+mustBe4to8:"Must be 4-9 digits",
 confirmPIN:"Confirm:",
 mismatch:"Mismatch",
 pinUpdated:"PIN updated",
@@ -660,8 +660,8 @@ sessionsScheduled:"edz\u00e9s be\u00fctemezve",
 createFromProfiles:"\u00dcgyf\u00e9l profilokb\u00f3l k\u00e9sz\u00edts programot",
 currentPIN:"Jelenlegi PIN:",
 incorrect:"Helytelen",
-newPINPrompt:"\u00daj PIN (4-8 sz\u00e1mjegy):",
-mustBe4to8:"4-8 sz\u00e1mjegy sz\u00fcks\u00e9ges",
+newPINPrompt:"\u00daj PIN (4-9 sz\u00e1mjegy):",
+mustBe4to8:"4-9 sz\u00e1mjegy sz\u00fcks\u00e9ges",
 confirmPIN:"Meger\u0151s\u00edt\u00e9s:",
 mismatch:"Nem egyezik",
 pinUpdated:"PIN friss\u00edtve",
@@ -2795,11 +2795,11 @@ function getPIN(){return localStorage.getItem(PIN_KEY)||DEFAULT_PIN;}
 function setPIN(p){localStorage.setItem(PIN_KEY,p);}
 function isUnlocked(){return sessionStorage.getItem("regi_unlocked")==="true";}
 function unlock(){sessionStorage.setItem("regi_unlocked","true");}
-function showLockScreen(){var app=$("app");app.style.display="none";var ld=$("lockScreen");if(!ld){ld=document.createElement("div");ld.id="lockScreen";document.body.appendChild(ld);}ld.style.cssText="position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#040406;padding:24px";
-ld.innerHTML='<div style="position:absolute;inset:0;pointer-events:none;overflow:hidden"><div style="position:absolute;top:-20%;left:50%;transform:translateX(-50%);width:160%;height:50%;background:radial-gradient(ellipse 60% 70% at 50% 100%,rgba(212,164,74,0.12),rgba(212,164,74,0.04) 40%,transparent 70%);filter:blur(40px)"></div><div style="position:absolute;bottom:-10%;left:50%;transform:translateX(-50%);width:120%;height:30%;background:radial-gradient(ellipse 80% 100% at 50% 0%,rgba(154,112,32,0.06),transparent 60%)"></div></div><div style="position:relative;display:flex;flex-direction:column;align-items:center;width:100%;max-width:340px"><div style="width:100px;height:100px;border-radius:24px;background:linear-gradient(145deg,#0c0c14,#161620);border:1px solid rgba(212,164,74,0.25);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:48px;font-weight:900;color:var(--acc);box-shadow:0 0 80px rgba(212,164,74,0.25),0 0 160px rgba(212,164,74,0.08),0 8px 32px rgba(0,0,0,0.6),inset 0 1px 0 rgba(212,164,74,0.1);animation:breathe 4s ease-in-out infinite;margin-bottom:28px;text-shadow:0 0 24px rgba(212,164,74,0.4)">R</div><div style="font-family:var(--display);font-size:34px;font-weight:800;letter-spacing:0.16em;color:var(--ice);margin-bottom:8px;text-shadow:0 2px 12px rgba(0,0,0,0.4)">REGI</div><div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><div style="width:32px;height:1px;background:linear-gradient(90deg,transparent,var(--accDeep))"></div><div style="font-size:9px;color:var(--acc);font-family:var(--mono);letter-spacing:0.3em;font-weight:700">COACHING STUDIO</div><div style="width:32px;height:1px;background:linear-gradient(90deg,var(--accDeep),transparent)"></div></div><div style="width:60px;height:1px;background:linear-gradient(90deg,transparent,var(--acc),transparent);margin-bottom:48px;box-shadow:0 0 12px var(--accGlow)"></div><div style="width:100%"><div id="pinDots" style="display:flex;justify-content:center;gap:12px;margin-bottom:20px;min-height:14px"></div><input id="pinInput" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="8" placeholder="" style="text-align:center;font-size:24px;letter-spacing:0.6em;font-family:var(--mono);padding:18px;margin-bottom:16px;border-radius:12px;background:rgba(212,164,74,0.03);border:1px solid rgba(212,164,74,0.2);box-shadow:inset 0 2px 8px rgba(0,0,0,0.3),0 0 20px rgba(212,164,74,0.04);color:transparent;text-shadow:0 0 0 transparent;caret-color:var(--acc)" oninput="updatePinDots()"><button class="btn" onclick="tryUnlock()" style="margin-bottom:12px;border-radius:12px;padding:16px;font-size:12px;letter-spacing:0.2em">'+t("unlockLabel")+'</button><div id="pinError" style="text-align:center;font-size:10px;color:var(--danger);font-family:var(--mono);min-height:18px"></div></div><div style="position:absolute;bottom:-80px;left:50%;transform:translateX(-50%);text-align:center"><div style="font-size:7px;color:var(--dmL);font-family:var(--mono);letter-spacing:0.2em">REGI COACHING STUDIO</div></div></div>';setTimeout(function(){var inp=$("pinInput");if(inp){inp.focus();updatePinDots();inp.addEventListener("keydown",function(e){if(e.key==="Enter")tryUnlock();});}},100);}
-function updatePinDots(){var inp=$("pinInput");var dots=$("pinDots");if(!inp||!dots)return;var len=inp.value.length;var maxLen=parseInt(inp.getAttribute("maxlength"))||8;var h='';for(var i=0;i<maxLen;i++){var filled=i<len;h+='<div style="width:12px;height:12px;border-radius:50%;transition:all 0.15s ease;'+(filled?'background:var(--acc);box-shadow:0 0 8px rgba(212,164,74,0.4)':'background:rgba(212,164,74,0.08);border:1px solid rgba(212,164,74,0.2)')+'"></div>';}dots.innerHTML=h;}
+function showLockScreen(){var app=$("app");app.style.display="none";var ld=$("lockScreen");if(!ld){ld=document.createElement("div");ld.id="lockScreen";document.body.appendChild(ld);}ld.style.cssText="position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(175deg,#060610 0%,#040408 40%,#020204 100%);padding:24px";
+ld.innerHTML='<div style="position:absolute;inset:0;pointer-events:none;overflow:hidden"><div style="position:absolute;top:-25%;left:50%;transform:translateX(-50%);width:180%;height:55%;background:radial-gradient(ellipse 50% 65% at 50% 100%,rgba(212,164,74,0.10),rgba(201,168,76,0.03) 45%,transparent 70%);filter:blur(50px)"></div><div style="position:absolute;bottom:-15%;left:50%;transform:translateX(-50%);width:140%;height:35%;background:radial-gradient(ellipse 70% 90% at 50% 0%,rgba(154,112,32,0.05),transparent 55%);filter:blur(30px)"></div><div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:200%;height:200%;background:radial-gradient(circle at 50% 50%,rgba(212,164,74,0.018) 0%,transparent 40%);filter:blur(60px)"></div></div><div style="position:relative;display:flex;flex-direction:column;align-items:center;width:100%;max-width:340px"><div style="width:100px;height:100px;border-radius:24px;background:linear-gradient(145deg,#0c0c14,#161620);border:1px solid rgba(212,164,74,0.25);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:48px;font-weight:900;color:var(--acc);box-shadow:0 0 80px rgba(212,164,74,0.25),0 0 160px rgba(212,164,74,0.08),0 8px 32px rgba(0,0,0,0.6),inset 0 1px 0 rgba(212,164,74,0.1);animation:breathe 4s ease-in-out infinite;margin-bottom:28px;text-shadow:0 0 24px rgba(212,164,74,0.4)">R</div><div style="font-family:var(--display);font-size:34px;font-weight:800;letter-spacing:0.16em;color:var(--ice);margin-bottom:8px;text-shadow:0 2px 12px rgba(0,0,0,0.4)">REGI</div><div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><div style="width:32px;height:1px;background:linear-gradient(90deg,transparent,var(--accDeep))"></div><div style="font-size:9px;color:var(--acc);font-family:var(--mono);letter-spacing:0.3em;font-weight:700">COACHING STUDIO</div><div style="width:32px;height:1px;background:linear-gradient(90deg,var(--accDeep),transparent)"></div></div><div style="width:60px;height:1px;background:linear-gradient(90deg,transparent,var(--acc),transparent);margin-bottom:48px;box-shadow:0 0 12px var(--accGlow)"></div><div style="width:100%"><div id="pinDots" style="display:flex;justify-content:center;gap:12px;margin-bottom:20px;min-height:14px"></div><input id="pinInput" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="9" placeholder="" style="text-align:center;font-size:24px;letter-spacing:0.6em;font-family:var(--mono);padding:18px;margin-bottom:16px;border-radius:12px;background:rgba(212,164,74,0.03);border:1px solid rgba(212,164,74,0.2);box-shadow:inset 0 2px 8px rgba(0,0,0,0.3),0 0 20px rgba(212,164,74,0.04);color:transparent;text-shadow:0 0 0 transparent;caret-color:var(--acc)" oninput="updatePinDots()"><button class="btn" onclick="tryUnlock()" style="margin-bottom:12px;border-radius:12px;padding:16px;font-size:12px;letter-spacing:0.2em">'+t("unlockLabel")+'</button><div id="pinError" style="text-align:center;font-size:10px;color:var(--danger);font-family:var(--mono);min-height:18px"></div></div><div style="position:absolute;bottom:-80px;left:50%;transform:translateX(-50%);text-align:center"><div style="font-size:7px;color:var(--dmL);font-family:var(--mono);letter-spacing:0.2em">REGI COACHING STUDIO</div></div></div>';setTimeout(function(){var inp=$("pinInput");if(inp){inp.focus();updatePinDots();inp.addEventListener("keydown",function(e){if(e.key==="Enter")tryUnlock();});}},100);}
+function updatePinDots(){var inp=$("pinInput");var dots=$("pinDots");if(!inp||!dots)return;var len=inp.value.length;var pinLen=getPIN().length;var h='';for(var i=0;i<pinLen;i++){var filled=i<len;h+='<div style="width:12px;height:12px;border-radius:50%;transition:all 0.15s ease;'+(filled?'background:var(--acc);box-shadow:0 0 8px rgba(212,164,74,0.4)':'background:rgba(212,164,74,0.08);border:1px solid rgba(212,164,74,0.2)')+'"></div>';}dots.innerHTML=h;}
 function tryUnlock(){var inp=$("pinInput"),entered=inp?inp.value.trim():"";if(entered===getPIN()){haptic([15,50,15]);unlock();var lk=$("lockScreen");if(lk)lk.remove();$("app").style.display="";render();}else{haptic([50,30,50]);var err=$("pinError");if(err){err.textContent=t("incorrectPIN");setTimeout(function(){err.textContent="";},1500);}if(inp){inp.value="";updatePinDots();inp.focus();inp.style.animation="shakeError 0.4s ease";setTimeout(function(){inp.style.animation="";},500);}}}
-function changePIN(){var cur=prompt(t("currentPIN"));if(cur!==getPIN()){toast(t("incorrect"));return;}var np=prompt(t("newPINPrompt"));if(!np||np.length<4||np.length>8||!/^\d+$/.test(np)){toast(t("mustBe4to8"));return;}var c2=prompt(t("confirmPIN"));if(c2!==np){toast(t("mismatch"));return;}setPIN(np);toast("\u2713 "+t("pinUpdated"));}
+function changePIN(){var cur=prompt(t("currentPIN"));if(cur!==getPIN()){toast(t("incorrect"));return;}var np=prompt(t("newPINPrompt"));if(!np||np.length<4||np.length>9||!/^\d+$/.test(np)){toast(t("mustBe4to8"));return;}var c2=prompt(t("confirmPIN"));if(c2!==np){toast(t("mismatch"));return;}setPIN(np);toast("\u2713 "+t("pinUpdated"));}
 
 // PWA
 var _deferredPrompt=null;
@@ -2818,17 +2818,50 @@ if(firstSeen){if(Date.now()-Number(firstSeen)>EXPIRY_MS){LS.set("seenVersion",VE
 else{LS.set("whatsNewFirstSeen",String(Date.now()));}
 var overlay=document.createElement("div");
 overlay.id="whatsNew";
-overlay.style.cssText="position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);padding:20px;animation:fadeIn 0.3s ease";
-var wnItems=[
-{icon:"\u2728",title:"Premium Dark UI Overhaul",desc:"Complete aesthetic redesign — cool-dark theme with refined gold accents. Every tab, card, button, and input redesigned with premium feel. Zero beige. Pure sophistication."},
-{icon:"\uD83D\uDC8A",title:"Supplement Protocol Builder",desc:"18 scientifically-backed supplements with adjustable dosing, peer-reviewed research notes, and auto-generated protocols. Creatine to collagen — everything evidence-based."},
-{icon:"\u23F1",title:"Pro Coaching Timer",desc:"Fullscreen premium timer with progress bar, pulse animations, expanded presets (30s to 5min), and inline session display. Optimized for coaching scenarios."},
-{icon:"\uD83C\uDFCB",title:"Exercise Builder Upgrade",desc:"Dropdown selectors for weight (5-500 lbs) and reps (1-30 + AMRAP/Failure) — no more typing. Premium exercise logging with pro-grade controls."},
-{icon:"\uD83D\uDCCA",title:"Settings Reorganized",desc:"Settings grouped into logical sections: Business & Finance, Notifications, Display, Security, Data & Backup. Everything where you'd expect it."},
-{icon:"\uD83C\uDF1F",title:"Gold Accent Line",desc:"The signature golden accent line now appears consistently across every tab for a cohesive, branded experience."},
-{icon:"\uD83D\uDE80",title:"100+ Improvements",desc:"Refined card styling, enhanced timer progress bars, expanded supplement database, premium modal overlays, and polished micro-interactions throughout."}
-];var wnHtml="";for(var wi=0;wi<wnItems.length;wi++){var wn=wnItems[wi];wnHtml+='<div style="display:flex;gap:14px;padding:12px 0;'+(wi<wnItems.length-1?"border-bottom:1px solid var(--borderS)":"")+'"><div style="font-size:20px;width:32px;flex-shrink:0;text-align:center;padding-top:2px">'+wn.icon+'</div><div style="flex:1"><div style="font-size:12px;font-weight:700;color:var(--accBright)">'+wn.title+'</div><div style="font-size:11px;color:var(--mu);margin-top:4px;line-height:1.6">'+wn.desc+'</div></div></div>';}
-overlay.innerHTML='<div style="width:100%;max-width:420px;max-height:82vh;overflow-y:auto;background:linear-gradient(160deg,rgba(22,21,26,0.99),rgba(10,9,12,0.99));border:1px solid var(--accB);border-radius:16px;padding:28px;box-shadow:0 0 80px rgba(212,164,74,0.15),0 0 1px rgba(212,164,74,0.3)"><div style="text-align:center;margin-bottom:22px"><div style="width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#0e0e14,#1a1a24);border:1px solid var(--borderH);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:24px;font-weight:900;color:var(--acc);box-shadow:0 0 40px var(--accGlow);margin:0 auto 14px">R</div><div style="font-family:var(--display);font-size:22px;font-weight:700;color:var(--ice);letter-spacing:0.06em">REGI v'+VERSION+'</div><div style="font-size:9px;color:var(--acc);font-family:var(--mono);margin-top:6px;letter-spacing:0.14em">WHAT\u2019S NEW</div></div><div class="gw" style="margin:16px 0"></div><div>'+wnHtml+'</div><button class="btn" style="margin-top:22px" onclick="LS.set(\'seenVersion\',VERSION);LS.set(\'whatsNewFirstSeen\',\'\');document.getElementById(\'whatsNew\').remove()">LET\u2019S GO</button></div>';
+overlay.style.cssText="position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.92);backdrop-filter:blur(20px);padding:16px;animation:fadeIn 0.4s ease";
+var wnSections=[
+{heading:"COACHING TOOLS",items:[
+{icon:"\uD83C\uDFCB",title:"Quick Add Exercise Database",desc:"Tap exercises from the Hany Rambod FST-7 database directly into your session builder. Muscle group filters, gender toggle, and instant add \u2014 no typing required."},
+{icon:"\u2795",title:"Live Session Stats",desc:"Real-time exercise and set counters update as you build each session. See total volume at a glance while logging."},
+{icon:"\u23F1",title:"Smart Exercise Picker",desc:"The picker now remembers your last muscle group, shows a running count of exercises added, and closes by tapping outside. Every tap gives instant feedback."}
+]},
+{heading:"LOCALIZATION",items:[
+{icon:"\uD83C\uDF10",title:"Full Hungarian Translation",desc:"Every screen, button, label, and toast message \u2014 cardio builder, supplement protocols, meal plans, settings, and auth \u2014 now fully translated with 90+ new keys."},
+{icon:"\uD83D\uDD24",title:"Dynamic Language Switching",desc:"Category filters, validation messages, timer states, and even PDF exports now respect your language setting instantly."}
+]},
+{heading:"SECURITY & UX",items:[
+{icon:"\uD83D\uDD12",title:"Premium Lock Screen",desc:"PIN entry now shows elegant gold dot indicators that fill as you type. Visual feedback that matches the premium aesthetic of the app."},
+{icon:"\uD83D\uDD22",title:"Extended PIN Support",desc:"PIN codes now support up to 9 digits for stronger security. The dot display adapts to your PIN length automatically."}
+]},
+{heading:"POLISH & QUALITY",items:[
+{icon:"\u2728",title:"Enhanced Backgrounds",desc:"Refined ambient lighting across the app \u2014 deeper gradients, more sophisticated glow effects, and cleaner card surfaces for a true dark-mode luxury feel."},
+{icon:"\uD83D\uDEE1",title:"Security Hardened",desc:"4 XSS vulnerabilities patched. All user-generated content (exercise names, client data, food items) now properly escaped. Null safety guards added throughout."},
+{icon:"\uD83D\uDE80",title:"200+ Code Changes",desc:"Touch targets sized for mobile, empty states added for every picker and list, consistent spacing rhythm, and micro-interaction improvements across every tool."}
+]}
+];
+var wnHtml='';
+for(var si=0;si<wnSections.length;si++){var sec=wnSections[si];
+wnHtml+='<div style="margin-bottom:22px'+(si>0?';padding-top:18px;border-top:1px solid rgba(212,164,74,0.08)':'')+'">';
+wnHtml+='<div style="font-size:8px;font-weight:700;color:var(--acc);font-family:var(--mono);letter-spacing:0.22em;margin-bottom:12px">'+sec.heading+'</div>';
+for(var wi=0;wi<sec.items.length;wi++){var wn=sec.items[wi];
+wnHtml+='<div style="display:flex;gap:14px;margin-bottom:'+(wi<sec.items.length-1?'14':'0')+'px;animation:slideUp 0.4s ease '+(si*0.1+wi*0.06)+'s both">';
+wnHtml+='<div style="width:36px;height:36px;border-radius:10px;background:rgba(212,164,74,0.06);border:1px solid rgba(212,164,74,0.12);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">'+wn.icon+'</div>';
+wnHtml+='<div style="flex:1;padding-top:2px"><div style="font-size:13px;font-weight:700;color:var(--ice);line-height:1.3">'+wn.title+'</div>';
+wnHtml+='<div style="font-size:11px;color:var(--mu);margin-top:4px;line-height:1.65">'+wn.desc+'</div></div></div>';}
+wnHtml+='</div>';}
+overlay.innerHTML='<div style="width:100%;max-width:440px;max-height:85vh;overflow-y:auto;background:linear-gradient(170deg,rgba(14,14,20,0.99) 0%,rgba(8,8,12,0.99) 40%,rgba(4,4,8,0.99) 100%);border:1px solid rgba(212,164,74,0.20);border-radius:20px;padding:0;box-shadow:0 0 100px rgba(212,164,74,0.12),0 0 2px rgba(212,164,74,0.25),0 40px 80px rgba(0,0,0,0.8)">'
++'<div style="position:relative;padding:36px 28px 0;text-align:center;overflow:hidden">'
++'<div style="position:absolute;inset:0;pointer-events:none;overflow:hidden"><div style="position:absolute;top:-60%;left:50%;transform:translateX(-50%);width:200%;height:80%;background:radial-gradient(ellipse 40% 60% at 50% 100%,rgba(212,164,74,0.10),rgba(212,164,74,0.03) 50%,transparent 75%);filter:blur(30px)"></div></div>'
++'<div style="position:relative">'
++'<div style="width:56px;height:56px;border-radius:14px;background:linear-gradient(145deg,#0c0c14,#161620);border:1px solid rgba(212,164,74,0.25);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:28px;font-weight:900;color:var(--acc);box-shadow:0 0 50px rgba(212,164,74,0.20),0 8px 24px rgba(0,0,0,0.5);margin:0 auto 18px;animation:breathe 4s ease-in-out infinite">R</div>'
++'<div style="font-family:var(--display);font-size:11px;font-weight:700;color:var(--acc);letter-spacing:0.35em;margin-bottom:6px">UPDATE</div>'
++'<div style="font-family:var(--display);font-size:26px;font-weight:800;color:var(--ice);letter-spacing:0.06em;line-height:1.2">REGI v'+VERSION+'</div>'
++'<div style="font-size:10px;color:var(--mu);font-family:var(--mono);margin-top:8px;letter-spacing:0.06em;line-height:1.5">Professional coaching. Elevated.</div>'
++'<div style="width:40px;height:1px;background:linear-gradient(90deg,transparent,var(--acc),transparent);margin:22px auto 0;box-shadow:0 0 12px var(--accGlow)"></div>'
++'</div></div>'
++'<div style="padding:24px 28px 28px">'+wnHtml
++'<button class="btn" style="margin-top:8px;border-radius:12px;padding:16px" onclick="LS.set(\'seenVersion\',VERSION);LS.set(\'whatsNewFirstSeen\',\'\');document.getElementById(\'whatsNew\').remove()">LET\u2019S GO</button>'
++'</div></div>';
 document.body.appendChild(overlay);
 }
 (async function boot(){
