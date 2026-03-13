@@ -1,6 +1,6 @@
-var CACHE_NAME = 'regi-v3.3';
+var CACHE_NAME = 'regi-v4.0';
 var OFFLINE_URL = '/';
-var ASSETS = ['/', '/index.html', '/icon.png', '/manifest.json'];
+var ASSETS = ['/', '/index.html', '/icon.png', '/icon-r.svg', '/manifest.json'];
 
 self.addEventListener('install', function(e) {
   e.waitUntil(
