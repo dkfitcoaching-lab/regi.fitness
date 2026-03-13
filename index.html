@@ -147,7 +147,7 @@ html{scroll-behavior:smooth}
 
 var SUPA_URL="https://pwopwvvgjflunjxwkkql.supabase.co";
 var SUPA_KEY="sb_publishable_6slliEpPsWV9JXIDvz8pyw_FNPrPMhv";
-var VERSION="4.0";
+var VERSION="4.1";
 var LANGS={
 en:{
 days:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],
@@ -704,18 +704,18 @@ return alerts;}
 // SESSION TEMPLATES - save/load exercise routines
 function saveTemplate(name,exercises){
 var templates=LS.get("templates",[]);
-templates=templates.filter(function(t){return t.name!==name;});
+templates=templates.filter(function(tm){return tm.name!==name;});
 templates.unshift({name:name,exercises:exercises,savedAt:Date.now()});
 if(templates.length>20)templates=templates.slice(0,20);
 LS.set("templates",templates);toast("\u2713 Template saved: "+name);}
 function getTemplates(){return LS.get("templates",[]);}
 function deleteTemplate(name){
-var templates=LS.get("templates",[]).filter(function(t){return t.name!==name;});
+var templates=LS.get("templates",[]).filter(function(tm){return tm.name!==name;});
 LS.set("templates",templates);toast("\u2713 Template deleted");}
 function loadTemplate(name){
-var t=LS.get("templates",[]).find(function(t){return t.name===name;});
-if(!t)return;
-currentView.data.prefillExercises=t.exercises;prefillExercises();}
+var tmpl=LS.get("templates",[]).find(function(tm){return tm.name===name;});
+if(!tmpl)return;
+currentView.data.prefillExercises=tmpl.exercises;prefillExercises();}
 
 // PROGRAMS - Per-client training programs, mobility protocols, stretching routines
 function getPrograms(){return LS.get("programs",[]);}
@@ -840,7 +840,7 @@ function render(){
 DN=LANGS[getLang()].days;
 var tabsEl=$("tabs");
 var deskLogo='<div class="desk-logo"><div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#0e0e14,#1a1a24);border:1px solid var(--borderH);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:22px;font-weight:900;color:var(--acc);box-shadow:0 0 32px var(--accGlow);animation:breathe 4s ease-in-out infinite;flex-shrink:0">R</div><div><div style="font-family:var(--display);font-size:15px;font-weight:700;letter-spacing:0.1em;color:var(--ice)">REGI</div><div style="font-size:8px;color:var(--dm);font-family:var(--mono);letter-spacing:0.14em;margin-top:2px">COACHING STUDIO</div></div></div>';
-var th="";var tabLabels={home:t("home"),clients:t("clients"),schedule:t("schedule"),sessions:t("log"),tools:"Pro Tools",guide:t("guide")};for(var i=0;i<TABS.length;i++){var tb=TABS[i];th+='<div class="ti'+(currentView.tab===tb.k?" on":"")+'" onclick="go(\''+tb.k+'\')">'+tb.svg+'<span>'+(tabLabels[tb.k]||tb.l)+'</span></div>';}
+var th="";var tabLabels={home:t("home"),clients:t("clients"),schedule:t("schedule"),sessions:t("log"),tools:t("proTools"),guide:t("guide")};for(var i=0;i<TABS.length;i++){var tb=TABS[i];th+='<div class="ti'+(currentView.tab===tb.k?" on":"")+'" onclick="go(\''+tb.k+'\')">'+tb.svg+'<span>'+(tabLabels[tb.k]||tb.l)+'</span></div>';}
 tabsEl.innerHTML=deskLogo+th+'<div class="desk-footer" style="display:none;position:absolute;bottom:0;left:0;right:0;padding:18px 24px;border-top:1px solid var(--borderS);font-family:var(--mono);font-size:8px;color:var(--dmL);letter-spacing:0.1em;flex-direction:column;gap:3px"><span style="color:var(--acc)">regi.fitness</span><span>v'+VERSION+' <span id="syncBadge2" style="font-size:12px"></span></span></div>';
 var ct=$("ct");ct.style.animation="none";ct.offsetHeight;ct.style.animation="slideUp 0.25s ease";
 var renderers={home:renderHome,clients:renderClients,sessions:renderSessions,schedule:renderSchedule,tools:renderTools,guide:renderGuide,settings:renderSettings};
@@ -952,7 +952,7 @@ return html;
 }
 function setDuration(m,el){document.getElementById('sDu').value=m;el.parentElement.querySelectorAll('.chip').forEach(function(c){c.classList.remove('on');});el.classList.add('on');}
 function renderLogSession(){
-_sessionRating=0;var data=currentView.data||{};if(!data._exInit){_exCount=0;data._exInit=true;}
+var data=currentView.data||{};if(!data._exInit){_exCount=0;_sessionRating=0;data._exInit=true;}
 startDraftAutoSave();
 var pfId=data.prefillClientId||"",pfT=data.prefillType||"",pfR=data.prefillRate||"",pfD=data.prefillDate||todayISO();
 var opts="";for(var i=0;i<clients.length;i++){var c=clients[i];opts+='<option value="'+c.id+'"'+(pfId===c.id?" selected":"")+'>'+escHtml(c.name)+'</option>';}
@@ -1151,7 +1151,7 @@ var key="autoPrompt_"+s.id+"_"+s.date;
 if(sessionStorage.getItem(key))return;
 sessionStorage.setItem(key,"1");
 // Show a toast prompt and auto-open the send dialog
-toast("\u23F0 Time to remind "+escHtml(s.clientName)+" about their session!");
+toast("\u23F0 Time to remind "+s.clientName+" about their session!");
 setTimeout(function(){sendClientReminder(s.id);},1500);
 }
 function markAutoReminderSent(schedId){
@@ -1650,10 +1650,11 @@ function setMealCount(n,el){el.parentElement.querySelectorAll('.chip').forEach(f
 var sl=$('mealSlots');if(!sl)return;sl.innerHTML='';_mealData={};
 for(var i=1;i<=n;i++){var d=document.createElement('div');d.className='cd';d.id='meal'+i;d.style.padding='14px';d.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span class="sl" style="margin:0">MEAL '+i+'</span><span class="meal-macros" style="font-size:9px;font-family:var(--mono);color:var(--dm)">P0 C0 F0 | 0cal</span></div><div class="meal-items"></div>';sl.appendChild(d);_mealData[i]=[];}_currentMealSlot=1;}
 
+function foodByIdx(idx,name){var fd=FOOD_DB[idx];if(fd&&(!name||fd.n===name))return fd;if(name){for(var i=0;i<FOOD_DB.length;i++){if(FOOD_DB[i].n===name)return FOOD_DB[i];}}return fd;}
 function addFoodToMeal(idx){
 var fd=FOOD_DB[idx];if(!fd)return;
 if(!_mealData[_currentMealSlot])_mealData[_currentMealSlot]=[];
-_mealData[_currentMealSlot].push({idx:idx,servings:1});
+_mealData[_currentMealSlot].push({idx:idx,name:fd.n,servings:1});
 renderMealSlotItems(_currentMealSlot);updateMacroTotals();
 // Advance to next meal if desired
 var mc=parseInt(($('mpMealCount')||{}).value||"4");
@@ -1664,7 +1665,7 @@ function renderMealSlotItems(slot){
 var el=$('meal'+slot);if(!el)return;
 var items=_mealData[slot]||[];var container=el.querySelector('.meal-items');
 var h='';var tp=0,tc=0,tf=0,tcal=0;
-for(var i=0;i<items.length;i++){var it=items[i];var fd=FOOD_DB[it.idx];if(!fd)continue;
+for(var i=0;i<items.length;i++){var it=items[i];var fd=foodByIdx(it.idx,it.name);if(!fd)continue;
 var s=it.servings;tp+=fd.p*s;tc+=fd.c*s;tf+=fd.f*s;tcal+=fd.cal*s;
 h+='<div style="display:flex;align-items:center;gap:6px;padding:5px 8px;margin-bottom:3px;background:rgba(212,164,74,0.03);border-radius:6px;font-size:11px">';
 h+='<input type="number" value="'+s+'" min="0.25" max="10" step="0.25" style="width:45px;padding:4px;font-size:10px;text-align:center" onchange="updateMealServing('+slot+','+i+',this.value)">';
@@ -1682,7 +1683,7 @@ function removeMealItem(slot,idx){if(!_mealData[slot])return;_mealData[slot].spl
 
 function updateMacroTotals(){
 var tp=0,tc=0,tf=0,tcal=0;
-Object.keys(_mealData).forEach(function(slot){(_mealData[slot]||[]).forEach(function(it){var fd=FOOD_DB[it.idx];if(!fd)return;var s=it.servings;tp+=fd.p*s;tc+=fd.c*s;tf+=fd.f*s;tcal+=fd.cal*s;});});
+Object.keys(_mealData).forEach(function(slot){(_mealData[slot]||[]).forEach(function(it){var fd=foodByIdx(it.idx,it.name);if(!fd)return;var s=it.servings;tp+=fd.p*s;tc+=fd.c*s;tf+=fd.f*s;tcal+=fd.cal*s;});});
 var elP=$('totP'),elC=$('totC'),elF=$('totF'),elCal=$('totCal');
 if(elP)elP.textContent=Math.round(tp)+'g';
 if(elC)elC.textContent=Math.round(tc)+'g';
@@ -1712,7 +1713,7 @@ var dayTP=0,dayTC=0,dayTF=0,dayCal=0;
 for(var mi=1;mi<=plan.mealCount;mi++){var items=plan.meals[mi]||[];
 var mp=0,mc2=0,mf=0,mcal=0;
 html+='<div class="cd" style="padding:14px"><span class="sl" style="margin:0;margin-bottom:8px">MEAL '+mi+'</span>';
-for(var ii=0;ii<items.length;ii++){var it=items[ii];var fd=FOOD_DB[it.idx];if(!fd)continue;
+for(var ii=0;ii<items.length;ii++){var it=items[ii];var fd=foodByIdx(it.idx,it.name);if(!fd)continue;
 var s=it.servings;mp+=fd.p*s;mc2+=fd.c*s;mf+=fd.f*s;mcal+=fd.cal*s;
 html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--borderS);font-size:12px"><span style="color:var(--wh)">'+(s!==1?s+'x ':'')+fd.n+'</span><span style="font-family:var(--mono);font-size:9px;color:var(--dm)">'+Math.round(fd.p*s)+'p '+Math.round(fd.c*s)+'c '+Math.round(fd.f*s)+'f</span></div>';}
 dayTP+=mp;dayTC+=mc2;dayTF+=mf;dayCal+=mcal;
@@ -1739,7 +1740,10 @@ women:{
 {n:"Glute-Ham Raise",s:"3x10-12",note:"Control the negative. Strong hamstring contraction."},
 {n:"Leg Press (High & Wide)",s:"4x12-15",note:"Feet high on platform. Deep ROM. Glute focused.",tech:"FST-7: 7x10-12 as finisher"},
 {n:"Seated Leg Curl",s:"4x12",note:"Slow eccentric 3s. Squeeze at contraction.",tech:"FST-7 finisher option"},
-{n:"Sumo Squat (Dumbbell)",s:"3x15",note:"Wide stance, toes out. Squeeze inner thighs and glutes."}
+{n:"Sumo Squat (Dumbbell)",s:"3x15",note:"Wide stance, toes out. Squeeze inner thighs and glutes."},
+{n:"Reverse Hack Squat (Glute Focus)",s:"3x12",note:"Face the pad. Wide stance. Deep stretch on glutes. Hany signature for women."},
+{n:"B-Stance Hip Thrust",s:"3x12 each",note:"Unilateral glute emphasis. One foot forward. Squeeze at top."},
+{n:"Pull-Through (Cable)",s:"3x15",note:"Hinge at hips. Squeeze glutes at lockout. Great glute-ham connection."}
 ],
 "Shoulders (Capped Delts)":[
 {n:"Seated Dumbbell Press",s:"4x10-12",note:"Control the negative. Don't lock out at top."},
@@ -1772,7 +1776,9 @@ women:{
 {n:"Hammer Curl (Dumbbell)",s:"3x10-12 each",note:"Controlled tempo. Builds brachialis for arm shape."},
 {n:"Overhead Tricep Extension (Rope)",s:"3x12",note:"Full stretch behind head. Squeeze at lockout."},
 {n:"Concentration Curl",s:"3x12 each",note:"Peak contraction work. Squeeze at top.",tech:"FST-7 finisher option"},
-{n:"Dip Machine (Tricep)",s:"3x12",note:"Lean slightly forward. Control full range."}
+{n:"Dip Machine (Tricep)",s:"3x12",note:"Lean slightly forward. Control full range."},
+{n:"Spider Curl (Incline Bench)",s:"3x12",note:"Lie face down on incline. Pure isolation, no momentum. Peak contraction.",tech:"FST-7 finisher option"},
+{n:"Drag Curl (Barbell)",s:"3x10-12",note:"Pull elbows back as you curl. Emphasizes long head of bicep."}
 ],
 "Abs & Core":[
 {n:"Hanging Leg Raise",s:"3x15",note:"Control the swing. Curl pelvis up at top."},
@@ -1790,7 +1796,9 @@ men:{
 {n:"Incline Dumbbell Flye",s:"3x10-12",note:"Deep stretch. Slight bend in elbows. Squeeze at top."},
 {n:"Cable Crossover (Low to High)",s:"3x12-15",note:"Upper chest emphasis. Squeeze at peak contraction.",tech:"FST-7 finisher option"},
 {n:"Dip (Chest Emphasis)",s:"3x10-12",note:"Lean forward. Wide grip. Deep stretch at bottom."},
-{n:"Pec Deck",s:"3x12-15",note:"Squeeze and hold at contraction. Constant tension.",tech:"FST-7: 7x10-12 as finisher"}
+{n:"Pec Deck",s:"3x12-15",note:"Squeeze and hold at contraction. Constant tension.",tech:"FST-7: 7x10-12 as finisher"},
+{n:"Decline Barbell Press",s:"3x8-10",note:"Lower chest development. Controlled negative. Don't bounce."},
+{n:"Svend Press (Plate Squeeze)",s:"3x12-15",note:"Squeeze plates together at chest level. Inner chest activation. Flex between sets."}
 ],
 "Back":[
 {n:"Weighted Pull-Up",s:"4x8-10",note:"Full stretch at bottom. Drive elbows down. Wide grip."},
@@ -1817,7 +1825,10 @@ men:{
 {n:"Incline Dumbbell Curl",s:"3x10-12",note:"Arms behind torso for long head stretch. Slow negative."},
 {n:"Hammer Curl (Cross Body)",s:"3x10-12 each",note:"Across body for brachialis emphasis. Controlled."},
 {n:"Cable Curl (Straight Bar)",s:"3x12-15",note:"Constant tension. Great for pump work.",tech:"FST-7: 7x10-12 as finisher"},
-{n:"Concentration Curl",s:"3x12 each",note:"Peak contraction. Squeeze and hold at top."}
+{n:"Concentration Curl",s:"3x12 each",note:"Peak contraction. Squeeze and hold at top."},
+{n:"Spider Curl (EZ Bar)",s:"3x10-12",note:"Chest on incline bench. Zero momentum. Incredible pump.",tech:"FST-7 finisher option"},
+{n:"Drag Curl (Barbell)",s:"3x10",note:"Bar stays close to body. Elbows travel back. Long head emphasis."},
+{n:"Cable Bayesian Curl",s:"3x12 each",note:"Stand facing away from cable. Full stretch at bottom. Lengthened partial option."}
 ],
 "Arms (Triceps)":[
 {n:"Close-Grip Bench Press",s:"4x8-10",note:"Elbows close to body. Full lockout. Compound strength."},
@@ -1825,7 +1836,9 @@ men:{
 {n:"Overhead Dumbbell Extension (Seated)",s:"3x10-12",note:"Full stretch behind head. Control the weight."},
 {n:"Skull Crushers (EZ Bar)",s:"3x10-12",note:"Lower to forehead. Elbows fixed. Full extension."},
 {n:"Dip Machine",s:"3x10-12",note:"Upright torso for tricep emphasis. Full lockout.",tech:"FST-7: 7x10-12 as finisher"},
-{n:"Single-Arm Cable Pushdown",s:"3x12 each",note:"Supinate at bottom. Squeeze and hold."}
+{n:"Single-Arm Cable Pushdown",s:"3x12 each",note:"Supinate at bottom. Squeeze and hold."},
+{n:"Overhead Cable Extension (Rope)",s:"3x12-15",note:"Face away from cable. Big stretch at bottom. Full lockout.",tech:"FST-7 finisher option"},
+{n:"JM Press",s:"3x8-10",note:"Hybrid skull crusher/close-grip press. Advanced. Hany uses for mass."}
 ],
 "Legs (Quads)":[
 {n:"Leg Extension",s:"4x12-15",note:"Pre-exhaust. Squeeze and hold at top. 3s negative.",tech:"FST-7: 7x10-12 as finisher"},
@@ -1834,7 +1847,9 @@ men:{
 {n:"Leg Press",s:"4x10-12",note:"Feet low and narrow for quad sweep. Deep ROM.",tech:"FST-7: 7x10-12 as finisher"},
 {n:"Walking Lunge (Barbell)",s:"3x12 each",note:"Long strides. Control the knee track."},
 {n:"Front Squat",s:"3x8-10",note:"Upright torso. Cross-arm or clean grip. Deep stretch."},
-{n:"Sissy Squat (Weighted)",s:"3x12-15",note:"Finisher movement. Lean back. Constant quad tension."}
+{n:"Sissy Squat (Weighted)",s:"3x12-15",note:"Finisher movement. Lean back. Constant quad tension."},
+{n:"Pendulum Squat",s:"4x10-12",note:"Machine squat with arc path. Deep stretch. Quad dominant.",tech:"FST-7 finisher option"},
+{n:"Belt Squat",s:"3x10-12",note:"Zero spinal loading. Pure leg drive. Hany uses for joint-friendly quad work."}
 ],
 "Legs (Hamstrings & Calves)":[
 {n:"Lying Leg Curl",s:"4x10-12",note:"Full stretch at bottom. Squeeze and hold at top."},
@@ -1950,7 +1965,8 @@ html+='</div><button class="btn2" onclick="addProExToSession(\''+escJs(ex.n)+'\'
 return html;}
 
 function addProExToSession(name,setsReps){
-toast('\u2713 '+name+' noted \u2014 use in session log');
+push('new',{prefillExercises:[{name:name,sets:[{w:'',r:setsReps||'',n:'FST-7'}],mode:'normal'}]});
+toast('\u2713 '+name+' added to session');
 haptic(12);}
 
 // ═══════════════════════════════════════════════════════════════════
@@ -1964,7 +1980,7 @@ if(currentView.view==='cardioDetail')return renderCardioDetail();
 if(currentView.view==='proExercises')return renderProExercises();
 if(currentView.view==='foodBrowser')return renderFoodBrowser();
 
-var html='<div class="pt">Pro Tools</div>';
+var html='<div class="pt">'+t("proTools")+'</div>';
 html+='<div style="font-size:11px;color:var(--mu);margin-bottom:20px;line-height:1.6">Olympian-level coaching tools. Build meal plans, cardio protocols, and access the Hany Rambod exercise database.</div>';
 
 // Quick actions grid
@@ -2000,10 +2016,11 @@ html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" 
 return html;}
 
 function startMealPlan(){
-if(!clients.length){toast('Add a client first');return;}
+if(!clients.length){push('mealPlanBuilder',{clientId:''});return;}
 if(clients.length===1){push('mealPlanBuilder',{clientId:clients[0].id});return;}
 var sel='<div style="position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);padding:20px;animation:fadeIn 0.3s" id="clientPicker"><div style="width:100%;max-width:380px;background:linear-gradient(160deg,rgba(22,21,26,0.99),rgba(10,9,12,0.99));border:1px solid var(--accB);border-radius:16px;padding:24px;box-shadow:0 0 60px rgba(212,164,74,0.12)"><div class="pt" style="font-size:18px;margin-bottom:14px">Select Client</div>';
 for(var i=0;i<clients.length;i++){sel+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="document.getElementById(\'clientPicker\').remove();push(\'mealPlanBuilder\',{clientId:\''+escJs(clients[i].id)+'\'})"><div style="width:36px;height:36px;border-radius:8px;background:var(--accS);border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:14px;font-weight:700;color:var(--accVib)">'+safeInitial(clients[i].name)+'</div><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(clients[i].name)+'</div></div>';}
+sel+='<div class="cd cd-link" style="text-align:center;border:1px dashed var(--border)" onclick="document.getElementById(\'clientPicker\').remove();push(\'mealPlanBuilder\',{clientId:\'\'})"><span style="font-size:12px;color:var(--dm)">General (no client)</span></div>';
 sel+='<button class="btn2" onclick="document.getElementById(\'clientPicker\').remove()" style="width:100%;margin-top:10px">'+t("cancel")+'</button></div></div>';
 var el=document.createElement('div');el.innerHTML=sel;document.body.appendChild(el.firstChild);}
 
