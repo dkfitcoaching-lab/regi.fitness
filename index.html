@@ -464,7 +464,8 @@ savedCardio:"SAVED CARDIO PROTOCOLS",
 savedSupplements:"SAVED SUPPLEMENT PROTOCOLS",
 noProtocolsSaved:"No protocols saved yet",
 food:"FOOD",
-size:"SIZE"
+size:"SIZE",
+mealPlan:"Meal Plan"
 },
 hu:{
 days:["Vas","H\u00e9t","Kedd","Sze","Cs\u00fct","P\u00e9n","Szo"],
@@ -781,7 +782,8 @@ savedCardio:"MENTETT KARDI\u00d3 PROTOKOLLOK",
 savedSupplements:"MENTETT KIEG\u00c9SZ\u00cdT\u0150 PROTOKOLLOK",
 noProtocolsSaved:"M\u00e9g nincs mentett protokoll",
 food:"\u00c9TEL",
-size:"M\u00c9RET"
+size:"M\u00c9RET",
+mealPlan:"\u00c9trend Terv"
 }
 };
 var DN;/* initialized after LS */
@@ -1016,8 +1018,8 @@ if(timer.running)_timerModalInterval=setInterval(updateTimerModal,500);
 var _timerModalInterval=null;
 function updateTimerModal(){
 var d=$("tmDisplay");if(d)d.textContent=fmtTime(timer.seconds>0?timer.seconds:timer.preset);
-var s=$("tmStatus");if(s)s.textContent=timer.running?"RUNNING":timer.seconds<=0?"COMPLETE":"READY";
-var b=$("tmBtn");if(b)b.textContent=timer.running?"PAUSE":"START";
+var s=$("tmStatus");if(s)s.textContent=timer.running?t("running"):timer.seconds<=0?t("complete2"):t("ready");
+var b=$("tmBtn");if(b)b.textContent=timer.running?t("pause2"):t("start");
 var bar=$("tmBar");if(bar&&timer.preset>0)bar.style.width=((timer.seconds/timer.preset)*100)+"%";
 if(d){d.style.color=timer.seconds<=5&&timer.seconds>0&&timer.running?"var(--warn)":timer.seconds<=0?"var(--accVib)":"var(--ice)";d.style.textShadow=timer.running&&timer.seconds<=5?"0 0 60px rgba(232,168,85,0.4)":"0 0 40px rgba(201,168,76,0.15)";}
 document.querySelectorAll("#timerModal [data-timer-preset]").forEach(function(el){el.className="chip"+(timer.preset===parseInt(el.dataset.timerPreset)?" on":"");el.style.padding="8px 14px";el.style.fontSize="11px";});
@@ -1034,7 +1036,7 @@ function signOut(){LS.set("userId",null);LS.set("accessToken",null);LS.set("refr
 function isLoggedIn(){return!!LS.get("userId",null);}
 function showAuthScreen(){var app=$("app");if(app)app.style.display="none";var el=$("authScreen");if(!el){el=document.createElement("div");el.id="authScreen";document.body.appendChild(el);}el.style.cssText="position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;background:var(--bg);padding:24px";el.innerHTML='<div style="position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 30%,rgba(212,164,74,0.06),transparent 60%);pointer-events:none"></div><div style="position:relative;width:100%;max-width:340px"><div style="text-align:center;margin-bottom:36px"><div style="width:80px;height:80px;border-radius:20px;background:linear-gradient(135deg,#0e0e14,#1a1a24);border:1px solid var(--borderH);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:38px;font-weight:900;color:var(--acc);box-shadow:0 0 60px var(--accGlow);animation:breathe 4s ease-in-out infinite;margin:0 auto 20px">R</div><div style="font-family:var(--display);font-size:24px;font-weight:700;letter-spacing:0.12em;color:var(--ice)">REGI</div><div style="font-size:9px;color:var(--dm);font-family:var(--mono);letter-spacing:0.2em;margin-top:4px">COACHING STUDIO</div></div><div style="display:flex;gap:0;margin-bottom:20px;border:1px solid var(--border);border-radius:8px;overflow:hidden"><div onclick="switchAuthTab(\'signin\')" id="tabSignin" style="flex:1;padding:10px;text-align:center;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.1em;cursor:pointer;background:rgba(212,164,74,0.1);color:var(--acc)">SIGN IN</div><div onclick="switchAuthTab(\'signup\')" id="tabSignup" style="flex:1;padding:10px;text-align:center;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.1em;cursor:pointer;color:var(--dm)">CREATE ACCOUNT</div></div><div id="authSignin"><div style="margin-bottom:12px"><input id="siEmail" type="email" placeholder="Email" autocomplete="email"></div><div style="margin-bottom:16px"><input id="siPass" type="password" placeholder="Password" autocomplete="current-password"></div><button class="btn" onclick="doSignIn()" id="siBtn">SIGN IN</button></div><div id="authSignup" style="display:none"><div style="margin-bottom:12px"><input id="suName" type="text" placeholder="Your name"></div><div style="margin-bottom:12px"><input id="suEmail" type="email" placeholder="Email" autocomplete="email"></div><div style="margin-bottom:16px"><input id="suPass" type="password" placeholder="Password (min 6 chars)" autocomplete="new-password"></div><button class="btn" onclick="doSignUp()" id="suBtn">CREATE ACCOUNT</button></div><div id="authError" style="margin-top:12px;text-align:center;font-size:11px;color:var(--danger);font-family:var(--mono);min-height:18px"></div></div>';setTimeout(function(){var e=$("siEmail");if(e){e.focus();e.addEventListener("keydown",function(ev){if(ev.key==="Enter")doSignIn();});}var p=$("siPass");if(p)p.addEventListener("keydown",function(ev){if(ev.key==="Enter")doSignIn();});var sp=$("suPass");if(sp)sp.addEventListener("keydown",function(ev){if(ev.key==="Enter")doSignUp();});},100);}
 function switchAuthTab(tab){$("authSignin").style.display=tab==="signin"?"":"none";$("authSignup").style.display=tab==="signup"?"":"none";$("tabSignin").style.background=tab==="signin"?"rgba(212,164,74,0.1)":"transparent";$("tabSignin").style.color=tab==="signin"?"var(--acc)":"var(--dm)";$("tabSignup").style.background=tab==="signup"?"rgba(212,164,74,0.1)":"transparent";$("tabSignup").style.color=tab==="signup"?"var(--acc)":"var(--dm)";}
-async function doSignIn(){var btn=$("siBtn");btn.disabled=true;btn.textContent="SIGNING IN...";try{var result=await signIn($("siEmail").value.trim(),$("siPass").value);if(result.ok){var el=$("authScreen");if(el)el.remove();$("app").style.display="";await syncFromCloud();render();}else{$("authError").textContent=result.error;btn.disabled=false;btn.textContent="SIGN IN";}}catch(e){$("authError").textContent="Network error. Check your connection.";btn.disabled=false;btn.textContent="SIGN IN";}}
+async function doSignIn(){var btn=$("siBtn");btn.disabled=true;btn.textContent=t("signingIn");try{var result=await signIn($("siEmail").value.trim(),$("siPass").value);if(result.ok){var el=$("authScreen");if(el)el.remove();$("app").style.display="";await syncFromCloud();render();}else{$("authError").textContent=result.error;btn.disabled=false;btn.textContent=t("signIn");}}catch(e){$("authError").textContent=t("networkError");btn.disabled=false;btn.textContent=t("signIn");}}
 async function doSignUp(){var btn=$("suBtn");btn.disabled=true;btn.textContent="CREATING...";var name=$("suName").value.trim(),email=$("suEmail").value.trim(),pass=$("suPass").value;if(!name){$("authError").textContent="Name is required";btn.disabled=false;btn.textContent="CREATE ACCOUNT";return;}if(pass.length<6){$("authError").textContent="Password must be at least 6 characters";btn.disabled=false;btn.textContent="CREATE ACCOUNT";return;}try{var result=await signUp(email,pass,name);if(result.ok){var el=$("authScreen");if(el)el.remove();$("app").style.display="";render();}else{$("authError").textContent=result.error;btn.disabled=false;btn.textContent="CREATE ACCOUNT";}}catch(e){$("authError").textContent="Network error. Check your connection.";btn.disabled=false;btn.textContent="CREATE ACCOUNT";}}
 
 // Tabs + Render
@@ -1989,7 +1991,7 @@ html+='<div class="field"><span class="lb">'+t("numberOfMeals")+'</span><div sty
 html+='<div class="field"><span class="lb">'+t("notes").toUpperCase()+'</span><textarea id="mpNotes" rows="2" placeholder="Training days vs rest days, carb cycling notes..."></textarea></div></div>';
 // Food search & add
 html+='<div class="sl" style="margin-top:18px">'+t("buildMeals")+'</div>';
-html+='<div style="margin-bottom:10px"><input id="foodSearch" placeholder="Search foods..." oninput="filterFoodDB(this.value)" style="font-size:13px"></div>';
+html+='<div style="margin-bottom:10px"><input id="foodSearch" placeholder="'+t('searchFoods')+'" oninput="filterFoodDB(this.value)" style="font-size:13px"></div>';
 html+='<div style="display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap"><div class="chip on" onclick="filterFoodCat(\'all\',this)">All</div><div class="chip" onclick="filterFoodCat(\'protein\',this)">Protein</div><div class="chip" onclick="filterFoodCat(\'carb\',this)">Carbs</div><div class="chip" onclick="filterFoodCat(\'fat\',this)">Fats</div><div class="chip" onclick="filterFoodCat(\'veggie\',this)">Veggies</div><div class="chip" onclick="filterFoodCat(\'supplement\',this)">Supps</div><div class="chip" onclick="filterFoodCat(\'custom\',this)">'+t("myCustomFoods")+'</div></div>';
 // Custom food button
 html+='<div style="margin-bottom:10px"><button class="btn2" onclick="showAddCustomFood()" style="width:100%;border:1px dashed var(--accB);color:var(--acc)">'+t("customFood")+'</button></div>';
@@ -2008,7 +2010,7 @@ for(var mi=1;mi<=mc;mi++){
 html+='<div class="cd" style="padding:14px" id="meal'+mi+'"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span class="sl" style="margin:0">MEAL '+mi+'</span><span class="meal-macros" style="font-size:9px;font-family:var(--mono);color:var(--dm)">P0 C0 F0 | 0cal</span></div><div class="meal-items"></div></div>';}
 html+='</div>';
 // Macro totals bar
-html+='<div class="cd" style="padding:14px;border:1px solid var(--accB);margin-top:10px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span class="sl" style="margin:0">DAILY TOTALS</span></div>';
+html+='<div class="cd" style="padding:14px;border:1px solid var(--accB);margin-top:10px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span class="sl" style="margin:0">'+t("dailyTotals")+'</span></div>';
 html+='<div class="g4" id="macroTotals"><div class="stat" style="padding:10px"><b style="color:var(--success);font-size:18px" id="totP">0</b><small>PROTEIN</small></div><div class="stat" style="padding:10px"><b style="color:var(--warn);font-size:18px" id="totC">0</b><small>CARBS</small></div><div class="stat" style="padding:10px"><b style="color:#cc88ee;font-size:18px" id="totF">0</b><small>FAT</small></div><div class="stat" style="padding:10px"><b style="color:var(--accVib);font-size:18px" id="totCal">0</b><small>CALORIES</small></div></div></div>';
 html+='<button class="btn" style="margin-top:18px" onclick="saveMealPlan(\''+escJs(clientId)+'\')">SAVE MEAL PLAN</button>';
 return html;}
@@ -2086,7 +2088,7 @@ var sel='<div style="position:fixed;inset:0;z-index:500;display:flex;align-items
 sel+='<div class="pt" style="font-size:16px;margin-bottom:14px">'+t("addCustomFood")+'</div>';
 sel+='<div class="field"><span class="lb">'+t("foodName")+' *</span><input id="cfName" placeholder="e.g. Turkey Meatballs"></div>';
 sel+='<div class="g2 field"><div><span class="lb">'+t("servingSize")+'</span><input id="cfSize" placeholder="e.g. 170g"></div><div><span class="lb">'+t("measured")+'</span><select id="cfMeas"><option value="cooked">'+t("cooked")+'</option><option value="dry">'+t("dry")+'</option><option value="raw">'+t("raw")+'</option></select></div></div>';
-sel+='<div class="field"><span class="lb">CATEGORY</span><select id="cfCat"><option value="protein">Protein</option><option value="carb">Carbs</option><option value="fat">Fats</option><option value="veggie">Veggies</option></select></div>';
+sel+='<div class="field"><span class="lb">'+t("category")+'</span><select id="cfCat"><option value="protein">Protein</option><option value="carb">Carbs</option><option value="fat">Fats</option><option value="veggie">Veggies</option></select></div>';
 sel+='<div class="g4 field"><div><span class="lb" style="color:var(--success)">P (g)</span><input id="cfP" type="number" placeholder="0"></div><div><span class="lb" style="color:var(--warn)">C (g)</span><input id="cfC" type="number" placeholder="0"></div><div><span class="lb" style="color:#cc88ee">F (g)</span><input id="cfF" type="number" placeholder="0"></div><div><span class="lb">CAL</span><input id="cfCal" type="number" placeholder="0"></div></div>';
 sel+='<div class="g2" style="margin-top:8px"><button class="btn" onclick="saveCustomFood()">'+t("save")+'</button><button class="btn2" onclick="document.getElementById(\'customFoodModal\').remove()">'+t("cancel")+'</button></div>';
 sel+='</div></div>';
@@ -2125,20 +2127,20 @@ var html='<button class="btn2" onclick="pop()" style="margin-bottom:14px">\u2039
 html+='<div class="pt">'+escHtml(plan.name)+'</div>';
 html+='<div style="font-size:10px;color:var(--acc);font-family:var(--mono);margin-bottom:14px">'+(c?escHtml(c.name)+' \u00B7 ':'')+'Created '+new Date(plan.createdAt).toLocaleDateString()+'</div>';
 if(plan.targetP||plan.targetC||plan.targetF){
-html+='<div class="cd" style="padding:14px;border:1px solid var(--accB);margin-bottom:14px"><span class="sl" style="margin:0;margin-bottom:8px">TARGET MACROS</span><div class="g3"><div class="stat" style="padding:10px"><b style="color:var(--success);font-size:16px">'+plan.targetP+'g</b><small>PROTEIN</small></div><div class="stat" style="padding:10px"><b style="color:var(--warn);font-size:16px">'+plan.targetC+'g</b><small>CARBS</small></div><div class="stat" style="padding:10px"><b style="color:#cc88ee;font-size:16px">'+plan.targetF+'g</b><small>FAT</small></div></div></div>';}
+html+='<div class="cd" style="padding:14px;border:1px solid var(--accB);margin-bottom:14px"><span class="sl" style="margin:0;margin-bottom:8px">'+t("targetMacros")+'</span><div class="g3"><div class="stat" style="padding:10px"><b style="color:var(--success);font-size:16px">'+plan.targetP+'g</b><small>PROTEIN</small></div><div class="stat" style="padding:10px"><b style="color:var(--warn);font-size:16px">'+plan.targetC+'g</b><small>CARBS</small></div><div class="stat" style="padding:10px"><b style="color:#cc88ee;font-size:16px">'+plan.targetF+'g</b><small>FAT</small></div></div></div>';}
 var dayTP=0,dayTC=0,dayTF=0,dayCal=0;
 for(var mi=1;mi<=plan.mealCount;mi++){var items=plan.meals[mi]||[];
 var mp=0,mc2=0,mf=0,mcal=0;
-html+='<div class="cd" style="padding:14px"><span class="sl" style="margin:0;margin-bottom:8px">MEAL '+mi+'</span>';
+html+='<div class="cd" style="padding:14px"><span class="sl" style="margin:0;margin-bottom:8px">'+t("meal")+' '+mi+'</span>';
 for(var ii=0;ii<items.length;ii++){var it=items[ii];var fd=foodByIdx(it.idx,it.name);if(!fd)continue;
 var s=it.servings;mp+=fd.p*s;mc2+=fd.c*s;mf+=fd.f*s;mcal+=fd.cal*s;
 html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--borderS);font-size:12px"><span style="color:var(--wh)">'+(s!==1?s+'x ':'')+fd.n+'</span><span style="font-family:var(--mono);font-size:9px;color:var(--dm)">'+Math.round(fd.p*s)+'p '+Math.round(fd.c*s)+'c '+Math.round(fd.f*s)+'f</span></div>';}
 dayTP+=mp;dayTC+=mc2;dayTF+=mf;dayCal+=mcal;
 html+='<div style="font-size:9px;font-family:var(--mono);margin-top:6px;color:var(--acc)">P'+Math.round(mp)+' C'+Math.round(mc2)+' F'+Math.round(mf)+' | '+Math.round(mcal)+' cal</div></div>';}
-html+='<div class="cd" style="padding:14px;border:1px solid var(--accB);margin-top:4px"><span class="sl" style="margin:0;margin-bottom:8px">DAILY TOTALS</span><div class="g4"><div class="stat" style="padding:8px"><b style="color:var(--success);font-size:16px">'+Math.round(dayTP)+'g</b><small>PROTEIN</small></div><div class="stat" style="padding:8px"><b style="color:var(--warn);font-size:16px">'+Math.round(dayTC)+'g</b><small>CARBS</small></div><div class="stat" style="padding:8px"><b style="color:#cc88ee;font-size:16px">'+Math.round(dayTF)+'g</b><small>FAT</small></div><div class="stat" style="padding:8px"><b style="color:var(--accVib);font-size:16px">'+Math.round(dayCal)+'</b><small>CALORIES</small></div></div></div>';
+html+='<div class="cd" style="padding:14px;border:1px solid var(--accB);margin-top:4px"><span class="sl" style="margin:0;margin-bottom:8px">'+t("dailyTotals")+'</span><div class="g4"><div class="stat" style="padding:8px"><b style="color:var(--success);font-size:16px">'+Math.round(dayTP)+'g</b><small>PROTEIN</small></div><div class="stat" style="padding:8px"><b style="color:var(--warn);font-size:16px">'+Math.round(dayTC)+'g</b><small>CARBS</small></div><div class="stat" style="padding:8px"><b style="color:#cc88ee;font-size:16px">'+Math.round(dayTF)+'g</b><small>FAT</small></div><div class="stat" style="padding:8px"><b style="color:var(--accVib);font-size:16px">'+Math.round(dayCal)+'</b><small>CALORIES</small></div></div></div>';
 if(plan.notes)html+='<div class="cd" style="margin-top:8px;border-left:3px solid var(--acc);padding:12px"><div style="font-size:12px;color:var(--mu);line-height:1.7">'+escHtml(plan.notes)+'</div></div>';
-html+='<button class="btn" style="margin-top:16px" onclick="generateMealPlanPDF(\''+escJs(plan.id)+'\')">\u2193 EXPORT MEAL PLAN PDF</button>';
-html+='<button class="btn-danger" style="margin-top:10px" onclick="deleteMealPlan(\''+escJs(plan.id)+'\')">DELETE MEAL PLAN</button>';
+html+='<button class="btn" style="margin-top:16px" onclick="generateMealPlanPDF(\''+escJs(plan.id)+'\')">\u2193 '+t("exportMealPDF")+'</button>';
+html+='<button class="btn-danger" style="margin-top:10px" onclick="deleteMealPlan(\''+escJs(plan.id)+'\')">'+t("deleteMealPlan")+'</button>';
 return html;}
 
 function generateMealPlanPDF(planId){
@@ -2591,48 +2593,42 @@ if(currentView.view==='proExercises')return renderProExercises();
 if(currentView.view==='foodBrowser')return renderFoodBrowser();
 
 var html='<div class="gw" style="margin:0 0 18px"></div><div class="pt">'+t("proTools")+'</div>';
-html+='<div style="font-size:11px;color:var(--mu);margin-bottom:20px;line-height:1.6">Olympian-level coaching tools. Build meal plans, cardio protocols, and access the Hany Rambod exercise database.</div>';
+html+='<div style="font-size:11px;color:var(--mu);margin-bottom:20px;line-height:1.6">'+t("proToolsDesc")+'</div>';
 
 // Quick actions grid
 html+='<div class="sl">BUILD</div>';
 html+='<div class="g2" style="margin-bottom:14px">';
-// Meal Plan
-html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="startMealPlan()"><div style="font-size:28px;margin-bottom:8px">\uD83C\uDF7D</div><div style="font-size:13px;font-weight:700;color:var(--wh)">Meal Plan</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">GF MACRO BUILDER</div></div>';
-// Cardio
-html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="startCardioPlan()"><div style="font-size:28px;margin-bottom:8px">\u2764</div><div style="font-size:13px;font-weight:700;color:var(--wh)">Cardio Protocol</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">PRO CARDIO BUILDER</div></div>';
+html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="startMealPlan()"><div style="font-size:28px;margin-bottom:8px">\uD83C\uDF7D</div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("mealPlan")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">'+t("macroBuilder")+'</div></div>';
+html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="startCardioPlan()"><div style="font-size:28px;margin-bottom:8px">\u2764</div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("cardioBuilder")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">'+t("proCardioBuilder")+'</div></div>';
 html+='</div>';
 
 html+='<div class="g2" style="margin-bottom:14px">';
-// Exercise DB
-html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="push(\'proExercises\')"><div style="font-size:28px;margin-bottom:8px">\uD83C\uDFCB</div><div style="font-size:13px;font-weight:700;color:var(--wh)">FST-7 Exercises</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">HANY RAMBOD METHOD</div></div>';
-// Supplement Builder
-html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="startSupplementPlan()"><div style="font-size:28px;margin-bottom:8px">\uD83D\uDC8A</div><div style="font-size:13px;font-weight:700;color:var(--wh)">Supplement Protocol</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">SCIENCE-BACKED</div></div>';
+html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="push(\'proExercises\')"><div style="font-size:28px;margin-bottom:8px">\uD83C\uDFCB</div><div style="font-size:13px;font-weight:700;color:var(--wh)">FST-7</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">'+t("hanyMethod")+'</div></div>';
+html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="startSupplementPlan()"><div style="font-size:28px;margin-bottom:8px">\uD83D\uDC8A</div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("supplementBuilder")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">'+t("scienceBacked")+'</div></div>';
 html+='</div>';
 html+='<div class="g2" style="margin-bottom:14px">';
-// Food Database
-html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="push(\'foodBrowser\')"><div style="font-size:28px;margin-bottom:8px">\uD83E\uDD66</div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("foodDatabase")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">'+getAllFoods().length+' GF FOODS</div></div>';
-// Timer Tool
-html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="showTimerModal()"><div style="font-size:28px;margin-bottom:8px">\u23F1</div><div style="font-size:13px;font-weight:700;color:var(--wh)">Pro Timer</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">REST & COACHING</div></div>';
+html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="push(\'foodBrowser\')"><div style="font-size:28px;margin-bottom:8px">\uD83E\uDD66</div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("foodDatabase")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">'+getAllFoods().length+' '+t("food")+'S</div></div>';
+html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="showTimerModal()"><div style="font-size:28px;margin-bottom:8px">\u23F1</div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("restTimer")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">REST & COACHING</div></div>';
 html+='</div>';
 
 // Saved meal plans
 var allMealPlans=getMealPlans();
 if(allMealPlans.length){
-html+='<div class="sl" style="margin-top:18px">SAVED MEAL PLANS ('+allMealPlans.length+')</div>';
+html+='<div class="sl" style="margin-top:18px">'+t("mealPlan").toUpperCase()+'S ('+allMealPlans.length+')</div>';
 for(var i=allMealPlans.length-1;i>=Math.max(0,allMealPlans.length-5);i--){var mp=allMealPlans[i];var c=clientById(mp.clientId);
 html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="push(\'mealPlanDetail\',{planId:\''+escJs(mp.id)+'\'})"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(120,200,120,0.18),rgba(120,200,120,0.06));border:1px solid rgba(120,200,120,0.2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">\uD83C\uDF7D</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(mp.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+(c?escHtml(c.name)+' \u00B7 ':'')+mp.mealCount+' meals \u00B7 P'+mp.targetP+'/C'+mp.targetC+'/F'+mp.targetF+'</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}}
 
 // Saved cardio plans
 var allCardioPlan=getCardioPlans();
 if(allCardioPlan.length){
-html+='<div class="sl" style="margin-top:18px">SAVED CARDIO PROTOCOLS ('+allCardioPlan.length+')</div>';
+html+='<div class="sl" style="margin-top:18px">'+t("savedCardio")+' ('+allCardioPlan.length+')</div>';
 for(var i=allCardioPlan.length-1;i>=Math.max(0,allCardioPlan.length-5);i--){var cp=allCardioPlan[i];var c=clientById(cp.clientId);
 html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="push(\'cardioDetail\',{planId:\''+escJs(cp.id)+'\'})"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(201,168,76,0.18),rgba(201,168,76,0.06));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">\u2764</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(cp.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+(c?escHtml(c.name)+' \u00B7 ':'')+cp.phase+' \u00B7 '+cp.frequency+'x/wk</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}}
 
 // Saved supplement plans
 var allSuppPlans=getSupplementPlans();
 if(allSuppPlans.length){
-html+='<div class="sl" style="margin-top:18px">SAVED SUPPLEMENT PROTOCOLS ('+allSuppPlans.length+')</div>';
+html+='<div class="sl" style="margin-top:18px">'+t("savedSupplements")+' ('+allSuppPlans.length+')</div>';
 for(var i=allSuppPlans.length-1;i>=Math.max(0,allSuppPlans.length-5);i--){var sp2=allSuppPlans[i];var c2=clientById(sp2.clientId);
 html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="push(\'supplementDetail\',{planId:\''+escJs(sp2.id)+'\'})"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(72,200,120,0.18),rgba(72,200,120,0.06));border:1px solid rgba(72,200,120,0.2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">\uD83D\uDC8A</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(sp2.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+(c2?escHtml(c2.name)+' \u00B7 ':'')+sp2.goal+' \u00B7 '+sp2.supplements.length+' supps</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}}
 
@@ -2662,10 +2658,10 @@ var html='<button class="btn2" onclick="pop()" style="margin-bottom:14px">\u2039
 html+='<div class="pt">'+t("foodDatabase")+'</div>';
 html+='<div style="font-size:11px;color:var(--mu);margin-bottom:14px;line-height:1.6">'+foods.length+' competition-ready foods. All gluten-free. Macros per standard serving. Meats measured cooked. Rice/quinoa measured cooked. Oats measured dry.</div>';
 html+='<div style="margin-bottom:10px"><button class="btn2" onclick="showAddCustomFood()" style="width:100%;border:1px dashed var(--accB);color:var(--acc)">'+t("customFood")+'</button></div>';
-html+='<input id="foodBrowseSearch" placeholder="Search foods..." oninput="filterFoodBrowse(this.value)" style="margin-bottom:10px;font-size:13px">';
+html+='<input id="foodBrowseSearch" placeholder="'+t('searchFoods')+'" oninput="filterFoodBrowse(this.value)" style="margin-bottom:10px;font-size:13px">';
 html+='<div style="display:flex;gap:4px;margin-bottom:14px;flex-wrap:wrap"><div class="chip on" onclick="filterFoodBrowseCat(\'all\',this)">All ('+foods.length+')</div><div class="chip" onclick="filterFoodBrowseCat(\'protein\',this)">Protein</div><div class="chip" onclick="filterFoodBrowseCat(\'carb\',this)">Carbs</div><div class="chip" onclick="filterFoodBrowseCat(\'fat\',this)">Fats</div><div class="chip" onclick="filterFoodBrowseCat(\'veggie\',this)">Veggies</div><div class="chip" onclick="filterFoodBrowseCat(\'supplement\',this)">Supps</div></div>';
 html+='<div class="cd" style="padding:0;overflow:hidden">';
-html+='<div style="display:grid;grid-template-columns:1fr 55px 35px 35px 35px 40px;padding:8px 12px;background:rgba(212,164,74,0.08);font-size:8px;font-weight:700;color:var(--acc);font-family:var(--mono)"><span>FOOD</span><span style="text-align:center">SIZE</span><span style="text-align:center">P</span><span style="text-align:center">C</span><span style="text-align:center">F</span><span style="text-align:right">CAL</span></div>';
+html+='<div style="display:grid;grid-template-columns:1fr 55px 35px 35px 35px 40px;padding:8px 12px;background:rgba(212,164,74,0.08);font-size:8px;font-weight:700;color:var(--acc);font-family:var(--mono)"><span>'+t("food")+'</span><span style="text-align:center">'+t("size")+'</span><span style="text-align:center">P</span><span style="text-align:center">C</span><span style="text-align:center">F</span><span style="text-align:right">CAL</span></div>';
 html+='<div id="foodBrowseList">';
 for(var i=0;i<foods.length;i++){var fd=foods[i];
 var measTag=fd.m==="cooked"?"\u{1F525}":fd.m==="dry"?"\u{1F33E}":"";
