@@ -164,7 +164,11 @@ database:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="cu
 warn:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>',
 trophy:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 9H3V5h3M18 9h3V5h-3M6 5h12v6a6 6 0 01-12 0V5zM12 17v3M8 20h8"/></svg>',
 cooked:'<svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 12c0-4 2-6 4-8M8 12c0-4 2-6 4-8M2 14h12"/></svg>',
-dry:'<svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2c3 4 5 6 5 9a5 5 0 01-10 0c0-3 2-5 5-9z"/></svg>'
+dry:'<svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2c3 4 5 6 5 9a5 5 0 01-10 0c0-3 2-5 5-9z"/></svg>',
+clock:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>',
+check:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>',
+msg:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>',
+moon:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>'
 };
 function gIcon(key,size){var s=size||22;return '<span style="display:inline-flex;align-items:center;justify-content:center;color:var(--acc);width:'+s+'px;height:'+s+'px">'+IC[key]+'</span>';}
 var LANGS={
@@ -927,7 +931,7 @@ return Object.keys(names).sort();}
 // OFFLINE DETECTION
 function initOfflineDetection(){
 window.addEventListener("online",function(){toast("\u2713 "+t("backOnline"));syncToCloud();});
-window.addEventListener("offline",function(){toast("\u26A0 "+t("youreOffline"));});}
+window.addEventListener("offline",function(){toast(IC.warn+" "+t("youreOffline"));});}
 
 // RETENTION ALERTS - clients inactive 7+ days
 function getRetentionAlerts(){
@@ -1415,50 +1419,112 @@ if(!("Notification" in window))return;
 if(_reminderInterval)clearInterval(_reminderInterval);
 if(Notification.permission==="granted"){_reminderInterval=setInterval(checkReminders,60000);checkReminders();}
 }
+function isQuietHours(){
+if(!LS.get("quietHours",false))return false;
+var h=new Date().getHours(),s=LS.get("quietStart",21),e=LS.get("quietEnd",7);
+return s<e?(h>=s&&h<e):(h>=s||h<e);
+}
 function checkReminders(){
-if(Notification.permission!=="granted")return;
+if(Notification.permission!=="granted"||isQuietHours())return;
 var now=new Date(),iso=todayISO(),nowMin=now.getHours()*60+now.getMinutes();
+var preMin=LS.get("reminderMinutes",30);
 schedule.forEach(function(s){
 if(s.date!==iso||s.status==="complete"||s.status==="cancelled"||!s.time)return;
 var parts=s.time.split(":"),schedMin=parseInt(parts[0])*60+parseInt(parts[1]);
 var diff=schedMin-nowMin;
 var key="reminded_"+s.id+"_"+iso;
-if(diff>0&&diff<=30&&!sessionStorage.getItem(key)){
+if(diff>0&&diff<=preMin&&!sessionStorage.getItem(key)){
 sessionStorage.setItem(key,"1");
 var title="REGI \u00B7 Upcoming Session";
 var body=(s.clientName||"Client")+" at "+fmtTimeStr(s.time)+" ("+(s.type||"Training")+")";
 try{new Notification(title,{body:body,icon:"icon.png",badge:"icon.png",tag:s.id});}catch(e){}
 }
 });
+// Session log reminders - prompt to log after session time has passed
+if(LS.get("notifSessionLog",true)){
+schedule.forEach(function(s){
+if(s.date!==iso||s.status==="complete"||s.status==="cancelled"||!s.time)return;
+var parts=s.time.split(":"),schedMin=parseInt(parts[0])*60+parseInt(parts[1]);
+var diff=nowMin-schedMin;
+var logKey="logPrompt_"+s.id+"_"+iso;
+if(diff>=60&&diff<90&&!sessionStorage.getItem(logKey)){
+sessionStorage.setItem(logKey,"1");
+try{new Notification("REGI \u00B7 Log Session",{body:"Time to log "+(s.clientName||"Client")+"'s session details",icon:"icon.png",badge:"icon.png",tag:"log_"+s.id});}catch(e){}
 }
+});
+}
+// No-show detection - alert if session time passed and not marked
+if(LS.get("notifNoShow",true)){
+schedule.forEach(function(s){
+if(s.date!==iso||s.status==="complete"||s.status==="cancelled"||!s.time)return;
+var parts=s.time.split(":"),schedMin=parseInt(parts[0])*60+parseInt(parts[1]);
+var diff=nowMin-schedMin;
+var nsKey="noshow_"+s.id+"_"+iso;
+if(diff>=15&&diff<30&&!sessionStorage.getItem(nsKey)){
+sessionStorage.setItem(nsKey,"1");
+try{new Notification("REGI \u00B7 No-Show?",{body:(s.clientName||"Client")+" hasn't checked in for their "+fmtTimeStr(s.time)+" session",icon:"icon.png",badge:"icon.png",tag:"ns_"+s.id});}catch(e){}
+}
+});
+}
+}
+function _notifToggle(label,desc,key,defVal,icon){
+var on=LS.get(key,defVal);
+return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--borderS)"><div style="display:flex;align-items:center;gap:10px"><span style="display:inline-flex;color:var(--acc)">'+icon+'</span><div><div style="font-size:12px;font-weight:600;color:var(--wh)">'+label+'</div><div style="font-size:9px;color:var(--dm);max-width:220px">'+desc+'</div></div></div><div style="position:relative;width:44px;height:24px;cursor:pointer" onclick="LS.set(\''+key+'\','+!on+');render()"><div style="position:absolute;inset:0;border-radius:12px;transition:background 0.2s;background:'+(on?'var(--acc)':'rgba(255,255,255,0.08)')+'"></div><div style="position:absolute;top:2px;'+(on?'right:2px':'left:2px')+';width:20px;height:20px;border-radius:50%;background:var(--wh);transition:all 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.3)"></div></div></div>';}
 function renderAutomation(){
-var enabled=Notification.permission==="granted";
-var html='<div class="sl" style="margin-top:18px">'+t("automations")+'</div><div class="cd" style="padding:16px">';
-html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><div><div style="font-size:13px;font-weight:600;color:var(--wh)">'+t("sessionReminders")+'</div><div style="font-size:10px;color:var(--dm)">'+t("notified30")+'</div></div><div style="font-size:10px;font-family:var(--mono);color:'+(enabled?"var(--success)":"var(--warn)")+'">'+( enabled?t("active"):t("off"))+'</div></div>';
-if(!enabled)html+='<button class="btn2" onclick="Notification.requestPermission().then(function(p){if(p===\'granted\'){initReminders();toast(\'\\u2713 Reminders enabled\');}render();})" style="width:100%">'+t("enableNotif")+'</button>';
-else html+='<div style="font-size:10px;color:var(--mu);font-family:var(--mono)">'+t("reminderActive")+'</div>';
+var enabled=("Notification" in window)&&Notification.permission==="granted";
+var html='';
+// ── BROWSER NOTIFICATIONS ──
+html+='<div class="cd" style="padding:16px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div style="display:flex;align-items:center;gap:10px"><span style="display:inline-flex;color:var(--acc)">'+IC.bell+'</span><div><div style="font-size:13px;font-weight:600;color:var(--wh)">'+t("sessionReminders")+'</div><div style="font-size:9px;color:var(--dm)">'+t("notified30")+'</div></div></div><div style="font-size:9px;font-family:var(--mono);padding:3px 8px;border-radius:6px;background:'+(enabled?'rgba(76,175,80,0.12)':'rgba(232,184,120,0.1)')+';color:'+(enabled?'var(--success)':'var(--warn)')+'">'+( enabled?'ACTIVE':'OFF')+'</div></div>';
+if(!enabled)html+='<button class="btn2" onclick="Notification.requestPermission().then(function(p){if(p===\'granted\'){initReminders();toast(IC.check+\' Reminders enabled\');}render();})" style="width:100%"><span style="display:inline-flex;vertical-align:middle;margin-right:6px">'+IC.bell+'</span>'+t("enableNotif")+'</button>';
+else{
+var preMin=LS.get("reminderMinutes",30);
+html+='<div class="field"><span class="lb">REMIND ME BEFORE SESSION</span><div style="display:flex;gap:4px;flex-wrap:wrap">';
+[10,15,30,45,60].forEach(function(m){html+='<div class="chip'+(preMin===m?" on":"")+'" onclick="LS.set(\'reminderMinutes\','+m+');render()">'+(m<60?m+'min':'1hr')+'</div>';});
+html+='</div></div>';
+html+='<div style="font-size:9px;color:var(--mu);font-family:var(--mono)">'+t("reminderActive")+'</div>';
+}
 html+='</div>';
-// Client reminder templates
-html+='<div class="cd" style="padding:16px;margin-top:8px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><div><div style="font-size:13px;font-weight:600;color:var(--wh)">'+t("clientReminder")+'</div><div style="font-size:10px;color:var(--dm)">'+t("reminderDesc")+'</div></div></div>';
+// ── NOTIFICATION TOGGLES ──
+html+='<div class="cd" style="padding:16px;margin-top:8px">';
+html+='<div style="font-size:10px;font-weight:700;letter-spacing:0.1em;color:var(--dm);margin-bottom:10px">NOTIFICATION PREFERENCES</div>';
+html+=_notifToggle('Session Log Reminders','Prompt to log session details after completion','notifSessionLog',true,IC.check);
+html+=_notifToggle('No-Show Alerts','Alert when a client misses without cancelling','notifNoShow',true,IC.warn);
+html+=_notifToggle('Weekly Summary','Sunday evening digest of the week ahead','notifWeeklySummary',false,IC.trophy);
+html+=_notifToggle('Payment Reminders','Notify when clients have outstanding balances','notifPayment',true,IC.finance);
+html+='</div>';
+// ── QUIET HOURS ──
+var quietOn=LS.get("quietHours",false);
+var quietStart=LS.get("quietStart",21);
+var quietEnd=LS.get("quietEnd",7);
+html+='<div class="cd" style="padding:16px;margin-top:8px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div style="display:flex;align-items:center;gap:10px"><span style="display:inline-flex;color:var(--acc)">'+IC.moon+'</span><div><div style="font-size:13px;font-weight:600;color:var(--wh)">Quiet Hours</div><div style="font-size:9px;color:var(--dm)">Silence all notifications during set hours</div></div></div><div style="position:relative;width:44px;height:24px;cursor:pointer" onclick="LS.set(\'quietHours\','+!quietOn+');render()"><div style="position:absolute;inset:0;border-radius:12px;transition:background 0.2s;background:'+(quietOn?'var(--acc)':'rgba(255,255,255,0.08)')+'"></div><div style="position:absolute;top:2px;'+(quietOn?'right:2px':'left:2px')+';width:20px;height:20px;border-radius:50%;background:var(--wh);transition:all 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.3)"></div></div></div>';
+if(quietOn){
+html+='<div style="display:flex;gap:12px;align-items:center"><div class="field" style="flex:1;margin:0"><span class="lb">FROM</span><select onchange="LS.set(\'quietStart\',parseInt(this.value));render()" style="font-size:12px">';
+for(var qh=0;qh<24;qh++)html+='<option value="'+qh+'"'+(quietStart===qh?' selected':'')+'>'+fmtTimeStr(String(qh).padStart(2,"0")+":00")+'</option>';
+html+='</select></div><div class="field" style="flex:1;margin:0"><span class="lb">UNTIL</span><select onchange="LS.set(\'quietEnd\',parseInt(this.value));render()" style="font-size:12px">';
+for(var qh2=0;qh2<24;qh2++)html+='<option value="'+qh2+'"'+(quietEnd===qh2?' selected':'')+'>'+fmtTimeStr(String(qh2).padStart(2,"0")+":00")+'</option>';
+html+='</select></div></div>';
+}
+html+='</div>';
+// ── CLIENT REMINDER TEMPLATES ──
+html+='<div class="cd" style="padding:16px;margin-top:8px"><div style="display:flex;align-items:center;gap:10px;margin-bottom:14px"><span style="display:inline-flex;color:var(--acc)">'+IC.msg+'</span><div><div style="font-size:13px;font-weight:600;color:var(--wh)">'+t("clientReminder")+'</div><div style="font-size:9px;color:var(--dm)">'+t("reminderDesc")+'</div></div></div>';
 html+='<div class="field"><span class="lb">'+t("customReminder").toUpperCase()+'</span><textarea id="reminderTemplate" rows="3" placeholder="'+escHtml(t("defaultReminder"))+'" style="font-size:12px">'+escHtml(LS.get("reminderTemplate",t("defaultReminder")))+'</textarea></div>';
-html+='<div style="font-size:9px;color:var(--dm);font-family:var(--mono);margin-bottom:10px">Use {name}, {time}, {type}, {date} as placeholders</div>';
-html+='<button class="btn2" onclick="LS.set(\'reminderTemplate\',document.getElementById(\'reminderTemplate\').value);toast(\'\\u2713 \'+t(\'reminderSaved\'))" style="width:100%">'+t("save")+' TEMPLATE</button>';
+html+='<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px"><span style="font-size:8px;font-family:var(--mono);padding:2px 6px;border-radius:4px;background:rgba(212,164,74,0.06);border:1px solid rgba(212,164,74,0.1);color:var(--dm)">{name}</span><span style="font-size:8px;font-family:var(--mono);padding:2px 6px;border-radius:4px;background:rgba(212,164,74,0.06);border:1px solid rgba(212,164,74,0.1);color:var(--dm)">{time}</span><span style="font-size:8px;font-family:var(--mono);padding:2px 6px;border-radius:4px;background:rgba(212,164,74,0.06);border:1px solid rgba(212,164,74,0.1);color:var(--dm)">{type}</span><span style="font-size:8px;font-family:var(--mono);padding:2px 6px;border-radius:4px;background:rgba(212,164,74,0.06);border:1px solid rgba(212,164,74,0.1);color:var(--dm)">{date}</span></div>';
+html+='<button class="btn2" onclick="LS.set(\'reminderTemplate\',document.getElementById(\'reminderTemplate\').value);toast(IC.check+\' \'+t(\'reminderSaved\'))" style="width:100%">'+t("save")+' TEMPLATE</button>';
 html+='</div>';
-// Auto-reminder scheduler
+// ── AUTO TEXT REMINDERS ──
 var autoOn=LS.get("autoReminder",false);
 var autoHrs=LS.get("autoReminderHrs",24);
-html+='<div class="cd" style="padding:16px;margin-top:8px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><div><div style="font-size:13px;font-weight:600;color:var(--wh)">'+t("autoTextReminders")+'</div><div style="font-size:10px;color:var(--dm)">'+t("autoTextDesc")+'</div></div><div style="font-size:10px;font-family:var(--mono);color:'+(autoOn?"var(--success)":"var(--warn)")+'">'+( autoOn?t("on"):t("off"))+'</div></div>';
-html+='<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px"><div class="chip'+(!autoOn?" on":"")+'" onclick="LS.set(\'autoReminder\',false);render()">OFF</div><div class="chip'+(autoOn?" on":"")+'" onclick="LS.set(\'autoReminder\',true);initAutoReminders();render()">ON</div></div>';
+html+='<div class="cd" style="padding:16px;margin-top:8px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div style="display:flex;align-items:center;gap:10px"><span style="display:inline-flex;color:var(--acc)">'+IC.clock+'</span><div><div style="font-size:13px;font-weight:600;color:var(--wh)">'+t("autoTextReminders")+'</div><div style="font-size:9px;color:var(--dm)">'+t("autoTextDesc")+'</div></div></div><div style="position:relative;width:44px;height:24px;cursor:pointer" onclick="LS.set(\'autoReminder\','+!autoOn+');if('+!autoOn+')initAutoReminders();render()"><div style="position:absolute;inset:0;border-radius:12px;transition:background 0.2s;background:'+(autoOn?'var(--acc)':'rgba(255,255,255,0.08)')+'"></div><div style="position:absolute;top:2px;'+(autoOn?'right:2px':'left:2px')+';width:20px;height:20px;border-radius:50%;background:var(--wh);transition:all 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.3)"></div></div></div>';
 if(autoOn){
 html+='<div class="field"><span class="lb">'+t("sendAdvance")+'</span><div style="display:flex;gap:4px;flex-wrap:wrap">';
 [1,2,6,12,24,48].forEach(function(h){html+='<div class="chip'+(autoHrs===h?" on":"")+'" onclick="LS.set(\'autoReminderHrs\','+h+');render()">'+(h<24?h+"hr":h/24+"d")+'</div>';});
 html+='</div></div>';
-html+='<div style="font-size:10px;color:var(--mu);font-family:var(--mono);margin-bottom:10px">When a session is '+autoHrs+'hr'+(autoHrs!==1?"s":"")+' away, you\'ll get a prompt to send a text reminder to the client. On mobile it opens your messages app pre-filled.</div>';
+html+='<div style="font-size:9px;color:var(--mu);font-family:var(--mono);margin-bottom:10px">When a session is '+autoHrs+'hr'+(autoHrs!==1?"s":"")+' away, you\'ll get a prompt to send a text reminder. On mobile it opens your messages app pre-filled.</div>';
 var pendingAuto=getAutoReminderQueue();
 if(pendingAuto.length){
-html+='<div class="sl" style="margin-top:12px">'+t("pendingReminders")+' ('+pendingAuto.length+')</div>';
+html+='<div style="font-size:9px;font-weight:700;letter-spacing:0.1em;color:var(--dm);margin:12px 0 6px">'+t("pendingReminders")+' ('+pendingAuto.length+')</div>';
 for(var pa=0;pa<pendingAuto.length;pa++){var pr=pendingAuto[pa];
-html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;margin-bottom:4px;background:rgba(212,164,74,0.04);border-radius:8px;border:1px solid rgba(212,164,74,0.08)"><div><div style="font-size:12px;font-weight:600;color:var(--wh)">'+escHtml(pr.clientName)+'</div><div style="font-size:9px;color:var(--dm);font-family:var(--mono)">'+fmtDate(pr.date)+' at '+fmtTimeStr(pr.time)+'</div></div><button class="btn2" onclick="sendClientReminder(\''+escJs(pr.id)+'\')" style="padding:5px 12px;font-size:8px">'+t("sendNow")+'</button></div>';}
+html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;margin-bottom:4px;background:rgba(212,164,74,0.04);border-radius:8px;border:1px solid rgba(212,164,74,0.08)"><div><div style="font-size:12px;font-weight:600;color:var(--wh)">'+escHtml(pr.clientName)+'</div><div style="font-size:9px;color:var(--dm);font-family:var(--mono)">'+fmtDate(pr.date)+' at '+fmtTimeStr(pr.time)+'</div></div><button class="btn2" onclick="sendClientReminder(\''+escJs(pr.id)+'\')" style="padding:5px 12px;font-size:8px">'+t("sendNow")+'</button></div>';}
 }}
 html+='</div>';
 return html;}
@@ -1487,7 +1553,7 @@ _autoReminderInterval=setInterval(checkAutoReminders,120000);
 checkAutoReminders();
 }
 function checkAutoReminders(){
-if(!LS.get("autoReminder",false))return;
+if(!LS.get("autoReminder",false)||isQuietHours())return;
 var queue=getAutoReminderQueue();
 if(!queue.length)return;
 var s=queue[0];
@@ -1495,12 +1561,27 @@ var key="autoPrompt_"+s.id+"_"+s.date;
 if(sessionStorage.getItem(key))return;
 sessionStorage.setItem(key,"1");
 // Show a toast prompt and auto-open the send dialog
-toast("\u23F0 Time to remind "+s.clientName+" about their session!");
+toast(IC.clock+" Time to remind "+s.clientName+" about their session!");
 setTimeout(function(){sendClientReminder(s.id);},1500);
 }
 function markAutoReminderSent(schedId){
 var s=schedule.find(function(x){return x.id===schedId;});
 if(s)LS.set("autoSent_"+s.id+"_"+s.date,true);
+}
+
+// WEEKLY SUMMARY CHECK
+function checkWeeklySummary(){
+if(!LS.get("notifWeeklySummary",false)||isQuietHours())return;
+if(Notification.permission!=="granted")return;
+var now=new Date();if(now.getDay()!==0||now.getHours()<17||now.getHours()>=20)return;
+var wKey="weekSummary_"+todayISO();
+if(sessionStorage.getItem(wKey))return;
+sessionStorage.setItem(wKey,"1");
+var nextWeek=new Date();nextWeek.setDate(nextWeek.getDate()+7);
+var upcoming=schedule.filter(function(s){return s.date>=todayISO()&&s.date<=nextWeek.toISOString().slice(0,10)&&s.status!=="cancelled";});
+var body=upcoming.length+" sessions scheduled this week";
+if(upcoming.length>0){var uniqueClients={};upcoming.forEach(function(s){uniqueClients[s.clientId||s.clientName]=1;});body+=", "+Object.keys(uniqueClients).length+" clients";}
+try{new Notification("REGI \u00B7 Week Ahead",{body:body,icon:"icon.png",badge:"icon.png",tag:"weekly"});}catch(e){}
 }
 
 // CLIENT REMINDER SYSTEM
@@ -1532,16 +1613,27 @@ function ensureJsPDF(){return new Promise(function(resolve,reject){if(window.jsp
 function safePDFSave(doc,fileName){
 try{
 var blob=doc.output('blob');
-var url=URL.createObjectURL(blob);
-if(navigator.userAgent.match(/iPhone|iPad|iPod/i)||navigator.standalone){
-window.open(url,'_blank');
-toast('\u2713 PDF opened \u2014 tap Share to save');
-}else{
-var a=document.createElement('a');a.href=url;a.download=fileName;a.style.display='none';document.body.appendChild(a);a.click();
-setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(url);},1000);
-toast('\u2713 PDF downloaded');
-}
+var file=new File([blob],fileName,{type:'application/pdf'});
+// Try Web Share API first (best for iOS — saves directly to Files/Books)
+if(navigator.canShare&&navigator.canShare({files:[file]})){
+navigator.share({files:[file],title:fileName.replace('.pdf','').replace(/_/g,' ')}).then(function(){
+toast('\u2713 PDF shared successfully');
+}).catch(function(err){
+if(err.name!=='AbortError'){_pdfFallbackSave(blob,fileName);}
+});return;}
+// Desktop or non-share browsers
+if(!navigator.userAgent.match(/iPhone|iPad|iPod/i)){
+var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fileName;a.style.display='none';document.body.appendChild(a);a.click();
+setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(a.href);},1000);
+toast('\u2713 PDF downloaded');return;}
+// iOS fallback — open in new tab for manual save
+_pdfFallbackSave(blob,fileName);
 }catch(e){try{doc.save(fileName);toast('\u2713 PDF downloaded');}catch(e2){toast('PDF error: '+e2.message);}}
+}
+function _pdfFallbackSave(blob,fileName){
+var url=URL.createObjectURL(blob);
+window.open(url,'_blank');
+toast('\u2713 PDF opened \u2014 tap Share then Save to Files');
 }
 function _pdfDecor(doc,W,H,gold,dimmed){
 // Corner accents on every page
@@ -2165,7 +2257,7 @@ if(tcal>0&&!hasVeg)warnings.push('No vegetables added \u2014 consider adding gre
 if(tcal>0&&tf<15)warnings.push('Fat is very low \u2014 minimum ~20g needed for hormone function');
 if(tcal>0&&tp<50)warnings.push('Protein is very low for a coached client');
 var wEl=$('macroWarnings');if(!wEl){wEl=document.createElement('div');wEl.id='macroWarnings';var totals=$('macroTotals');if(totals)totals.parentElement.appendChild(wEl);}
-if(warnings.length){wEl.innerHTML='<div style="margin-top:10px;padding:10px 14px;background:rgba(232,184,120,0.06);border:1px solid rgba(232,184,120,0.18);border-radius:8px">'+warnings.map(function(w){return'<div style="font-size:10px;color:var(--warn);font-family:var(--mono);line-height:1.8">\u26A0 '+w+'</div>';}).join('')+'</div>';}else{wEl.innerHTML='';}}
+if(warnings.length){wEl.innerHTML='<div style="margin-top:10px;padding:10px 14px;background:rgba(232,184,120,0.06);border:1px solid rgba(232,184,120,0.18);border-radius:8px">'+warnings.map(function(w){return'<div style="font-size:10px;color:var(--warn);font-family:var(--mono);line-height:1.8"><span style="display:inline-flex;vertical-align:middle;color:var(--warn)">'+IC.warn+'</span>'+w+'</div>';}).join('')+'</div>';}else{wEl.innerHTML='';}}
 
 function filterFoodDB(q){q=q.toLowerCase();document.querySelectorAll('#foodList .food-item').forEach(function(el){var t=el.textContent.toLowerCase();el.style.display=(!q||t.indexOf(q)>=0)?'flex':'none';});}
 function filterFoodCat(cat,el){el.parentElement.querySelectorAll('.chip').forEach(function(c){c.classList.remove('on');});el.classList.add('on');document.querySelectorAll('#foodList .food-item').forEach(function(item){item.style.display=(cat==='all'||item.dataset.cat===cat)?'flex':'none';});}
@@ -2888,6 +2980,7 @@ if(currentView.view==='supplementBuilder')return renderSupplementBuilder();
 if(currentView.view==='supplementDetail')return renderSupplementDetail();
 if(currentView.view==='proExercises')return renderProExercises();
 if(currentView.view==='foodBrowser')return renderFoodBrowser();
+if(currentView.view==='quickCalc')return renderQuickCalc();
 
 var html='<div class="gw" style="margin:0 0 18px"></div><div class="pt">'+t("proTools")+'</div>';
 
@@ -2913,7 +3006,7 @@ html+='</div>';
 html+='<div class="sl" style="margin-top:6px">COACHING</div>';
 html+='<div class="g2" style="margin-bottom:14px">';
 html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="showTimerModal()"><div style="margin-bottom:8px;display:flex;justify-content:center"><span style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,rgba(212,164,74,0.15),rgba(212,164,74,0.04));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;color:var(--acc)">'+IC.timer+'</span></div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("restTimer")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">REST & RECOVERY</div></div>';
-html+='<div style="padding:20px"></div>';
+html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="push(\'quickCalc\')"><div style="margin-bottom:8px;display:flex;justify-content:center"><span style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,rgba(212,164,74,0.15),rgba(212,164,74,0.04));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;color:var(--acc)">'+IC.finance+'</span></div><div style="font-size:13px;font-weight:700;color:var(--wh)">Quick Calc</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">EARNINGS & TAX</div></div>';
 html+='</div>';
 
 // Saved meal plans
@@ -2938,6 +3031,93 @@ for(var i=allSuppPlans.length-1;i>=Math.max(0,allSuppPlans.length-5);i--){var sp
 html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="push(\'supplementDetail\',{planId:\''+escJs(sp2.id)+'\'})"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(72,200,120,0.18),rgba(72,200,120,0.06));border:1px solid rgba(72,200,120,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--success)">'+IC.supp+'</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(sp2.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+(c2?escHtml(c2.name)+' \u00B7 ':'')+sp2.goal+' \u00B7 '+sp2.supplements.length+' supps</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}}
 
 return html;}
+
+// ═══════════════════════════════════════════════════════════════════
+// QUICK CALCULATOR — Earnings, Tax, Gym Cut
+// ═══════════════════════════════════════════════════════════════════
+function renderQuickCalc(){
+var html='<button class="btn2" onclick="pop()" style="margin-bottom:14px">\u2039 '+t("back")+'</button>';
+html+='<div class="pt">Quick Calculator</div>';
+html+='<div style="font-size:11px;color:var(--mu);margin-bottom:18px;line-height:1.6">Fast earnings math. Enter amounts, see instant gym cut, tax estimates, and net take-home.</div>';
+
+// Quick add calculator
+html+='<div class="cd" style="padding:18px;border:1px solid var(--accB)">';
+html+='<div class="sl" style="margin-bottom:12px">EARNINGS CALCULATOR</div>';
+html+='<div class="field"><span class="lb">SESSION AMOUNTS (one per line or comma-separated)</span><textarea id="qcAmounts" rows="4" placeholder="70\n85\n70\n100\nor: 70, 85, 70, 100" oninput="calcQuickTotals()" style="font-size:14px;font-family:var(--mono)"></textarea></div>';
+html+='<div class="g2" style="gap:8px;margin-bottom:12px"><div class="field" style="margin-bottom:0"><span class="lb">GYM CUT %</span><input id="qcCut" type="number" value="'+Math.round(getGymCut()*100)+'" min="0" max="100" oninput="calcQuickTotals()" style="font-size:16px;text-align:center;font-family:var(--mono)"></div><div class="field" style="margin-bottom:0"><span class="lb">TAX RATE %</span><input id="qcTax" type="number" value="'+LS.get("taxRate","20")+'" min="0" max="50" oninput="LS.set(\'taxRate\',this.value);calcQuickTotals()" style="font-size:16px;text-align:center;font-family:var(--mono)"></div></div>';
+html+='<div id="qcResults" style="display:none">';
+html+='<div class="gw" style="margin:14px 0"></div>';
+html+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">';
+html+='<div class="stat" style="padding:14px"><b style="color:var(--ow);font-size:22px" id="qcGross">$0</b><small>GROSS</small></div>';
+html+='<div class="stat" style="padding:14px"><b style="color:var(--danger);font-size:22px" id="qcGymCut">-$0</b><small>GYM CUT</small></div>';
+html+='<div class="stat" style="padding:14px"><b style="color:var(--warn);font-size:22px" id="qcTaxAmt">-$0</b><small>SET ASIDE FOR TAX</small></div>';
+html+='<div class="stat" style="padding:14px;border:1px solid var(--accB)"><b style="color:var(--success);font-size:22px" id="qcNet">$0</b><small>NET TAKE-HOME</small></div>';
+html+='</div>';
+html+='<div style="margin-top:12px;padding:12px;background:rgba(212,164,74,0.04);border-radius:10px;border:1px solid rgba(212,164,74,0.10)">';
+html+='<div style="font-size:9px;font-family:var(--mono);color:var(--dm);line-height:1.8" id="qcBreakdown"></div>';
+html+='</div></div></div>';
+
+// Monthly snapshot from actual data
+var now_=new Date(),mo=now_.getMonth(),yr=now_.getFullYear();
+var moS=sessions.filter(function(s){var d=new Date(s.date+"T12:00:00");return d.getMonth()===mo&&d.getFullYear()===yr&&s.status!=="cancelled";});
+var moGross=roundMoney(moS.reduce(function(a,s){return a+parseFloat(s.rate||0);},0));
+var moCut=Math.round(moGross*getGymCut());
+var moNet=roundMoney(moGross-moCut);
+var moTaxRate=parseInt(LS.get("taxRate","20"));
+var moTax=Math.round(moNet*moTaxRate/100);
+var moAfterTax=roundMoney(moNet-moTax);
+
+html+='<div class="cd" style="padding:18px;margin-top:14px">';
+html+='<div class="sl" style="margin-bottom:12px">THIS MONTH\'S SNAPSHOT</div>';
+html+='<div style="font-size:10px;color:var(--dm);font-family:var(--mono);margin-bottom:12px">'+LANGS[getLang()].months[mo]+' '+yr+' \u00B7 '+moS.length+' sessions</div>';
+html+='<div style="padding:8px 0;border-bottom:1px solid var(--borderS);display:flex;justify-content:space-between"><span style="font-size:12px;color:var(--mu)">Gross Revenue</span><span style="font-size:14px;font-weight:700;font-family:var(--mono);color:var(--ow)">$'+moGross+'</span></div>';
+html+='<div style="padding:8px 0;border-bottom:1px solid var(--borderS);display:flex;justify-content:space-between"><span style="font-size:12px;color:var(--mu)">Gym Cut ('+Math.round(getGymCut()*100)+'%)</span><span style="font-size:14px;font-weight:700;font-family:var(--mono);color:var(--danger)">-$'+moCut+'</span></div>';
+html+='<div style="padding:8px 0;border-bottom:1px solid var(--borderS);display:flex;justify-content:space-between"><span style="font-size:12px;color:var(--mu)">Your Earnings</span><span style="font-size:14px;font-weight:700;font-family:var(--mono);color:var(--accVib)">$'+moNet+'</span></div>';
+html+='<div style="padding:8px 0;border-bottom:1px solid var(--borderS);display:flex;justify-content:space-between"><span style="font-size:12px;color:var(--mu)">Tax Reserve ('+moTaxRate+'%)</span><span style="font-size:14px;font-weight:700;font-family:var(--mono);color:var(--warn)">-$'+moTax+'</span></div>';
+html+='<div style="padding:8px 0;display:flex;justify-content:space-between"><span style="font-size:12px;font-weight:700;color:var(--wh)">Take-Home After Tax</span><span style="font-size:16px;font-weight:800;font-family:var(--mono);color:var(--success)">$'+moAfterTax+'</span></div>';
+html+='</div>';
+
+// Quarterly estimate
+var qSessions=sessions.filter(function(s){var d=new Date(s.date+"T12:00:00");var q1=Math.floor(mo/3)*3;return d.getMonth()>=q1&&d.getMonth()<=mo&&d.getFullYear()===yr&&s.status!=="cancelled";});
+var qGross=roundMoney(qSessions.reduce(function(a,s){return a+parseFloat(s.rate||0);},0));
+var qCut=Math.round(qGross*getGymCut());
+var qNet=roundMoney(qGross-qCut);
+var qTax=Math.round(qNet*moTaxRate/100);
+var quarterNum=Math.floor(mo/3)+1;
+
+html+='<div class="cd" style="padding:18px;margin-top:14px">';
+html+='<div class="sl" style="margin-bottom:12px">Q'+quarterNum+' '+yr+' QUARTERLY ESTIMATE</div>';
+html+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">';
+html+='<div class="stat" style="padding:12px"><b style="color:var(--ow);font-size:18px">$'+qGross+'</b><small>Q'+quarterNum+' GROSS</small></div>';
+html+='<div class="stat" style="padding:12px"><b style="color:var(--accVib);font-size:18px">$'+qNet+'</b><small>Q'+quarterNum+' NET</small></div>';
+html+='<div class="stat" style="padding:12px"><b style="color:var(--warn);font-size:18px">$'+qTax+'</b><small>EST. TAX DUE</small></div>';
+html+='<div class="stat" style="padding:12px"><b style="color:var(--success);font-size:18px">'+qSessions.length+'</b><small>SESSIONS</small></div>';
+html+='</div>';
+html+='<div style="margin-top:10px;font-size:9px;color:var(--dm);font-family:var(--mono);line-height:1.6">Estimated quarterly tax payment based on '+moTaxRate+'% rate. Adjust your tax rate above. For 1099 contractors, quarterly estimates are typically due Jan 15, Apr 15, Jun 15, Sep 15.</div>';
+html+='</div>';
+
+html+='<div style="margin-top:14px"><button class="btn" onclick="showEarningsReportPicker()">\u2193 GENERATE FULL TAX REPORT PDF</button></div>';
+return html;}
+
+function calcQuickTotals(){
+var raw=v('qcAmounts')||'';
+var nums=raw.replace(/\n/g,',').split(',').map(function(s){return parseFloat(s.trim());}).filter(function(n){return!isNaN(n)&&n>0;});
+var results=$('qcResults');
+if(!nums.length){if(results)results.style.display='none';return;}
+if(results)results.style.display='block';
+var gross=nums.reduce(function(a,b){return a+b;},0);
+var cutPct=parseInt(v('qcCut'))||20;
+var taxPct=parseInt(v('qcTax'))||20;
+var gymCut=Math.round(gross*cutPct/100);
+var afterCut=gross-gymCut;
+var taxAmt=Math.round(afterCut*taxPct/100);
+var net=afterCut-taxAmt;
+var elG=$('qcGross'),elC=$('qcGymCut'),elT=$('qcTaxAmt'),elN=$('qcNet'),elB=$('qcBreakdown');
+if(elG)elG.textContent='$'+roundMoney(gross);
+if(elC)elC.textContent='-$'+gymCut;
+if(elT)elT.textContent='-$'+taxAmt;
+if(elN)elN.textContent='$'+roundMoney(net);
+if(elB)elB.innerHTML=nums.length+' sessions totaling $'+roundMoney(gross)+'<br>Gym keeps $'+gymCut+' ('+cutPct+'%) \u2192 You earn $'+roundMoney(afterCut)+'<br>Set aside $'+taxAmt+' ('+taxPct+'%) for taxes \u2192 Take-home: $'+roundMoney(net)+'<br>Per session avg: $'+roundMoney(gross/nums.length)+' gross / $'+roundMoney(net/nums.length)+' net';}
 
 function startMealPlan(){
 if(!clients.length){push('mealPlanBuilder',{clientId:''});return;}
@@ -3161,6 +3341,7 @@ try{$("app").style.display="";render();}catch(e){var errDiv=document.createEleme
 syncFromCloud().then(function(){render();});
 initReminders();
 initAutoReminders();
+checkWeeklySummary();
 initOfflineDetection();
 showWhatsNew();
 })();
