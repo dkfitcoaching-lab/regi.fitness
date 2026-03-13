@@ -1062,26 +1062,26 @@ var html='<div style="position:fixed;inset:0;z-index:500;display:flex;align-item
 html+='<div class="pt" style="font-size:16px;margin-bottom:10px">Quick Add from Exercise DB</div>';
 html+='<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px"><div class="chip'+((_proGender==="women")?" on":"")+'" onclick="_proGender=\'women\';updateExPickerList()">WOMEN</div><div class="chip'+((_proGender==="men")?" on":"")+'" onclick="_proGender=\'men\';updateExPickerList()">MEN</div></div>';
 html+='<div id="exPickerGroups" style="display:flex;gap:3px;flex-wrap:wrap;margin-bottom:12px">';
-for(var gi=0;gi<groups.length;gi++){html+='<div class="chip'+(gi===0?" on":"")+'" onclick="selectExPickerGroup(\''+escJs(groups[gi])+'\',this)">'+groups[gi]+'</div>';}
+for(var gi=0;gi<groups.length;gi++){html+='<div class="chip'+(gi===0?" on":"")+'" onclick="selectExPickerGroup(\''+escJs(groups[gi])+'\',this)">'+escHtml(groups[gi])+'</div>';}
 html+='</div><div id="exPickerList" style="max-height:40vh;overflow-y:auto"></div>';
 html+='<button class="btn2" onclick="document.getElementById(\'exPicker\').remove()" style="width:100%;margin-top:12px">CLOSE</button></div></div>';
 var el=document.createElement('div');el.innerHTML=html;document.body.appendChild(el.firstChild);
-selectExPickerGroup(groups[0],document.querySelector('#exPickerGroups .chip.on'));
+if(groups.length)selectExPickerGroup(groups[0],document.querySelector('#exPickerGroups .chip.on'));
 }
 function selectExPickerGroup(group,el){
 if(el){el.parentElement.querySelectorAll('.chip').forEach(function(c){c.classList.remove('on');});el.classList.add('on');}
 var exs=PRO_EXERCISES[_proGender][group]||[];
 var h='';for(var i=0;i<exs.length;i++){var ex=exs[i];
-h+='<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;margin-bottom:4px;background:rgba(212,168,72,0.02);border:1px solid rgba(212,168,72,0.06);border-radius:8px;cursor:pointer" onclick="quickAddExFromDB(\''+escJs(ex.n)+'\');this.style.borderColor=\'var(--acc)\';this.querySelector(\'.qaBadge\').textContent=\'\u2713\'"><div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--wh)">'+escHtml(ex.n)+'</div><div style="font-size:9px;color:var(--acc);font-family:var(--mono)">'+ex.s+'</div></div><span class="qaBadge" style="font-size:10px;color:var(--dm)">+</span></div>';}
+h+='<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;margin-bottom:4px;background:rgba(212,168,72,0.02);border:1px solid rgba(212,168,72,0.06);border-radius:8px;cursor:pointer" onclick="quickAddExFromDB(\''+escJs(ex.n)+'\');this.style.borderColor=\'var(--acc)\';this.querySelector(\'.qaBadge\').textContent=\'\u2713\'"><div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--wh)">'+escHtml(ex.n)+'</div><div style="font-size:9px;color:var(--acc);font-family:var(--mono)">'+escHtml(ex.s)+'</div></div><span class="qaBadge" style="font-size:10px;color:var(--dm)">+</span></div>';}
 var list=$('exPickerList');if(list)list.innerHTML=h;
 }
 function updateExPickerList(){
 var picker=$('exPicker');if(!picker)return;
 var groups=Object.keys(PRO_EXERCISES[_proGender]);
-var gh='';for(var gi=0;gi<groups.length;gi++){gh+='<div class="chip'+(gi===0?" on":"")+'" onclick="selectExPickerGroup(\''+escJs(groups[gi])+'\',this)">'+groups[gi]+'</div>';}
+var gh='';for(var gi=0;gi<groups.length;gi++){gh+='<div class="chip'+(gi===0?" on":"")+'" onclick="selectExPickerGroup(\''+escJs(groups[gi])+'\',this)">'+escHtml(groups[gi])+'</div>';}
 var gEl=$('exPickerGroups');if(gEl)gEl.innerHTML=gh;
 picker.querySelectorAll('.chip').forEach(function(c){var t=c.textContent.trim();if(t==='WOMEN')c.className='chip'+(_proGender==='women'?' on':'');if(t==='MEN')c.className='chip'+(_proGender==='men'?' on':'');});
-selectExPickerGroup(groups[0],document.querySelector('#exPickerGroups .chip.on'));
+if(groups.length)selectExPickerGroup(groups[0],document.querySelector('#exPickerGroups .chip.on'));
 }
 function quickAddExFromDB(name){
 addExercise('normal');
@@ -2404,7 +2404,7 @@ html+='<div style="font-size:11px;color:var(--mu);margin-bottom:14px;line-height
 html+='<div style="display:flex;gap:4px;margin-bottom:14px"><div class="chip'+(_proGender==="women"?" on":"")+'" onclick="_proGender=\'women\';_proMuscle=\'\';render()">WOMEN\'S</div><div class="chip'+(_proGender==="men"?" on":"")+'" onclick="_proGender=\'men\';_proMuscle=\'\';render()">MEN\'S</div></div>';
 var groups=Object.keys(PRO_EXERCISES[_proGender]);
 html+='<div style="display:flex;gap:3px;flex-wrap:wrap;margin-bottom:14px">';
-for(var gi=0;gi<groups.length;gi++){var g=groups[gi];html+='<div class="chip'+(_proMuscle===g?" on":"")+'" onclick="_proMuscle=\''+escJs(g)+'\';render()">'+g+'</div>';}
+for(var gi=0;gi<groups.length;gi++){var g=groups[gi];html+='<div class="chip'+(_proMuscle===g?" on":"")+'" onclick="_proMuscle=\''+escJs(g)+'\';render()">'+escHtml(g)+'</div>';}
 html+='</div>';
 if(_proMuscle&&PRO_EXERCISES[_proGender][_proMuscle]){
 var exs=PRO_EXERCISES[_proGender][_proMuscle];
