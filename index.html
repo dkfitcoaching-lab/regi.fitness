@@ -398,7 +398,11 @@ fromDB:"FROM DB",
 women:"WOMEN",
 men:"MEN",
 close:"CLOSE",
-noExercisesInGroup:"No exercises in this group"
+noExercisesInGroup:"No exercises in this group",
+nExercises:"{n} exercises",
+nTotalSets:"{n} total sets",
+exerciseAdded:"Exercise added",
+nAdded:"{n} added"
 },
 hu:{
 days:["Vas","H\u00e9t","Kedd","Sze","Cs\u00fct","P\u00e9n","Szo"],
@@ -649,7 +653,11 @@ fromDB:"ADATB\u00c1ZIS",
 women:"N\u0150K",
 men:"F\u00c9RFIAK",
 close:"BEZ\u00c1R\u00c1S",
-noExercisesInGroup:"Nincs gyakorlat ebben a csoportban"
+noExercisesInGroup:"Nincs gyakorlat ebben a csoportban",
+nExercises:"{n} gyakorlat",
+nTotalSets:"{n} \u00f6sszes sorozat",
+exerciseAdded:"Gyakorlat hozz\u00e1adva",
+nAdded:"{n} hozz\u00e1adva"
 }
 };
 var DN;/* initialized after LS */
@@ -1011,7 +1019,7 @@ html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" 
 return html;}
 
 // SESSIONS - Rebuilt Exercise Logging System
-var _exCount=0,_sessionRating=0;
+var _exCount=0,_sessionRating=0,_pickerGroup="",_pickerAdded=0;
 function renderSessions(){if(currentView.view==="new")return renderLogSession();if(currentView.view==="detail")return renderSessionDetail();return renderSessionList();}
 function renderTimerWidget(compact){var presets=[30,45,60,90,120,180];var ph="";for(var i=0;i<presets.length;i++){var s=presets[i];ph+='<div class="chip'+(timer.preset===s?" on":"")+'" data-timer-preset="'+s+'" onclick="timerSetPreset('+s+')"'+(compact?' style="padding:4px 8px;font-size:9px"':'')+'>'+(s<60?s+"s":fmtTime(s))+'</div>';}
 if(compact)return'<div class="cd" style="padding:14px;margin-bottom:12px;border:1px solid var(--accB);background:linear-gradient(160deg,rgba(12,12,20,0.99),rgba(6,6,12,0.99))"><div style="display:flex;align-items:center;gap:12px;margin-bottom:10px"><span style="font-size:9px;color:var(--acc);font-family:var(--mono);letter-spacing:0.12em">\u23F1 '+t("restTimer")+'</span><span id="timerDisplay" style="font-family:var(--mono);font-size:28px;font-weight:300;color:var(--ice);flex:1;text-align:right;letter-spacing:0.06em;text-shadow:0 0 24px rgba(201,168,76,0.10)">'+fmtTime(timer.seconds>0?timer.seconds:timer.preset)+'</span></div><div style="height:2px;background:rgba(201,168,76,0.06);border-radius:1px;margin-bottom:10px;overflow:hidden"><div id="timerBarInline" style="height:100%;background:linear-gradient(90deg,var(--accDeep),var(--accBright));border-radius:1px;transition:width 1s linear;width:'+(timer.preset>0?((timer.seconds/timer.preset)*100):100)+'%"></div></div><div style="display:flex;gap:3px;flex-wrap:wrap;margin-bottom:8px">'+ph+'</div><div style="display:flex;gap:6px"><button class="btn2" onclick="timerToggle()" id="timerBtn" style="flex:1;padding:8px 10px;font-size:10px">'+(timer.running?"PAUSE":"START")+'</button><button class="btn2" onclick="timerReset()" style="flex:1;padding:8px 10px;font-size:10px">RESET</button><button class="btn2" onclick="showTimerModal()" style="padding:8px 10px;font-size:10px">\u2197</button></div></div>';
@@ -1069,18 +1077,22 @@ function _repOpts(){var o='<option value="">'+t("reps")+'</option>';for(var r=1;
 function addSet(group){var rows=group.querySelector(".xSets");var n=rows.querySelectorAll(".set-row").length+1;var d=document.createElement("div");d.className="set-row set-normal";d.innerHTML='<div class="set-badge">S'+n+'</div><select class="sw" style="width:68px;padding:8px 4px;font-size:12px;text-align:center;background-position:right 4px center;padding-right:18px">'+_weightOpts()+'</select><span style="font-size:10px;color:var(--dmL)">\u00D7</span><select class="sr" style="width:62px;padding:8px 4px;font-size:12px;text-align:center;background-position:right 4px center;padding-right:18px">'+_repOpts()+'</select><input class="sn" placeholder="'+t("notes").toLowerCase()+'" style="flex:1;padding:8px;font-size:11px"><span style="font-size:12px;color:var(--danger);cursor:pointer;padding:2px 4px" onclick="this.parentElement.remove()">\u2715</span>';rows.appendChild(d);}
 function collectExercises(){var exercises=[];document.querySelectorAll("#exList .cd").forEach(function(card){var mode=card.dataset.mode||"normal";var nt=(card.querySelector(".xNote")||{}).value||"";var rest=(card.querySelector(".xRest")||{}).value||"";var te=card.querySelector(".chip.on");var tempo=te?te.textContent.trim():"Normal";var groups=[];card.querySelectorAll(".exGroup").forEach(function(g){var nm=(g.querySelector(".xN")||{}).value||"";var sets=[];g.querySelectorAll(".set-row").forEach(function(row){sets.push({w:(row.querySelector(".sw")||{}).value||"",r:(row.querySelector(".sr")||{}).value||"",n:(row.querySelector(".sn")||{}).value||""});});if(nm)groups.push({name:nm,sets:sets});});if(groups.length===1)exercises.push({name:groups[0].name,tempo:tempo,sets:groups[0].sets,note:nt,rest:rest,mode:mode});else if(groups.length>1)exercises.push({name:groups.map(function(g){return g.name;}).join(" + "),tempo:tempo,mode:mode,note:nt,rest:rest,grouped:groups});});return exercises;}
 function showQuickExPicker(){
+_pickerAdded=0;
 var groups=Object.keys(PRO_EXERCISES[_proGender]);
-var html='<div style="position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.90);backdrop-filter:blur(12px);padding:20px;animation:fadeIn 0.3s" id="exPicker"><div style="width:100%;max-width:440px;max-height:80vh;overflow-y:auto;background:linear-gradient(160deg,rgba(10,10,16,0.99),rgba(4,4,8,0.99));border:1px solid var(--accB);border-radius:16px;padding:24px;box-shadow:0 0 60px rgba(212,168,72,0.08)">';
-html+='<div class="sl" style="margin:0 0 12px">'+t("quickAddFromDB")+'</div>';
+var startGroup=(_pickerGroup&&groups.indexOf(_pickerGroup)>-1)?_pickerGroup:groups[0]||"";
+var html='<div style="position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.90);backdrop-filter:blur(12px);padding:20px;animation:fadeIn 0.3s" id="exPicker" onclick="if(event.target===this)this.remove()">';
+html+='<div style="width:100%;max-width:440px;max-height:80vh;overflow-y:auto;background:linear-gradient(160deg,rgba(10,10,16,0.99),rgba(4,4,8,0.99));border:1px solid var(--accB);border-radius:16px;padding:24px;box-shadow:0 0 60px rgba(212,168,72,0.08)">';
+html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><div class="sl" style="margin:0">'+t("quickAddFromDB")+'</div><span id="exPickerCount" style="font-size:10px;color:var(--acc);font-family:var(--mono);display:none"></span></div>';
 html+='<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px"><div class="chip'+((_proGender==="women")?" on":"")+'" onclick="_proGender=\'women\';updateExPickerList()" style="min-height:36px;display:flex;align-items:center">'+t("women")+'</div><div class="chip'+((_proGender==="men")?" on":"")+'" onclick="_proGender=\'men\';updateExPickerList()" style="min-height:36px;display:flex;align-items:center">'+t("men")+'</div></div>';
 html+='<div id="exPickerGroups" style="display:flex;gap:3px;flex-wrap:wrap;margin-bottom:12px">';
-for(var gi=0;gi<groups.length;gi++){html+='<div class="chip'+(gi===0?" on":"")+'" onclick="selectExPickerGroup(\''+escJs(groups[gi])+'\',this)" style="min-height:36px;display:flex;align-items:center">'+escHtml(groups[gi])+'</div>';}
+for(var gi=0;gi<groups.length;gi++){html+='<div class="chip'+(groups[gi]===startGroup?" on":"")+'" onclick="selectExPickerGroup(\''+escJs(groups[gi])+'\',this)" style="min-height:36px;display:flex;align-items:center">'+escHtml(groups[gi])+'</div>';}
 html+='</div><div id="exPickerList" style="max-height:40vh;overflow-y:auto"></div>';
 html+='<button class="btn2" onclick="document.getElementById(\'exPicker\').remove()" style="width:100%;margin-top:12px;padding:12px">'+t("close")+'</button></div></div>';
 var el=document.createElement('div');el.innerHTML=html;document.body.appendChild(el.firstChild);
-if(groups.length)selectExPickerGroup(groups[0],document.querySelector('#exPickerGroups .chip.on'));
+if(startGroup)selectExPickerGroup(startGroup,document.querySelector('#exPickerGroups .chip.on'));
 }
 function selectExPickerGroup(group,el){
+_pickerGroup=group;
 if(el){el.parentElement.querySelectorAll('.chip').forEach(function(c){c.classList.remove('on');});el.classList.add('on');}
 var exs=PRO_EXERCISES[_proGender][group]||[];
 var h='';if(!exs.length){h='<div style="padding:18px;text-align:center;font-size:10px;color:var(--dm);font-family:var(--mono)">'+t("noExercisesInGroup")+'</div>';}
@@ -1100,7 +1112,10 @@ function quickAddExFromDB(name){
 addExercise('normal');
 var card=document.getElementById('ex'+_exCount);
 if(card){var nm=card.querySelector('.xN');if(nm)nm.value=name;}
+_pickerAdded++;
+var cnt=$('exPickerCount');if(cnt){cnt.style.display='inline';cnt.textContent=t("nAdded").replace("{n}",_pickerAdded);}
 updateExLiveStats();
+toast("\u2713 "+escHtml(name));
 }
 function updateExLiveStats(){
 var el=$('exLiveStats');if(!el)return;
@@ -1110,7 +1125,7 @@ var totalEx=0,totalSets=0;
 cards.forEach(function(card){
 var groups=card.querySelectorAll('.exGroup');
 groups.forEach(function(g){var nm=(g.querySelector('.xN')||{}).value;if(nm){totalEx++;totalSets+=g.querySelectorAll('.set-row').length;}});});
-if(totalEx){el.style.display='block';el.innerHTML='\u2022 '+totalEx+' exercises \u2022 '+totalSets+' total sets';}
+if(totalEx){el.style.display='block';el.innerHTML='\u2022 '+t("nExercises").replace("{n}",totalEx)+' \u2022 '+t("nTotalSets").replace("{n}",totalSets);}
 else el.style.display='none';
 }
 function prefillExercises(){var pfEx=(currentView.data||{}).prefillExercises||[];for(var i=0;i<pfEx.length;i++){var ex=pfEx[i];var mode=ex.mode||"normal";if(ex.grouped){addExercise(mode);var card=document.getElementById("ex"+_exCount);if(!card)continue;var groups=card.querySelectorAll(".exGroup");for(var g=0;g<Math.min(groups.length,ex.grouped.length);g++){var nm=groups[g].querySelector(".xN");if(nm)nm.value=ex.grouped[g].name||"";var sets=ex.grouped[g].sets||[];for(var j=1;j<sets.length;j++)addSet(groups[g]);var rows=groups[g].querySelectorAll(".set-row");for(var j=0;j<Math.min(rows.length,sets.length);j++){var sw=rows[j].querySelector(".sw");if(sw)sw.value=sets[j].w||"";var sr=rows[j].querySelector(".sr");if(sr)sr.value=sets[j].r||"";}}}else{addExercise(mode);var card=document.getElementById("ex"+_exCount);if(!card)continue;var nm=card.querySelector(".xN");if(nm)nm.value=ex.name||"";var sets=ex.sets||[];for(var j=1;j<sets.length;j++)addSet(card.querySelector(".exGroup"));var rows=card.querySelectorAll(".set-row");for(var j=0;j<Math.min(rows.length,sets.length);j++){var sw=rows[j].querySelector(".sw");if(sw)sw.value=sets[j].w||"";var sr=rows[j].querySelector(".sr");if(sr)sr.value=sets[j].r||"";}}}toast("\u2713 Exercises loaded");}
