@@ -147,7 +147,7 @@ html{scroll-behavior:smooth}
 
 var SUPA_URL="https://pwopwvvgjflunjxwkkql.supabase.co";
 var SUPA_KEY="sb_publishable_6slliEpPsWV9JXIDvz8pyw_FNPrPMhv";
-var VERSION="5.3";
+var VERSION="5.4";
 var LANGS={
 en:{
 days:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],
@@ -944,7 +944,7 @@ html+='<div class="cd" style="padding:18px"><div class="field"><span class="lb">
 html+='<div class="field"><span class="lb">'+t("programType")+'</span><select id="progType">'+topts+'</select></div>';
 html+='<div class="field"><span class="lb">'+t("programNotes")+'</span><textarea id="progNotes" rows="2" placeholder="Program description, goals, frequency..."></textarea></div></div>';
 html+=dlHtml;
-html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px"><div class="sl" style="margin:0">'+t("exercises")+'</div><div style="display:flex;gap:4px"><button class="btn2" onclick="addExercise(\'normal\')" style="padding:6px 10px;font-size:8px">'+t("addExercise")+'</button><button class="btn2" onclick="addExercise(\'superset\')" style="padding:6px 10px;font-size:8px;color:#88ccdd;border-color:rgba(120,180,200,0.3)">'+t("addSuperset")+'</button><button class="btn2" onclick="addExercise(\'giant\')" style="padding:6px 10px;font-size:8px;color:#cc88ee;border-color:rgba(180,120,200,0.3)">'+t("addGiantSet")+'</button></div></div>'+tmplHtml+'<div id="exList" style="margin-top:8px"></div>';
+html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px"><div class="sl" style="margin:0">'+t("exercises")+'</div><div style="display:flex;gap:4px"><button class="btn2" onclick="showQuickExPicker()" style="padding:6px 10px;font-size:8px;color:var(--acc);border-color:var(--accB)">\uD83C\uDFCB DB</button><button class="btn2" onclick="addExercise(\'normal\')" style="padding:6px 10px;font-size:8px">'+t("addExercise")+'</button><button class="btn2" onclick="addExercise(\'superset\')" style="padding:6px 10px;font-size:8px;color:#88ccdd;border-color:rgba(120,180,200,0.3)">'+t("addSuperset")+'</button><button class="btn2" onclick="addExercise(\'giant\')" style="padding:6px 10px;font-size:8px;color:#cc88ee;border-color:rgba(180,120,200,0.3)">'+t("addGiantSet")+'</button></div></div>'+tmplHtml+'<div id="exLiveStats" style="display:none;font-size:10px;color:var(--dm);font-family:var(--mono);margin-top:6px;padding:6px 10px;background:rgba(212,164,74,0.03);border-radius:6px"></div><div id="exList" style="margin-top:8px"></div>';
 html+='<button class="btn" style="margin-top:18px" onclick="saveNewProgram(\''+escJs(c.id)+'\')">'+t("saveProgram")+'</button>';
 return html;}
 function renderProgramDetail(){
@@ -955,6 +955,8 @@ var html='<button class="btn2" onclick="pop()" style="margin-bottom:14px">\u2039
 html+='<div style="display:flex;align-items:center;gap:14px;margin-bottom:16px"><div style="width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,var(--accM),var(--accS));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:var(--wh);font-family:var(--mono)">'+(prog.type===t("mobilityProtocol")?"\u26A1":prog.type===t("stretchRoutine")?"\u2728":"\uD83C\uDFCB")+'</div><div style="flex:1"><div class="pt" style="margin-bottom:0;font-size:20px">'+escHtml(prog.name)+'</div><div style="font-size:10px;color:var(--acc);font-family:var(--mono)">'+escHtml(prog.type)+(c?" \u00B7 "+escHtml(c.name):"")+'</div></div></div>';
 if(prog.notes)html+='<div class="cd" style="margin-bottom:14px;border-left:3px solid var(--acc)"><div style="font-size:12px;color:var(--mu);line-height:1.7">'+escHtml(prog.notes)+'</div></div>';
 var exs=prog.exercises||[];
+var _totalSets=0,_totalVol=0;exs.forEach(function(ex){if(ex.grouped){ex.grouped.forEach(function(g){(g.sets||[]).forEach(function(s){_totalSets++;_totalVol+=(parseFloat(s.w)||0)*(parseFloat(s.r)||0);});});}else{(ex.sets||[]).forEach(function(s){_totalSets++;_totalVol+=(parseFloat(s.w)||0)*(parseFloat(s.r)||0);});}});
+html+='<div class="g3" style="margin-bottom:16px"><div class="stat"><b style="color:var(--acc)">'+exs.length+'</b><small>'+t("exercises").toUpperCase()+'</small></div><div class="stat"><b style="color:var(--ow)">'+_totalSets+'</b><small>SETS</small></div><div class="stat"><b style="color:var(--accVib)">'+(_totalVol>0?(_totalVol/1000).toFixed(1)+"K":"0")+'</b><small>VOLUME (LBS)</small></div></div>';
 if(exs.length){html+='<div class="sl">'+t("exercises")+' ('+exs.length+')</div>';for(var i=0;i<exs.length;i++)html+=renderExerciseSummary(exs[i]);}
 else html+='<div class="cd" style="text-align:center;padding:24px;border:1px dashed var(--border);color:var(--dm)">'+t("noPrograms")+'</div>';
 html+='<div style="display:flex;gap:8px;margin-top:18px"><button class="btn" style="flex:1" onclick="generateProgramPDF(\''+escJs(prog.id)+'\')">\u2193 '+t("exportPDF")+'</button>';
@@ -1141,6 +1143,17 @@ var cProgs=getClientPrograms(c.id);
 html+='<div class="sl" style="margin-top:20px;display:flex;justify-content:space-between;align-items:center"><span>'+t("programs")+' <span style="font-size:9px;color:var(--dm)">'+cProgs.length+'</span></span><button class="btn2" onclick="push(\'newProgram\',{clientIdx:'+idx+'})" style="padding:4px 10px;font-size:8px;margin-top:-4px">+ '+t("newProgram")+'</button></div>';
 if(cProgs.length){for(var pi=0;pi<cProgs.length;pi++){var pr=cProgs[pi];var exCount=(pr.exercises||[]).length;var typeIcon=pr.type===t("mobilityProtocol")||pr.type==="Mobility Protocol"?"\u26A1":pr.type===t("stretchRoutine")||pr.type==="Stretching Routine"?"\u2728":"\uD83C\uDFCB";html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="push(\'programDetail\',{progId:\''+escJs(pr.id)+'\'})"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(212,164,74,0.18),rgba(212,164,74,0.06));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">'+typeIcon+'</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(pr.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+escHtml(pr.type)+' \u00B7 '+exCount+' '+t("exercises").toLowerCase()+'</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}}
 else html+='<div class="cd" style="text-align:center;padding:18px;border:1px dashed var(--border);color:var(--dm);font-size:11px">'+t("noPrograms")+'</div>';
+
+// Meal plans section
+var cMeals=getClientMealPlans(c.id);
+html+='<div class="sl" style="margin-top:20px;display:flex;justify-content:space-between;align-items:center"><span>\uD83C\uDF7D '+t("mealPlan").toUpperCase()+'S <span style="font-size:9px;color:var(--dm)">'+cMeals.length+'</span></span><button class="btn2" onclick="navStack=[];currentView={tab:\'tools\',view:\'main\',data:{}};push(\'mealPlanBuilder\',{clientId:\''+escJs(c.id)+'\'})" style="padding:4px 10px;font-size:8px;margin-top:-4px">+ NEW PLAN</button></div>';
+if(cMeals.length){for(var mi2=0;mi2<cMeals.length;mi2++){var mp=cMeals[mi2];html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="navStack=[];currentView={tab:\'tools\',view:\'main\',data:{}};push(\'mealPlanDetail\',{planId:\''+escJs(mp.id)+'\'})"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(120,200,120,0.18),rgba(120,200,120,0.06));border:1px solid rgba(120,200,120,0.2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">\uD83C\uDF7D</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(mp.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+mp.mealCount+' meals \u00B7 P'+mp.targetP+'/C'+mp.targetC+'/F'+mp.targetF+' \u00B7 '+(mp.targetP*4+mp.targetC*4+mp.targetF*9)+' cal</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}}
+else html+='<div class="cd" style="text-align:center;padding:18px;border:1px dashed var(--border);color:var(--dm);font-size:11px">'+t("tapFoodToAdd")+'</div>';
+
+// Cardio plans section
+var cCardio=(typeof getCardioPlans==="function")?getCardioPlans().filter(function(p){return p.clientId===c.id;}):[];
+if(cCardio.length){html+='<div class="sl" style="margin-top:20px;display:flex;justify-content:space-between;align-items:center"><span>\u2764 '+t("cardioBuilder").toUpperCase()+' <span style="font-size:9px;color:var(--dm)">'+cCardio.length+'</span></span></div>';
+for(var ci2=0;ci2<cCardio.length;ci2++){var cp=cCardio[ci2];html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="navStack=[];currentView={tab:\'tools\',view:\'main\',data:{}};push(\'cardioDetail\',{planId:\''+escJs(cp.id)+'\'})"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(201,168,76,0.18),rgba(201,168,76,0.06));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">\u2764</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(cp.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+escHtml(cp.phase)+' \u00B7 '+cp.frequency+'x/wk \u00B7 '+cp.duration+'min</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}}
 html+='<div style="display:flex;gap:8px;margin-top:16px"><button class="btn" style="flex:1" onclick="navToLogFromClient(\''+escJs(c.id)+'\',\''+escJs(c.rate)+'\',\''+escJs(c.type)+'\')">'+t("logSession")+'</button><button class="btn2" style="flex:1" onclick="navToScheduleFromClient(\''+escJs(c.id)+'\')">'+t("schedule").toUpperCase()+'</button></div><div class="g2" style="margin-top:8px"><button class="btn2" onclick="navStack=[];currentView={tab:\'tools\',view:\'main\',data:{}};push(\'mealPlanBuilder\',{clientId:\''+escJs(c.id)+'\'})" style="width:100%">\uD83C\uDF7D MEAL PLAN</button><button class="btn2" onclick="navStack=[];currentView={tab:\'tools\',view:\'main\',data:{}};push(\'cardioBuilder\',{clientId:\''+escJs(c.id)+'\'})" style="width:100%">\u2764 CARDIO</button></div><div class="g2" style="margin-top:8px"><button class="btn2" style="width:100%;background:rgba(212,164,74,0.06);border-color:var(--accB)" onclick="generateClientPDF('+idx+')"><span style="margin-right:6px">\u2193</span>'+t("clientReportPDF")+'</button><button class="btn2" onclick="sendReminderToClient(\''+escJs(c.id)+'\')" style="width:100%">\u2709 '+t("sendReminder")+'</button></div><div style="margin-top:24px;text-align:center"><span onclick="deleteClient('+idx+')" style="cursor:pointer;font-size:9px;color:var(--dm);font-family:var(--mono);letter-spacing:0.06em">'+t("removeClient")+'</span></div>';
 return html;
 }
@@ -2695,22 +2708,39 @@ function filterFoodBrowse(q){q=q.toLowerCase();document.querySelectorAll('#foodB
 function filterFoodBrowseCat(cat,el){el.parentElement.querySelectorAll('.chip').forEach(function(c){c.classList.remove('on');});el.classList.add('on');document.querySelectorAll('#foodBrowseList .food-browse-item').forEach(function(item){item.style.display=(cat==='all'||item.dataset.cat===cat)?'grid':'none';});}
 
 // SETTINGS
-function renderSettings(){var tr=roundMoney(sessions.filter(function(s){return s.status!=="cancelled";}).reduce(function(a,s){return a+parseFloat(s.rate||0);},0));var go2=Math.round(tr*getGymCut());var pcts=[10,15,20,25,30],ph="";for(var i=0;i<pcts.length;i++)ph+='<div class="chip'+(Math.round(getGymCut()*100)===pcts[i]?" on":"")+'" onclick="setGymCut('+pcts[i]+')">'+pcts[i]+'%</div>';
+function renderSettings(){var tr=roundMoney(sessions.filter(function(s){return s.status!=="cancelled";}).reduce(function(a,s){return a+parseFloat(s.rate||0);},0));var go2=Math.round(tr*getGymCut());var net=roundMoney(tr-go2);var pcts=[10,15,20,25,30],ph="";for(var i=0;i<pcts.length;i++)ph+='<div class="chip'+(Math.round(getGymCut()*100)===pcts[i]?" on":"")+'" onclick="setGymCut('+pcts[i]+')">'+pcts[i]+'%</div>';
 var html='<div class="gw" style="margin:0 0 18px"></div><button class="btn2" onclick="go(\'home\')" style="margin-bottom:12px">\u2039 '+t("back").toUpperCase()+'</button><div class="pt">'+t("settings")+'</div>';
+
+// ── OVERVIEW SNAPSHOT ──
+html+='<div class="cd" style="padding:18px;border:1px solid var(--accB);background:linear-gradient(160deg,rgba(12,12,20,0.99),rgba(6,6,12,0.99));margin-bottom:18px"><div class="g3"><div class="stat"><b style="color:var(--acc);font-size:20px">'+clients.length+'</b><small>'+t("clients").toUpperCase()+'</small></div><div class="stat"><b style="color:var(--ow);font-size:20px">'+sessions.length+'</b><small>'+t("sessions").toUpperCase()+'</small></div><div class="stat"><b style="color:var(--accVib);font-size:20px">$'+net+'</b><small>NET</small></div></div></div>';
+
+// ── BUSINESS & FINANCE ──
 html+='<div class="sl">\uD83D\uDCB0 BUSINESS & FINANCE</div>';
-html+='<div class="cd" style="padding:16px"><div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--borderS)"><span style="font-size:12px;color:var(--mu)">'+t("clients")+'</span><span style="font-size:13px;font-weight:700;color:var(--wh);font-family:var(--mono)">'+clients.length+'</span></div><div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--borderS)"><span style="font-size:12px;color:var(--mu)">'+t("sessions")+'</span><span style="font-size:13px;font-weight:700;color:var(--wh);font-family:var(--mono)">'+sessions.length+'</span></div><div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--borderS)"><span style="font-size:12px;color:var(--mu)">'+t("gross")+'</span><span style="font-size:13px;font-weight:700;color:var(--accVib);font-family:var(--mono)">$'+tr+'</span></div><div style="display:flex;justify-content:space-between;padding:8px 0"><span style="font-size:12px;color:var(--mu)">'+t("gymCut")+'</span><span style="font-size:13px;font-weight:700;color:var(--dm);font-family:var(--mono)">$'+go2+'</span></div></div>';
+html+='<div class="cd" style="padding:16px"><div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--borderS)"><span style="font-size:12px;color:var(--mu)">'+t("gross")+'</span><span style="font-size:13px;font-weight:700;color:var(--accVib);font-family:var(--mono)">$'+tr+'</span></div><div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--borderS)"><span style="font-size:12px;color:var(--mu)">'+t("gymCut")+'</span><span style="font-size:13px;font-weight:700;color:var(--dm);font-family:var(--mono)">$'+go2+'</span></div><div style="display:flex;justify-content:space-between;padding:8px 0"><span style="font-size:12px;color:var(--mu)">NET INCOME</span><span style="font-size:13px;font-weight:700;color:var(--success);font-family:var(--mono)">$'+net+'</span></div></div>';
 html+='<div class="cd" style="padding:16px"><div class="field"><span class="lb">'+t("gymCut")+'</span><div style="display:flex;gap:4px;flex-wrap:wrap">'+ph+'</div></div><div class="field" style="margin-bottom:0"><span class="lb">'+t("defaultRate")+'</span><input id="defRate" type="number" min="0" value="'+LS.get("defaultRate","70")+'" onchange="LS.set(\'defaultRate\',this.value)"></div></div>';
 html+='<div class="cd" style="padding:16px"><div class="g2"><button class="btn2" onclick="generateMonthlyPDF()" style="width:100%;background:rgba(201,168,76,0.05);border-color:var(--accB)">\u2193 '+t("monthlyPDF")+'</button><button class="btn" onclick="showEarningsReportPicker()" style="width:100%;font-size:10px;padding:10px 14px">\u2193 TAX REPORT</button></div></div>';
-html+='<div class="sl" style="margin-top:22px">\uD83D\uDD14 NOTIFICATIONS</div>';
-html+=renderAutomation();
+
+// ── DISPLAY & PREFERENCES ──
 html+='<div class="sl" style="margin-top:22px">\uD83C\uDFA8 DISPLAY & PREFERENCES</div>';
 html+='<div class="cd" style="padding:16px"><div class="field"><span class="lb">'+t("timeFormat")+'</span><div style="display:flex;gap:4px"><div class="chip'+(is24Hr()?"":" on")+'" onclick="LS.set(\'timeFormat\',\'12\');render()">12-Hour</div><div class="chip'+(is24Hr()?" on":"")+'" onclick="LS.set(\'timeFormat\',\'24\');render()">24-Hour</div></div></div><div class="field" style="margin-bottom:0"><span class="lb">'+t("lang").toUpperCase()+'</span><div style="display:flex;gap:4px"><div class="chip'+(getLang()==="en"?" on":"")+'" onclick="LS.set(\'lang\',\'en\');render()">English</div><div class="chip'+(getLang()==="hu"?" on":"")+'" onclick="LS.set(\'lang\',\'hu\');render()">Magyar</div></div></div></div>';
+
+// ── SECURITY ──
 html+='<div class="sl" style="margin-top:22px">\uD83D\uDD12 '+t("security")+'</div>';
 html+='<div class="cd" style="padding:16px"><div style="margin-bottom:12px"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+t("pin")+'</div><div style="font-size:10px;color:var(--dm)">'+t("quickAccessSecurity")+'</div></div><div class="g2"><button class="btn2" onclick="changePIN()" style="width:100%">'+t("changePIN")+'</button><button class="btn2" onclick="sessionStorage.removeItem(\'regi_unlocked\');showLockScreen()" style="width:100%">'+t("lockNow")+'</button></div></div>';
+
+// ── NOTIFICATIONS ──
+html+='<div class="sl" style="margin-top:22px">\uD83D\uDD14 NOTIFICATIONS</div>';
+html+=renderAutomation();
+
+// ── DATA & BACKUP ──
 html+='<div class="sl" style="margin-top:22px">\uD83D\uDCBE DATA & BACKUP</div>';
 html+='<div class="cd" style="padding:16px"><div class="g2"><button class="btn2" onclick="exportData()" style="width:100%">'+t("export")+' JSON</button><button class="btn2" onclick="$(\'importFile\').click()" style="width:100%">'+t("import")+'</button></div><input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)"></div>';
+
+// ── DANGER ZONE ──
 html+='<div class="sl" style="margin-top:22px">\u26A0 '+t("dangerZone")+'</div>';
 html+='<div class="cd" style="padding:16px;border:1px solid rgba(224,88,88,0.12)"><div style="font-size:11px;color:var(--danger);margin-bottom:12px">'+t("cannotUndo")+'</div><div class="g2"><button class="btn-danger" onclick="if(confirm(\'Delete ALL sessions?\')&&confirm(\'Sure?\')){sessions=[];save();toast(\'Cleared\');render();}">'+t("clearSessions")+'</button><button class="btn-danger" onclick="if(confirm(\'RESET EVERYTHING?\')&&confirm(\'Last chance?\')){clients=[];sessions=[];schedule=[];save();toast(\'Reset\');render();}">'+t("resetAll")+'</button></div></div>';
+
+// ── FOOTER ──
 html+='<div style="text-align:center;padding:24px 0"><div class="gw" style="margin:0 0 20px"></div><div style="font-size:9px;color:var(--dmL);font-family:var(--mono);letter-spacing:0.08em">REGI '+t("coachingStudio")+' v'+VERSION+'</div><div style="font-size:8px;color:var(--dmL);font-family:var(--mono);margin-top:4px;letter-spacing:0.06em">regi.fitness \u00B7 Built by DK Fit Coaching Lab</div><button class="btn-danger" style="margin-top:16px;max-width:200px;margin-left:auto;margin-right:auto" onclick="if(confirm(\'Sign out of REGI?\'))signOut()">'+t("signOut")+'</button></div>';
 return html;}
 function setGymCut(p){LS.set("gymCut",p);toast("\u2713 Gym cut "+p+"%");render();}
@@ -2819,36 +2849,21 @@ else{LS.set("whatsNewFirstSeen",String(Date.now()));}
 var overlay=document.createElement("div");
 overlay.id="whatsNew";
 overlay.style.cssText="position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.92);backdrop-filter:blur(20px);padding:16px;animation:fadeIn 0.4s ease";
-var wnSections=[
-{heading:"COACHING TOOLS",items:[
-{icon:"\uD83C\uDFCB",title:"Quick Add Exercise Database",desc:"Tap exercises from the Hany Rambod FST-7 database directly into your session builder. Muscle group filters, gender toggle, and instant add \u2014 no typing required."},
-{icon:"\u2795",title:"Live Session Stats",desc:"Real-time exercise and set counters update as you build each session. See total volume at a glance while logging."},
-{icon:"\u23F1",title:"Smart Exercise Picker",desc:"The picker now remembers your last muscle group, shows a running count of exercises added, and closes by tapping outside. Every tap gives instant feedback."}
-]},
-{heading:"LOCALIZATION",items:[
-{icon:"\uD83C\uDF10",title:"Full Hungarian Translation",desc:"Every screen, button, label, and toast message \u2014 cardio builder, supplement protocols, meal plans, settings, and auth \u2014 now fully translated with 90+ new keys."},
-{icon:"\uD83D\uDD24",title:"Dynamic Language Switching",desc:"Category filters, validation messages, timer states, and even PDF exports now respect your language setting instantly."}
-]},
-{heading:"SECURITY & UX",items:[
-{icon:"\uD83D\uDD12",title:"Premium Lock Screen",desc:"PIN entry now shows elegant gold dot indicators that fill as you type. Visual feedback that matches the premium aesthetic of the app."},
-{icon:"\uD83D\uDD22",title:"Extended PIN Support",desc:"PIN codes now support up to 9 digits for stronger security. The dot display adapts to your PIN length automatically."}
-]},
-{heading:"POLISH & QUALITY",items:[
-{icon:"\u2728",title:"Enhanced Backgrounds",desc:"Refined ambient lighting across the app \u2014 deeper gradients, more sophisticated glow effects, and cleaner card surfaces for a true dark-mode luxury feel."},
-{icon:"\uD83D\uDEE1",title:"Security Hardened",desc:"4 XSS vulnerabilities patched. All user-generated content (exercise names, client data, food items) now properly escaped. Null safety guards added throughout."},
-{icon:"\uD83D\uDE80",title:"200+ Code Changes",desc:"Touch targets sized for mobile, empty states added for every picker and list, consistent spacing rhythm, and micro-interaction improvements across every tool."}
-]}
+var wnItems=[
+{icon:"\uD83C\uDFCB",title:"Quick Add Exercise Database",desc:"Tap exercises from the FST-7 database directly into your session. Muscle group filters, gender toggle, instant add."},
+{icon:"\u23F1",title:"Smarter Exercise Picker",desc:"Remembers your last muscle group, shows a running count, closes by tapping outside."},
+{icon:"\uD83C\uDF10",title:"Full Hungarian Translation",desc:"90+ new keys. Every screen, builder, and toast message now fully translated."},
+{icon:"\uD83D\uDD12",title:"Premium Lock Screen",desc:"Gold dot indicators fill as you type. PIN codes now support up to 9 digits."},
+{icon:"\u2728",title:"Refined Backgrounds",desc:"Deeper gradients, richer glow effects, and cleaner card surfaces across the entire app."},
+{icon:"\uD83D\uDEE1",title:"Security Hardened",desc:"4 XSS vulnerabilities patched. All user content properly escaped."},
+{icon:"\uD83D\uDE80",title:"200+ Changes",desc:"Mobile touch targets, empty states, consistent spacing, and micro-interaction polish throughout."}
 ];
 var wnHtml='';
-for(var si=0;si<wnSections.length;si++){var sec=wnSections[si];
-wnHtml+='<div style="margin-bottom:22px'+(si>0?';padding-top:18px;border-top:1px solid rgba(212,164,74,0.08)':'')+'">';
-wnHtml+='<div style="font-size:8px;font-weight:700;color:var(--acc);font-family:var(--mono);letter-spacing:0.22em;margin-bottom:12px">'+sec.heading+'</div>';
-for(var wi=0;wi<sec.items.length;wi++){var wn=sec.items[wi];
-wnHtml+='<div style="display:flex;gap:14px;margin-bottom:'+(wi<sec.items.length-1?'14':'0')+'px;animation:slideUp 0.4s ease '+(si*0.1+wi*0.06)+'s both">';
+for(var wi=0;wi<wnItems.length;wi++){var wn=wnItems[wi];
+wnHtml+='<div style="display:flex;gap:14px;padding:14px 0;'+(wi<wnItems.length-1?'border-bottom:1px solid rgba(212,164,74,0.06)':'')+';animation:slideUp 0.4s ease '+(wi*0.05)+'s both">';
 wnHtml+='<div style="width:36px;height:36px;border-radius:10px;background:rgba(212,164,74,0.06);border:1px solid rgba(212,164,74,0.12);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">'+wn.icon+'</div>';
 wnHtml+='<div style="flex:1;padding-top:2px"><div style="font-size:13px;font-weight:700;color:var(--ice);line-height:1.3">'+wn.title+'</div>';
 wnHtml+='<div style="font-size:11px;color:var(--mu);margin-top:4px;line-height:1.65">'+wn.desc+'</div></div></div>';}
-wnHtml+='</div>';}
 overlay.innerHTML='<div style="width:100%;max-width:440px;max-height:85vh;overflow-y:auto;background:linear-gradient(170deg,rgba(14,14,20,0.99) 0%,rgba(8,8,12,0.99) 40%,rgba(4,4,8,0.99) 100%);border:1px solid rgba(212,164,74,0.20);border-radius:20px;padding:0;box-shadow:0 0 100px rgba(212,164,74,0.12),0 0 2px rgba(212,164,74,0.25),0 40px 80px rgba(0,0,0,0.8)">'
 +'<div style="position:relative;padding:36px 28px 0;text-align:center;overflow:hidden">'
 +'<div style="position:absolute;inset:0;pointer-events:none;overflow:hidden"><div style="position:absolute;top:-60%;left:50%;transform:translateX(-50%);width:200%;height:80%;background:radial-gradient(ellipse 40% 60% at 50% 100%,rgba(212,164,74,0.10),rgba(212,164,74,0.03) 50%,transparent 75%);filter:blur(30px)"></div></div>'
@@ -2856,7 +2871,6 @@ overlay.innerHTML='<div style="width:100%;max-width:440px;max-height:85vh;overfl
 +'<div style="width:56px;height:56px;border-radius:14px;background:linear-gradient(145deg,#0c0c14,#161620);border:1px solid rgba(212,164,74,0.25);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:28px;font-weight:900;color:var(--acc);box-shadow:0 0 50px rgba(212,164,74,0.20),0 8px 24px rgba(0,0,0,0.5);margin:0 auto 18px;animation:breathe 4s ease-in-out infinite">R</div>'
 +'<div style="font-family:var(--display);font-size:11px;font-weight:700;color:var(--acc);letter-spacing:0.35em;margin-bottom:6px">UPDATE</div>'
 +'<div style="font-family:var(--display);font-size:26px;font-weight:800;color:var(--ice);letter-spacing:0.06em;line-height:1.2">REGI v'+VERSION+'</div>'
-+'<div style="font-size:10px;color:var(--mu);font-family:var(--mono);margin-top:8px;letter-spacing:0.06em;line-height:1.5">Professional coaching. Elevated.</div>'
 +'<div style="width:40px;height:1px;background:linear-gradient(90deg,transparent,var(--acc),transparent);margin:22px auto 0;box-shadow:0 0 12px var(--accGlow)"></div>'
 +'</div></div>'
 +'<div style="padding:24px 28px 28px">'+wnHtml
