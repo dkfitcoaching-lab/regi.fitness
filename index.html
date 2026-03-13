@@ -392,7 +392,13 @@ general:"General",
 noClient:"No client",
 myCustomFoods:"MY CUSTOM FOODS",
 myCustomExercises:"MY CUSTOM EXERCISES",
-selectClient:"Select Client"
+selectClient:"Select Client",
+quickAddFromDB:"QUICK ADD FROM DB",
+fromDB:"FROM DB",
+women:"WOMEN",
+men:"MEN",
+close:"CLOSE",
+noExercisesInGroup:"No exercises in this group"
 },
 hu:{
 days:["Vas","H\u00e9t","Kedd","Sze","Cs\u00fct","P\u00e9n","Szo"],
@@ -637,7 +643,13 @@ general:"\u00c1ltal\u00e1nos",
 noClient:"Nincs \u00fcgyf\u00e9l",
 myCustomFoods:"EGY\u00c9NI \u00c9TELEK",
 myCustomExercises:"EGY\u00c9NI GYAKORLATOK",
-selectClient:"\u00dcgyf\u00e9l v\u00e1laszt\u00e1sa"
+selectClient:"\u00dcgyf\u00e9l v\u00e1laszt\u00e1sa",
+quickAddFromDB:"GYORS HOZZ\u00c1AD\u00c1S",
+fromDB:"ADATB\u00c1ZIS",
+women:"N\u0150K",
+men:"F\u00c9RFIAK",
+close:"BEZ\u00c1R\u00c1S",
+noExercisesInGroup:"Nincs gyakorlat ebben a csoportban"
 }
 };
 var DN;/* initialized after LS */
@@ -1029,7 +1041,7 @@ var templates=getTemplates();var tmplHtml="";if(templates.length){tmplHtml='<div
 var draftHtml="";var draft=loadDraft();if(draft&&!pfId&&draft.exercises&&draft.exercises.length){draftHtml='<div class="cd" style="padding:12px;border:1px solid var(--warn);margin-bottom:12px;display:flex;align-items:center;gap:10px"><span style="font-size:10px;color:var(--warn);font-family:var(--mono);flex:1">'+t("unsavedDraft")+'</span><button class="btn2" onclick="restoreDraft()" style="padding:4px 10px;font-size:8px;color:var(--warn);border-color:rgba(232,184,120,0.3)">'+t("restore")+'</button><button class="btn2" onclick="clearDraft();this.closest(\'.cd\').remove()" style="padding:4px 10px;font-size:8px">'+t("discard")+'</button></div>';}
 html+=dlHtml+draftHtml;
 html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px"><div class="sl" style="margin:0">'+t("exercises")+'</div><div style="display:flex;gap:4px"><button class="btn2" onclick="addExercise(\'normal\')" style="padding:6px 10px;font-size:8px">'+t("addExercise")+'</button><button class="btn2" onclick="addExercise(\'superset\')" style="padding:6px 10px;font-size:8px;color:#88ccdd;border-color:rgba(120,180,200,0.3)">'+t("addSuperset")+'</button><button class="btn2" onclick="addExercise(\'giant\')" style="padding:6px 10px;font-size:8px;color:#cc88ee;border-color:rgba(180,120,200,0.3)">'+t("addGiantSet")+'</button></div></div>';
-html+='<div style="display:flex;gap:4px;margin-top:6px;flex-wrap:wrap">'+tmplHtml+'<button class="btn2" onclick="showQuickExPicker()" style="padding:4px 10px;font-size:8px;color:var(--accVib);border-color:rgba(212,168,72,0.2)">\uD83C\uDFCB FROM DB</button></div>';
+html+='<div style="display:flex;gap:4px;margin-top:6px;flex-wrap:wrap">'+tmplHtml+'<button class="btn2" onclick="showQuickExPicker()" style="padding:6px 12px;font-size:8px;color:var(--accVib);border-color:rgba(212,168,72,0.2)">\u2795 '+t("fromDB")+'</button></div>';
 html+='<div id="exLiveStats" style="display:none;margin-top:8px;padding:8px 12px;background:rgba(212,168,72,0.03);border:1px solid rgba(212,168,72,0.06);border-radius:10px;font-size:10px;color:var(--dm);font-family:var(--mono)"></div>';
 html+='<div id="exList" style="margin-top:8px"></div>';
 html+=renderTimerWidget(true);
@@ -1059,28 +1071,29 @@ function collectExercises(){var exercises=[];document.querySelectorAll("#exList 
 function showQuickExPicker(){
 var groups=Object.keys(PRO_EXERCISES[_proGender]);
 var html='<div style="position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.90);backdrop-filter:blur(12px);padding:20px;animation:fadeIn 0.3s" id="exPicker"><div style="width:100%;max-width:440px;max-height:80vh;overflow-y:auto;background:linear-gradient(160deg,rgba(10,10,16,0.99),rgba(4,4,8,0.99));border:1px solid var(--accB);border-radius:16px;padding:24px;box-shadow:0 0 60px rgba(212,168,72,0.08)">';
-html+='<div class="pt" style="font-size:16px;margin-bottom:10px">Quick Add from Exercise DB</div>';
-html+='<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px"><div class="chip'+((_proGender==="women")?" on":"")+'" onclick="_proGender=\'women\';updateExPickerList()">WOMEN</div><div class="chip'+((_proGender==="men")?" on":"")+'" onclick="_proGender=\'men\';updateExPickerList()">MEN</div></div>';
+html+='<div class="sl" style="margin:0 0 12px">'+t("quickAddFromDB")+'</div>';
+html+='<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px"><div class="chip'+((_proGender==="women")?" on":"")+'" onclick="_proGender=\'women\';updateExPickerList()" style="min-height:36px;display:flex;align-items:center">'+t("women")+'</div><div class="chip'+((_proGender==="men")?" on":"")+'" onclick="_proGender=\'men\';updateExPickerList()" style="min-height:36px;display:flex;align-items:center">'+t("men")+'</div></div>';
 html+='<div id="exPickerGroups" style="display:flex;gap:3px;flex-wrap:wrap;margin-bottom:12px">';
-for(var gi=0;gi<groups.length;gi++){html+='<div class="chip'+(gi===0?" on":"")+'" onclick="selectExPickerGroup(\''+escJs(groups[gi])+'\',this)">'+escHtml(groups[gi])+'</div>';}
+for(var gi=0;gi<groups.length;gi++){html+='<div class="chip'+(gi===0?" on":"")+'" onclick="selectExPickerGroup(\''+escJs(groups[gi])+'\',this)" style="min-height:36px;display:flex;align-items:center">'+escHtml(groups[gi])+'</div>';}
 html+='</div><div id="exPickerList" style="max-height:40vh;overflow-y:auto"></div>';
-html+='<button class="btn2" onclick="document.getElementById(\'exPicker\').remove()" style="width:100%;margin-top:12px">CLOSE</button></div></div>';
+html+='<button class="btn2" onclick="document.getElementById(\'exPicker\').remove()" style="width:100%;margin-top:12px;padding:12px">'+t("close")+'</button></div></div>';
 var el=document.createElement('div');el.innerHTML=html;document.body.appendChild(el.firstChild);
 if(groups.length)selectExPickerGroup(groups[0],document.querySelector('#exPickerGroups .chip.on'));
 }
 function selectExPickerGroup(group,el){
 if(el){el.parentElement.querySelectorAll('.chip').forEach(function(c){c.classList.remove('on');});el.classList.add('on');}
 var exs=PRO_EXERCISES[_proGender][group]||[];
-var h='';for(var i=0;i<exs.length;i++){var ex=exs[i];
-h+='<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;margin-bottom:4px;background:rgba(212,168,72,0.02);border:1px solid rgba(212,168,72,0.06);border-radius:8px;cursor:pointer" onclick="quickAddExFromDB(\''+escJs(ex.n)+'\');this.style.borderColor=\'var(--acc)\';this.querySelector(\'.qaBadge\').textContent=\'\u2713\'"><div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--wh)">'+escHtml(ex.n)+'</div><div style="font-size:9px;color:var(--acc);font-family:var(--mono)">'+escHtml(ex.s)+'</div></div><span class="qaBadge" style="font-size:10px;color:var(--dm)">+</span></div>';}
+var h='';if(!exs.length){h='<div style="padding:18px;text-align:center;font-size:10px;color:var(--dm);font-family:var(--mono)">'+t("noExercisesInGroup")+'</div>';}
+for(var i=0;i<exs.length;i++){var ex=exs[i];
+h+='<div style="display:flex;align-items:center;gap:10px;padding:12px;margin-bottom:4px;background:rgba(212,168,72,0.02);border:1px solid rgba(212,168,72,0.06);border-radius:8px;cursor:pointer;min-height:44px" onclick="quickAddExFromDB(\''+escJs(ex.n)+'\');this.style.borderColor=\'var(--acc)\';this.querySelector(\'.qaBadge\').textContent=\'\u2713\'"><div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--wh)">'+escHtml(ex.n)+'</div><div style="font-size:9px;color:var(--acc);font-family:var(--mono)">'+escHtml(ex.s)+'</div></div><span class="qaBadge" style="font-size:12px;color:var(--dm)">+</span></div>';}
 var list=$('exPickerList');if(list)list.innerHTML=h;
 }
 function updateExPickerList(){
 var picker=$('exPicker');if(!picker)return;
 var groups=Object.keys(PRO_EXERCISES[_proGender]);
-var gh='';for(var gi=0;gi<groups.length;gi++){gh+='<div class="chip'+(gi===0?" on":"")+'" onclick="selectExPickerGroup(\''+escJs(groups[gi])+'\',this)">'+escHtml(groups[gi])+'</div>';}
+var gh='';for(var gi=0;gi<groups.length;gi++){gh+='<div class="chip'+(gi===0?" on":"")+'" onclick="selectExPickerGroup(\''+escJs(groups[gi])+'\',this)" style="min-height:36px;display:flex;align-items:center">'+escHtml(groups[gi])+'</div>';}
 var gEl=$('exPickerGroups');if(gEl)gEl.innerHTML=gh;
-picker.querySelectorAll('.chip').forEach(function(c){var t=c.textContent.trim();if(t==='WOMEN')c.className='chip'+(_proGender==='women'?' on':'');if(t==='MEN')c.className='chip'+(_proGender==='men'?' on':'');});
+picker.querySelectorAll('.chip[onclick*="proGender"]').forEach(function(c){var isW=c.getAttribute('onclick').indexOf("women")>-1;c.className='chip'+((isW&&_proGender==='women')||(!isW&&_proGender==='men')?' on':'');});
 if(groups.length)selectExPickerGroup(groups[0],document.querySelector('#exPickerGroups .chip.on'));
 }
 function quickAddExFromDB(name){
