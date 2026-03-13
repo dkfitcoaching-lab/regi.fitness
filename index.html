@@ -2819,36 +2819,21 @@ else{LS.set("whatsNewFirstSeen",String(Date.now()));}
 var overlay=document.createElement("div");
 overlay.id="whatsNew";
 overlay.style.cssText="position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.92);backdrop-filter:blur(20px);padding:16px;animation:fadeIn 0.4s ease";
-var wnSections=[
-{heading:"COACHING TOOLS",items:[
-{icon:"\uD83C\uDFCB",title:"Quick Add Exercise Database",desc:"Tap exercises from the Hany Rambod FST-7 database directly into your session builder. Muscle group filters, gender toggle, and instant add \u2014 no typing required."},
-{icon:"\u2795",title:"Live Session Stats",desc:"Real-time exercise and set counters update as you build each session. See total volume at a glance while logging."},
-{icon:"\u23F1",title:"Smart Exercise Picker",desc:"The picker now remembers your last muscle group, shows a running count of exercises added, and closes by tapping outside. Every tap gives instant feedback."}
-]},
-{heading:"LOCALIZATION",items:[
-{icon:"\uD83C\uDF10",title:"Full Hungarian Translation",desc:"Every screen, button, label, and toast message \u2014 cardio builder, supplement protocols, meal plans, settings, and auth \u2014 now fully translated with 90+ new keys."},
-{icon:"\uD83D\uDD24",title:"Dynamic Language Switching",desc:"Category filters, validation messages, timer states, and even PDF exports now respect your language setting instantly."}
-]},
-{heading:"SECURITY & UX",items:[
-{icon:"\uD83D\uDD12",title:"Premium Lock Screen",desc:"PIN entry now shows elegant gold dot indicators that fill as you type. Visual feedback that matches the premium aesthetic of the app."},
-{icon:"\uD83D\uDD22",title:"Extended PIN Support",desc:"PIN codes now support up to 9 digits for stronger security. The dot display adapts to your PIN length automatically."}
-]},
-{heading:"POLISH & QUALITY",items:[
-{icon:"\u2728",title:"Enhanced Backgrounds",desc:"Refined ambient lighting across the app \u2014 deeper gradients, more sophisticated glow effects, and cleaner card surfaces for a true dark-mode luxury feel."},
-{icon:"\uD83D\uDEE1",title:"Security Hardened",desc:"4 XSS vulnerabilities patched. All user-generated content (exercise names, client data, food items) now properly escaped. Null safety guards added throughout."},
-{icon:"\uD83D\uDE80",title:"200+ Code Changes",desc:"Touch targets sized for mobile, empty states added for every picker and list, consistent spacing rhythm, and micro-interaction improvements across every tool."}
-]}
+var wnItems=[
+{icon:"\uD83C\uDFCB",title:"Quick Add Exercise Database",desc:"Tap exercises from the FST-7 database directly into your session. Muscle group filters, gender toggle, instant add."},
+{icon:"\u23F1",title:"Smarter Exercise Picker",desc:"Remembers your last muscle group, shows a running count, closes by tapping outside."},
+{icon:"\uD83C\uDF10",title:"Full Hungarian Translation",desc:"90+ new keys. Every screen, builder, and toast message now fully translated."},
+{icon:"\uD83D\uDD12",title:"Premium Lock Screen",desc:"Gold dot indicators fill as you type. PIN codes now support up to 9 digits."},
+{icon:"\u2728",title:"Refined Backgrounds",desc:"Deeper gradients, richer glow effects, and cleaner card surfaces across the entire app."},
+{icon:"\uD83D\uDEE1",title:"Security Hardened",desc:"4 XSS vulnerabilities patched. All user content properly escaped."},
+{icon:"\uD83D\uDE80",title:"200+ Changes",desc:"Mobile touch targets, empty states, consistent spacing, and micro-interaction polish throughout."}
 ];
 var wnHtml='';
-for(var si=0;si<wnSections.length;si++){var sec=wnSections[si];
-wnHtml+='<div style="margin-bottom:22px'+(si>0?';padding-top:18px;border-top:1px solid rgba(212,164,74,0.08)':'')+'">';
-wnHtml+='<div style="font-size:8px;font-weight:700;color:var(--acc);font-family:var(--mono);letter-spacing:0.22em;margin-bottom:12px">'+sec.heading+'</div>';
-for(var wi=0;wi<sec.items.length;wi++){var wn=sec.items[wi];
-wnHtml+='<div style="display:flex;gap:14px;margin-bottom:'+(wi<sec.items.length-1?'14':'0')+'px;animation:slideUp 0.4s ease '+(si*0.1+wi*0.06)+'s both">';
+for(var wi=0;wi<wnItems.length;wi++){var wn=wnItems[wi];
+wnHtml+='<div style="display:flex;gap:14px;padding:14px 0;'+(wi<wnItems.length-1?'border-bottom:1px solid rgba(212,164,74,0.06)':'')+';animation:slideUp 0.4s ease '+(wi*0.05)+'s both">';
 wnHtml+='<div style="width:36px;height:36px;border-radius:10px;background:rgba(212,164,74,0.06);border:1px solid rgba(212,164,74,0.12);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">'+wn.icon+'</div>';
 wnHtml+='<div style="flex:1;padding-top:2px"><div style="font-size:13px;font-weight:700;color:var(--ice);line-height:1.3">'+wn.title+'</div>';
 wnHtml+='<div style="font-size:11px;color:var(--mu);margin-top:4px;line-height:1.65">'+wn.desc+'</div></div></div>';}
-wnHtml+='</div>';}
 overlay.innerHTML='<div style="width:100%;max-width:440px;max-height:85vh;overflow-y:auto;background:linear-gradient(170deg,rgba(14,14,20,0.99) 0%,rgba(8,8,12,0.99) 40%,rgba(4,4,8,0.99) 100%);border:1px solid rgba(212,164,74,0.20);border-radius:20px;padding:0;box-shadow:0 0 100px rgba(212,164,74,0.12),0 0 2px rgba(212,164,74,0.25),0 40px 80px rgba(0,0,0,0.8)">'
 +'<div style="position:relative;padding:36px 28px 0;text-align:center;overflow:hidden">'
 +'<div style="position:absolute;inset:0;pointer-events:none;overflow:hidden"><div style="position:absolute;top:-60%;left:50%;transform:translateX(-50%);width:200%;height:80%;background:radial-gradient(ellipse 40% 60% at 50% 100%,rgba(212,164,74,0.10),rgba(212,164,74,0.03) 50%,transparent 75%);filter:blur(30px)"></div></div>'
@@ -2856,7 +2841,6 @@ overlay.innerHTML='<div style="width:100%;max-width:440px;max-height:85vh;overfl
 +'<div style="width:56px;height:56px;border-radius:14px;background:linear-gradient(145deg,#0c0c14,#161620);border:1px solid rgba(212,164,74,0.25);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:28px;font-weight:900;color:var(--acc);box-shadow:0 0 50px rgba(212,164,74,0.20),0 8px 24px rgba(0,0,0,0.5);margin:0 auto 18px;animation:breathe 4s ease-in-out infinite">R</div>'
 +'<div style="font-family:var(--display);font-size:11px;font-weight:700;color:var(--acc);letter-spacing:0.35em;margin-bottom:6px">UPDATE</div>'
 +'<div style="font-family:var(--display);font-size:26px;font-weight:800;color:var(--ice);letter-spacing:0.06em;line-height:1.2">REGI v'+VERSION+'</div>'
-+'<div style="font-size:10px;color:var(--mu);font-family:var(--mono);margin-top:8px;letter-spacing:0.06em;line-height:1.5">Professional coaching. Elevated.</div>'
 +'<div style="width:40px;height:1px;background:linear-gradient(90deg,transparent,var(--acc),transparent);margin:22px auto 0;box-shadow:0 0 12px var(--accGlow)"></div>'
 +'</div></div>'
 +'<div style="padding:24px 28px 28px">'+wnHtml
