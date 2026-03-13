@@ -1609,7 +1609,7 @@ var ta=document.createElement("textarea");ta.value=msg;document.body.appendChild
 });}}
 
 // PDF EXPORT - Professional branded client reports
-function ensureJsPDF(){return new Promise(function(resolve,reject){if(window.jspdf&&window.jspdf.jsPDF){resolve();return;}var s=document.createElement("script");s.src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js";s.onload=function(){setTimeout(function(){if(window.jspdf&&window.jspdf.jsPDF)resolve();else reject(new Error("jsPDF failed to initialize"));},200);};s.onerror=function(){reject(new Error("Failed to load PDF library"));};document.head.appendChild(s);});}
+function ensureJsPDF(attempt){attempt=attempt||1;return new Promise(function(resolve,reject){if(window.jspdf&&window.jspdf.jsPDF){resolve();return;}var s=document.createElement("script");s.src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js";s.onload=function(){setTimeout(function(){if(window.jspdf&&window.jspdf.jsPDF)resolve();else if(attempt<3)setTimeout(function(){ensureJsPDF(attempt+1).then(resolve,reject);},1000);else reject(new Error("jsPDF failed to initialize"));},300);};s.onerror=function(){if(attempt<3){setTimeout(function(){ensureJsPDF(attempt+1).then(resolve,reject);},1000*attempt);}else{reject(new Error("Failed to load PDF library"));}};document.head.appendChild(s);});}
 function safePDFSave(doc,fileName){
 try{
 var blob=doc.output('blob');
@@ -1803,7 +1803,8 @@ var mo=d.getMonth(),yr=d.getFullYear();
 var moLabel=d.toLocaleDateString(getLang()==="hu"?"hu-HU":"en-US",{month:"long",year:"numeric"});
 var moSessions=sessions.filter(function(s){var sd=new Date(s.date+"T12:00:00");return sd.getMonth()===mo&&sd.getFullYear()===yr&&s.status!=="cancelled";});
 var moGross=roundMoney(moSessions.reduce(function(a,s){return a+parseFloat(s.rate||0);},0));
-html+='<label style="display:flex;align-items:center;gap:12px;padding:10px 12px;margin-bottom:4px;border-radius:8px;background:rgba(212,164,74,0.03);border:1px solid rgba(212,164,74,0.08);cursor:pointer"><input type="checkbox" value="'+yr+'-'+(mo<9?'0':'')+(mo+1)+'" '+(i<=2?'checked':'')+' style="width:18px;height:18px;accent-color:#d4a44a"><div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--wh)">'+moLabel+'</div><div style="font-size:9px;color:var(--dm);font-family:var(--mono)">'+moSessions.length+' sessions \u00B7 $'+moGross+'</div></div></label>';
+var cbId='erp_cb_'+yr+'_'+(mo+1);
+html+='<div onclick="var cb=document.getElementById(\''+cbId+'\');cb.checked=!cb.checked" style="display:flex;align-items:center;gap:12px;padding:10px 12px;margin-bottom:4px;border-radius:8px;background:rgba(212,164,74,0.03);border:1px solid rgba(212,164,74,0.08);cursor:pointer;-webkit-tap-highlight-color:rgba(212,164,74,0.15);user-select:none;-webkit-user-select:none"><input type="checkbox" id="'+cbId+'" value="'+yr+'-'+(mo<9?'0':'')+(mo+1)+'" '+(i<=2?'checked':'')+' onclick="event.stopPropagation()" style="width:22px;height:22px;min-width:22px;accent-color:#d4a44a;pointer-events:auto"><div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--wh)">'+moLabel+'</div><div style="font-size:9px;color:var(--dm);font-family:var(--mono)">'+moSessions.length+' sessions \u00B7 $'+moGross+'</div></div></div>';
 }
 html+='</div>';
 html+='<div style="display:flex;gap:8px;margin-bottom:10px"><button class="btn2" onclick="document.querySelectorAll(\'#monthChecklist input\').forEach(function(c){c.checked=true})" style="flex:1;font-size:9px">'+t("selectAll")+'</button><button class="btn2" onclick="document.querySelectorAll(\'#monthChecklist input\').forEach(function(c){c.checked=false})" style="flex:1;font-size:9px">'+t("clearAll")+'</button></div>';
@@ -3344,5 +3345,6 @@ initAutoReminders();
 checkWeeklySummary();
 initOfflineDetection();
 showWhatsNew();
+ensureJsPDF().catch(function(){});
 })();
 </script></body></html>
