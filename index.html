@@ -466,7 +466,12 @@ noProtocolsSaved:"No protocols saved yet",
 food:"FOOD",
 size:"SIZE",
 mealPlan:"Meal Plan",
-passwordMin:"Password must be at least 6 characters"
+passwordMin:"Password must be at least 6 characters",
+carbs:"CARBS",
+fat:"FAT",
+tapFoodToAdd:"Tap a food above to add here",
+addToMeal:"ADDING TO MEAL",
+build:"BUILD"
 },
 hu:{
 days:["Vas","H\u00e9t","Kedd","Sze","Cs\u00fct","P\u00e9n","Szo"],
@@ -785,7 +790,12 @@ noProtocolsSaved:"M\u00e9g nincs mentett protokoll",
 food:"\u00c9TEL",
 size:"M\u00c9RET",
 mealPlan:"\u00c9trend Terv",
-passwordMin:"A jelsz\u00f3nak legal\u00e1bb 6 karakternek kell lennie"
+passwordMin:"A jelsz\u00f3nak legal\u00e1bb 6 karakternek kell lennie",
+carbs:"SZ\u00c9NHIDR\u00c1T",
+fat:"ZS\u00cdR",
+tapFoodToAdd:"Koppintson egy \u00e9telre a hozz\u00e1ad\u00e1shoz",
+addToMeal:"\u00c9TKEZ\u00c9SHEZ AD\u00c1S",
+build:"\u00c9P\u00cdT\u00c9S"
 }
 };
 var DN;/* initialized after LS */
@@ -1988,13 +1998,13 @@ html+='<div class="pt">'+t("mealPlanBuilder")+'</div>';
 if(c)html+='<div style="font-size:11px;color:var(--dm);margin-bottom:16px;font-family:var(--mono)">'+t("clients")+': <span style="color:var(--acc)">'+escHtml(c.name)+'</span></div>';
 else html+='<div style="font-size:11px;color:var(--dm);margin-bottom:16px;font-family:var(--mono)"><span style="color:var(--mu)">'+t("general")+' \u2014 '+t("noClient")+'</span></div>';
 html+='<div class="cd" style="padding:18px"><div class="field"><span class="lb">'+t("protocolName")+' *</span><input id="mpName" placeholder="e.g. Contest Prep Week 12, Off-Season Bulk"></div>';
-html+='<div class="field"><span class="lb">'+t("dailyTargets")+'</span><div class="g3"><div><span class="lb" style="color:var(--success)">PROTEIN (g)</span><input id="mpTargP" type="number" placeholder="180"></div><div><span class="lb" style="color:var(--warn)">CARBS (g)</span><input id="mpTargC" type="number" placeholder="200"></div><div><span class="lb" style="color:#cc88ee">FAT (g)</span><input id="mpTargF" type="number" placeholder="60"></div></div></div>';
+html+='<div class="field"><span class="lb">'+t("dailyTargets")+'</span><div class="g3"><div><span class="lb" style="color:var(--success)">'+t("protein")+' (g)</span><input id="mpTargP" type="number" placeholder="180"></div><div><span class="lb" style="color:var(--warn)">'+t("carbs")+' (g)</span><input id="mpTargC" type="number" placeholder="200"></div><div><span class="lb" style="color:#cc88ee">'+t("fat")+' (g)</span><input id="mpTargF" type="number" placeholder="60"></div></div></div>';
 html+='<div class="field"><span class="lb">'+t("numberOfMeals")+'</span><div style="display:flex;gap:4px"><div class="chip on" onclick="setMealCount(4,this)">4</div><div class="chip" onclick="setMealCount(5,this)">5</div><div class="chip" onclick="setMealCount(6,this)">6</div><div class="chip" onclick="setMealCount(7,this)">7</div></div><input type="hidden" id="mpMealCount" value="4"></div>';
 html+='<div class="field"><span class="lb">'+t("notes").toUpperCase()+'</span><textarea id="mpNotes" rows="2" placeholder="Training days vs rest days, carb cycling notes..."></textarea></div></div>';
 // Food search & add
 html+='<div class="sl" style="margin-top:18px">'+t("buildMeals")+'</div>';
 html+='<div style="margin-bottom:10px"><input id="foodSearch" placeholder="'+t('searchFoods')+'" oninput="filterFoodDB(this.value)" style="font-size:13px"></div>';
-html+='<div style="display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap"><div class="chip on" onclick="filterFoodCat(\'all\',this)">All</div><div class="chip" onclick="filterFoodCat(\'protein\',this)">Protein</div><div class="chip" onclick="filterFoodCat(\'carb\',this)">Carbs</div><div class="chip" onclick="filterFoodCat(\'fat\',this)">Fats</div><div class="chip" onclick="filterFoodCat(\'veggie\',this)">Veggies</div><div class="chip" onclick="filterFoodCat(\'supplement\',this)">Supps</div><div class="chip" onclick="filterFoodCat(\'custom\',this)">'+t("myCustomFoods")+'</div></div>';
+html+='<div style="display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap"><div class="chip on" onclick="filterFoodCat(\'all\',this)">'+t("all")+'</div><div class="chip" onclick="filterFoodCat(\'protein\',this)">'+t("protein")+'</div><div class="chip" onclick="filterFoodCat(\'carb\',this)">'+t("carbs")+'</div><div class="chip" onclick="filterFoodCat(\'fat\',this)">'+t("fat")+'</div><div class="chip" onclick="filterFoodCat(\'veggie\',this)">Veggies</div><div class="chip" onclick="filterFoodCat(\'supplement\',this)">Supps</div><div class="chip" onclick="filterFoodCat(\'custom\',this)">'+t("myCustomFoods")+'</div></div>';
 // Custom food button
 html+='<div style="margin-bottom:10px"><button class="btn2" onclick="showAddCustomFood()" style="width:100%;border:1px dashed var(--accB);color:var(--acc)">'+t("customFood")+'</button></div>';
 var foods=getAllFoods();
@@ -2030,7 +2040,7 @@ _mealData[_currentMealSlot].push({idx:idx,name:fd.n,servings:1});
 renderMealSlotItems(_currentMealSlot);updateMacroTotals();
 // Advance to next meal if desired
 var mc=parseInt(($('mpMealCount')||{}).value||"4");
-toast('\u2713 '+fd.n+' \u2192 Meal '+_currentMealSlot);
+toast('\u2713 '+fd.n+' \u2192 '+t("meal")+' '+_currentMealSlot);
 haptic(8);}
 
 function renderMealSlotItems(slot){
@@ -2044,8 +2054,8 @@ h+='<input type="number" value="'+s+'" min="0.25" max="10" step="0.25" style="wi
 h+='<span style="flex:1;color:var(--wh)">'+fd.n+'</span>';
 h+='<span style="font-family:var(--mono);font-size:8px;color:var(--dm)">'+Math.round(fd.p*s)+'p '+Math.round(fd.c*s)+'c '+Math.round(fd.f*s)+'f</span>';
 h+='<span onclick="removeMealItem('+slot+','+i+')" style="color:var(--danger);cursor:pointer;padding:2px 4px;font-size:12px">\u2715</span></div>';}
-if(!items.length)h+='<div style="text-align:center;font-size:10px;color:var(--dmL);padding:8px;cursor:pointer" onclick="_currentMealSlot='+slot+';toast(\'Adding to Meal '+slot+'\')">Tap a food above to add here</div>';
-else h+='<div style="text-align:center;margin-top:4px"><span onclick="_currentMealSlot='+slot+';toast(\'Now adding to Meal '+slot+'\')" style="font-size:8px;color:var(--acc);cursor:pointer;font-family:var(--mono)">ADD TO THIS MEAL</span></div>';
+if(!items.length)h+='<div style="text-align:center;font-size:10px;color:var(--dmL);padding:8px;cursor:pointer" onclick="_currentMealSlot='+slot+';toast(t(\'addToMeal\')+\' '+slot+'\')">'+t("tapFoodToAdd")+'</div>';
+else h+='<div style="text-align:center;margin-top:4px"><span onclick="_currentMealSlot='+slot+';toast(t(\'addToMeal\')+\' '+slot+'\')" style="font-size:8px;color:var(--acc);cursor:pointer;font-family:var(--mono)">'+t("addToMeal")+' '+slot+'</span></div>';
 container.innerHTML=h;
 var macroEl=el.querySelector('.meal-macros');
 if(macroEl)macroEl.innerHTML='<span style="color:var(--success)">P'+tp+'</span> <span style="color:var(--warn)">C'+tc+'</span> <span style="color:#cc88ee">F'+tf+'</span> | '+tcal+'cal';}
@@ -2557,7 +2567,7 @@ function renderProExercises(){
 var html='<button class="btn2" onclick="pop()" style="margin-bottom:14px">\u2039 '+t("back")+'</button>';
 html+='<div class="pt">FST-7 Exercise Database</div>';
 html+='<div style="font-size:11px;color:var(--mu);margin-bottom:14px;line-height:1.6">Hany Rambod\'s FST-7 methodology. Fascia Stretch Training \u2014 finish each muscle group with 7 sets of 8-12 reps, 30-45s rest between sets, to stretch the fascia and maximize blood volume.</div>';
-html+='<div style="display:flex;gap:4px;margin-bottom:14px"><div class="chip'+(_proGender==="women"?" on":"")+'" onclick="_proGender=\'women\';_proMuscle=\'\';render()">WOMEN\'S</div><div class="chip'+(_proGender==="men"?" on":"")+'" onclick="_proGender=\'men\';_proMuscle=\'\';render()">MEN\'S</div></div>';
+html+='<div style="display:flex;gap:4px;margin-bottom:14px"><div class="chip'+(_proGender==="women"?" on":"")+'" onclick="_proGender=\'women\';_proMuscle=\'\';render()">'+t("women")+'</div><div class="chip'+(_proGender==="men"?" on":"")+'" onclick="_proGender=\'men\';_proMuscle=\'\';render()">'+t("men")+'</div></div>';
 var groups=Object.keys(PRO_EXERCISES[_proGender]);
 html+='<div style="display:flex;gap:3px;flex-wrap:wrap;margin-bottom:14px">';
 for(var gi=0;gi<groups.length;gi++){var g=groups[gi];html+='<div class="chip'+(_proMuscle===g?" on":"")+'" onclick="_proMuscle=\''+escJs(g)+'\';render()">'+escHtml(g)+'</div>';}
@@ -2598,7 +2608,7 @@ var html='<div class="gw" style="margin:0 0 18px"></div><div class="pt">'+t("pro
 html+='<div style="font-size:11px;color:var(--mu);margin-bottom:20px;line-height:1.6">'+t("proToolsDesc")+'</div>';
 
 // Quick actions grid
-html+='<div class="sl">BUILD</div>';
+html+='<div class="sl">'+t("build")+'</div>';
 html+='<div class="g2" style="margin-bottom:14px">';
 html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="startMealPlan()"><div style="font-size:28px;margin-bottom:8px">\uD83C\uDF7D</div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("mealPlan")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">'+t("macroBuilder")+'</div></div>';
 html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="startCardioPlan()"><div style="font-size:28px;margin-bottom:8px">\u2764</div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("cardioBuilder")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">'+t("proCardioBuilder")+'</div></div>';
@@ -2661,7 +2671,7 @@ html+='<div class="pt">'+t("foodDatabase")+'</div>';
 html+='<div style="font-size:11px;color:var(--mu);margin-bottom:14px;line-height:1.6">'+foods.length+' competition-ready foods. All gluten-free. Macros per standard serving. Meats measured cooked. Rice/quinoa measured cooked. Oats measured dry.</div>';
 html+='<div style="margin-bottom:10px"><button class="btn2" onclick="showAddCustomFood()" style="width:100%;border:1px dashed var(--accB);color:var(--acc)">'+t("customFood")+'</button></div>';
 html+='<input id="foodBrowseSearch" placeholder="'+t('searchFoods')+'" oninput="filterFoodBrowse(this.value)" style="margin-bottom:10px;font-size:13px">';
-html+='<div style="display:flex;gap:4px;margin-bottom:14px;flex-wrap:wrap"><div class="chip on" onclick="filterFoodBrowseCat(\'all\',this)">All ('+foods.length+')</div><div class="chip" onclick="filterFoodBrowseCat(\'protein\',this)">Protein</div><div class="chip" onclick="filterFoodBrowseCat(\'carb\',this)">Carbs</div><div class="chip" onclick="filterFoodBrowseCat(\'fat\',this)">Fats</div><div class="chip" onclick="filterFoodBrowseCat(\'veggie\',this)">Veggies</div><div class="chip" onclick="filterFoodBrowseCat(\'supplement\',this)">Supps</div></div>';
+html+='<div style="display:flex;gap:4px;margin-bottom:14px;flex-wrap:wrap"><div class="chip on" onclick="filterFoodBrowseCat(\'all\',this)">'+t("all")+' ('+foods.length+')</div><div class="chip" onclick="filterFoodBrowseCat(\'protein\',this)">'+t("protein")+'</div><div class="chip" onclick="filterFoodBrowseCat(\'carb\',this)">'+t("carbs")+'</div><div class="chip" onclick="filterFoodBrowseCat(\'fat\',this)">'+t("fat")+'</div><div class="chip" onclick="filterFoodBrowseCat(\'veggie\',this)">Veggies</div><div class="chip" onclick="filterFoodBrowseCat(\'supplement\',this)">Supps</div></div>';
 html+='<div class="cd" style="padding:0;overflow:hidden">';
 html+='<div style="display:grid;grid-template-columns:1fr 55px 35px 35px 35px 40px;padding:8px 12px;background:rgba(212,164,74,0.08);font-size:8px;font-weight:700;color:var(--acc);font-family:var(--mono)"><span>'+t("food")+'</span><span style="text-align:center">'+t("size")+'</span><span style="text-align:center">P</span><span style="text-align:center">C</span><span style="text-align:center">F</span><span style="text-align:right">CAL</span></div>';
 html+='<div id="foodBrowseList">';
