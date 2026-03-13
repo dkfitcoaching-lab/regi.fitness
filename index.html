@@ -147,7 +147,7 @@ html{scroll-behavior:smooth}
 
 var SUPA_URL="https://pwopwvvgjflunjxwkkql.supabase.co";
 var SUPA_KEY="sb_publishable_6slliEpPsWV9JXIDvz8pyw_FNPrPMhv";
-var VERSION="5.1";
+var VERSION="5.2";
 var LANGS={
 en:{
 days:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],
@@ -471,7 +471,9 @@ carbs:"CARBS",
 fat:"FAT",
 tapFoodToAdd:"Tap a food above to add here",
 addToMeal:"ADDING TO MEAL",
-build:"BUILD"
+build:"BUILD",
+veggies:"Veggies",
+supps:"Supps"
 },
 hu:{
 days:["Vas","H\u00e9t","Kedd","Sze","Cs\u00fct","P\u00e9n","Szo"],
@@ -795,7 +797,9 @@ carbs:"SZ\u00c9NHIDR\u00c1T",
 fat:"ZS\u00cdR",
 tapFoodToAdd:"Koppintson egy \u00e9telre a hozz\u00e1ad\u00e1shoz",
 addToMeal:"\u00c9TKEZ\u00c9SHEZ AD\u00c1S",
-build:"\u00c9P\u00cdT\u00c9S"
+build:"\u00c9P\u00cdT\u00c9S",
+veggies:"Z\u00f6lds\u00e9gek",
+supps:"Kieg."
 }
 };
 var DN;/* initialized after LS */
@@ -2004,7 +2008,7 @@ html+='<div class="field"><span class="lb">'+t("notes").toUpperCase()+'</span><t
 // Food search & add
 html+='<div class="sl" style="margin-top:18px">'+t("buildMeals")+'</div>';
 html+='<div style="margin-bottom:10px"><input id="foodSearch" placeholder="'+t('searchFoods')+'" oninput="filterFoodDB(this.value)" style="font-size:13px"></div>';
-html+='<div style="display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap"><div class="chip on" onclick="filterFoodCat(\'all\',this)">'+t("all")+'</div><div class="chip" onclick="filterFoodCat(\'protein\',this)">'+t("protein")+'</div><div class="chip" onclick="filterFoodCat(\'carb\',this)">'+t("carbs")+'</div><div class="chip" onclick="filterFoodCat(\'fat\',this)">'+t("fat")+'</div><div class="chip" onclick="filterFoodCat(\'veggie\',this)">Veggies</div><div class="chip" onclick="filterFoodCat(\'supplement\',this)">Supps</div><div class="chip" onclick="filterFoodCat(\'custom\',this)">'+t("myCustomFoods")+'</div></div>';
+html+='<div style="display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap"><div class="chip on" onclick="filterFoodCat(\'all\',this)">'+t("all")+'</div><div class="chip" onclick="filterFoodCat(\'protein\',this)">'+t("protein")+'</div><div class="chip" onclick="filterFoodCat(\'carb\',this)">'+t("carbs")+'</div><div class="chip" onclick="filterFoodCat(\'fat\',this)">'+t("fat")+'</div><div class="chip" onclick="filterFoodCat(\'veggie\',this)">'+t("veggies")+'</div><div class="chip" onclick="filterFoodCat(\'supplement\',this)">'+t("supps")+'</div><div class="chip" onclick="filterFoodCat(\'custom\',this)">'+t("myCustomFoods")+'</div></div>';
 // Custom food button
 html+='<div style="margin-bottom:10px"><button class="btn2" onclick="showAddCustomFood()" style="width:100%;border:1px dashed var(--accB);color:var(--acc)">'+t("customFood")+'</button></div>';
 var foods=getAllFoods();
@@ -2019,7 +2023,7 @@ html+='</div>';
 // Meal slots
 html+='<div id="mealSlots">';var mc=4;
 for(var mi=1;mi<=mc;mi++){
-html+='<div class="cd" style="padding:14px" id="meal'+mi+'"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span class="sl" style="margin:0">MEAL '+mi+'</span><span class="meal-macros" style="font-size:9px;font-family:var(--mono);color:var(--dm)">P0 C0 F0 | 0cal</span></div><div class="meal-items"></div></div>';}
+html+='<div class="cd" style="padding:14px" id="meal'+mi+'"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span class="sl" style="margin:0">'+t("meal")+' '+mi+'</span><span class="meal-macros" style="font-size:9px;font-family:var(--mono);color:var(--dm)">P0 C0 F0 | 0cal</span></div><div class="meal-items"></div></div>';}
 html+='</div>';
 // Macro totals bar
 html+='<div class="cd" style="padding:14px;border:1px solid var(--accB);margin-top:10px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span class="sl" style="margin:0">'+t("dailyTotals")+'</span></div>';
@@ -2030,7 +2034,7 @@ return html;}
 var _currentMealSlot=1,_mealData={1:[],2:[],3:[],4:[]};
 function setMealCount(n,el){el.parentElement.querySelectorAll('.chip').forEach(function(c){c.classList.remove('on');});el.classList.add('on');var h=$('mpMealCount');if(h)h.value=n;
 var sl=$('mealSlots');if(!sl)return;sl.innerHTML='';_mealData={};
-for(var i=1;i<=n;i++){var d=document.createElement('div');d.className='cd';d.id='meal'+i;d.style.padding='14px';d.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span class="sl" style="margin:0">MEAL '+i+'</span><span class="meal-macros" style="font-size:9px;font-family:var(--mono);color:var(--dm)">P0 C0 F0 | 0cal</span></div><div class="meal-items"></div>';sl.appendChild(d);_mealData[i]=[];}_currentMealSlot=1;}
+for(var i=1;i<=n;i++){var d=document.createElement('div');d.className='cd';d.id='meal'+i;d.style.padding='14px';d.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span class="sl" style="margin:0">'+t("meal")+' '+i+'</span><span class="meal-macros" style="font-size:9px;font-family:var(--mono);color:var(--dm)">P0 C0 F0 | 0cal</span></div><div class="meal-items"></div>';sl.appendChild(d);_mealData[i]=[];}_currentMealSlot=1;}
 
 function foodByIdx(idx,name){var foods=getAllFoods();var fd=foods[idx];if(fd&&(!name||fd.n===name))return fd;if(name){for(var i=0;i<foods.length;i++){if(foods[i].n===name)return foods[i];}}return fd;}
 function addFoodToMeal(idx){
@@ -2100,7 +2104,7 @@ var sel='<div style="position:fixed;inset:0;z-index:500;display:flex;align-items
 sel+='<div class="pt" style="font-size:16px;margin-bottom:14px">'+t("addCustomFood")+'</div>';
 sel+='<div class="field"><span class="lb">'+t("foodName")+' *</span><input id="cfName" placeholder="e.g. Turkey Meatballs"></div>';
 sel+='<div class="g2 field"><div><span class="lb">'+t("servingSize")+'</span><input id="cfSize" placeholder="e.g. 170g"></div><div><span class="lb">'+t("measured")+'</span><select id="cfMeas"><option value="cooked">'+t("cooked")+'</option><option value="dry">'+t("dry")+'</option><option value="raw">'+t("raw")+'</option></select></div></div>';
-sel+='<div class="field"><span class="lb">'+t("category")+'</span><select id="cfCat"><option value="protein">Protein</option><option value="carb">Carbs</option><option value="fat">Fats</option><option value="veggie">Veggies</option></select></div>';
+sel+='<div class="field"><span class="lb">'+t("category")+'</span><select id="cfCat"><option value="protein">'+t("protein")+'</option><option value="carb">'+t("carbs")+'</option><option value="fat">'+t("fat")+'</option><option value="veggie">'+t("veggies")+'</option></select></div>';
 sel+='<div class="g4 field"><div><span class="lb" style="color:var(--success)">P (g)</span><input id="cfP" type="number" placeholder="0"></div><div><span class="lb" style="color:var(--warn)">C (g)</span><input id="cfC" type="number" placeholder="0"></div><div><span class="lb" style="color:#cc88ee">F (g)</span><input id="cfF" type="number" placeholder="0"></div><div><span class="lb">CAL</span><input id="cfCal" type="number" placeholder="0"></div></div>';
 sel+='<div class="g2" style="margin-top:8px"><button class="btn" onclick="saveCustomFood()">'+t("save")+'</button><button class="btn2" onclick="document.getElementById(\'customFoodModal\').remove()">'+t("cancel")+'</button></div>';
 sel+='</div></div>';
@@ -2671,7 +2675,7 @@ html+='<div class="pt">'+t("foodDatabase")+'</div>';
 html+='<div style="font-size:11px;color:var(--mu);margin-bottom:14px;line-height:1.6">'+foods.length+' competition-ready foods. All gluten-free. Macros per standard serving. Meats measured cooked. Rice/quinoa measured cooked. Oats measured dry.</div>';
 html+='<div style="margin-bottom:10px"><button class="btn2" onclick="showAddCustomFood()" style="width:100%;border:1px dashed var(--accB);color:var(--acc)">'+t("customFood")+'</button></div>';
 html+='<input id="foodBrowseSearch" placeholder="'+t('searchFoods')+'" oninput="filterFoodBrowse(this.value)" style="margin-bottom:10px;font-size:13px">';
-html+='<div style="display:flex;gap:4px;margin-bottom:14px;flex-wrap:wrap"><div class="chip on" onclick="filterFoodBrowseCat(\'all\',this)">'+t("all")+' ('+foods.length+')</div><div class="chip" onclick="filterFoodBrowseCat(\'protein\',this)">'+t("protein")+'</div><div class="chip" onclick="filterFoodBrowseCat(\'carb\',this)">'+t("carbs")+'</div><div class="chip" onclick="filterFoodBrowseCat(\'fat\',this)">'+t("fat")+'</div><div class="chip" onclick="filterFoodBrowseCat(\'veggie\',this)">Veggies</div><div class="chip" onclick="filterFoodBrowseCat(\'supplement\',this)">Supps</div></div>';
+html+='<div style="display:flex;gap:4px;margin-bottom:14px;flex-wrap:wrap"><div class="chip on" onclick="filterFoodBrowseCat(\'all\',this)">'+t("all")+' ('+foods.length+')</div><div class="chip" onclick="filterFoodBrowseCat(\'protein\',this)">'+t("protein")+'</div><div class="chip" onclick="filterFoodBrowseCat(\'carb\',this)">'+t("carbs")+'</div><div class="chip" onclick="filterFoodBrowseCat(\'fat\',this)">'+t("fat")+'</div><div class="chip" onclick="filterFoodBrowseCat(\'veggie\',this)">'+t("veggies")+'</div><div class="chip" onclick="filterFoodBrowseCat(\'supplement\',this)">'+t("supps")+'</div></div>';
 html+='<div class="cd" style="padding:0;overflow:hidden">';
 html+='<div style="display:grid;grid-template-columns:1fr 55px 35px 35px 35px 40px;padding:8px 12px;background:rgba(212,164,74,0.08);font-size:8px;font-weight:700;color:var(--acc);font-family:var(--mono)"><span>'+t("food")+'</span><span style="text-align:center">'+t("size")+'</span><span style="text-align:center">P</span><span style="text-align:center">C</span><span style="text-align:center">F</span><span style="text-align:right">CAL</span></div>';
 html+='<div id="foodBrowseList">';
