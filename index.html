@@ -16,59 +16,59 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
 <style>
 :root{
---bg:#06060a;--bg2:#0e0e14;--card:#121218;--cardH:#1a1a22;
---border:#28231e;--borderH:#3c3428;--borderS:#181510;
---acc:#d4a44a;--accD:#c09030;--accDeep:#9a7020;--accVib:#f0cc70;--accBright:#ffd97a;
---accS:rgba(212,164,74,0.06);--accB:rgba(212,164,74,0.18);--accM:rgba(212,164,74,0.30);
---accGlow:rgba(212,164,74,0.22);--accGlow2:rgba(240,204,112,0.14);
---ice:#fff8e8;--wh:#f0ece4;--ow:#ccc4b4;--mu:#948a7a;--dm:#645c4c;--dmL:#3c3628;
---glass:rgba(212,164,74,0.03);--glassB:rgba(212,164,74,0.07);
---warn:#e8b878;--danger:#d87878;--success:#78c878;
+--bg:#020204;--bg2:#060608;--card:#08080c;--cardH:#0e0e14;
+--border:#181828;--borderH:#242440;--borderS:#0e0e1a;
+--acc:#d4a848;--accD:#b8901e;--accDeep:#8a6a14;--accVib:#f0d060;--accBright:#fce080;
+--accS:rgba(201,168,76,0.06);--accB:rgba(201,168,76,0.18);--accM:rgba(201,168,76,0.30);
+--accGlow:rgba(201,168,76,0.22);--accGlow2:rgba(232,204,106,0.14);
+--ice:#f0f0f8;--wh:#e2e2ec;--ow:#b0b0c0;--mu:#7a7a90;--dm:#50506a;--dmL:#2e2e44;
+--glass:rgba(201,168,76,0.03);--glassB:rgba(201,168,76,0.07);
+--warn:#e8a855;--danger:#e05858;--success:#48c878;
 --display:'Cinzel',serif;--body:'Rajdhani',sans-serif;--mono:'IBM Plex Mono',monospace;
 --sidebar:260px;
---goldGrad:linear-gradient(135deg,#a87828,#c49838,#d4a44a,#f0cc70,#d4a44a,#c49838,#a87828);
+--goldGrad:linear-gradient(135deg,#8a6a1e,#b08a30,#c9a84c,#e8cc6a,#c9a84c,#b08a30,#8a6a1e);
 --goldText:linear-gradient(135deg,var(--accBright),var(--acc),var(--accD));
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{background:var(--bg);color:var(--wh);font-family:var(--body);min-height:100vh;min-height:100dvh;-webkit-font-smoothing:antialiased}
-input,textarea,select{font-family:var(--body);color:var(--wh);background:rgba(212,164,74,0.04);border:1px solid rgba(212,164,74,0.18);border-radius:10px;padding:13px 16px;font-size:15px;outline:none;width:100%;box-sizing:border-box;-webkit-appearance:none;appearance:none;transition:border-color 0.25s,box-shadow 0.25s,background 0.25s;box-shadow:inset 0 1px 4px rgba(0,0,0,0.2),0 0 0 0 transparent}
-input:focus,textarea:focus,select:focus{border-color:var(--acc);box-shadow:inset 0 1px 4px rgba(0,0,0,0.15),0 0 0 3px rgba(212,164,74,0.12),0 0 24px rgba(212,164,74,0.08);background:rgba(212,164,74,0.06)}
-input::placeholder,textarea::placeholder{color:var(--dm);opacity:0.7}
-select{cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23d4a44a' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+input,textarea,select{font-family:var(--body);color:var(--wh);background:rgba(201,168,76,0.03);border:1px solid rgba(201,168,76,0.12);border-radius:10px;padding:13px 16px;font-size:15px;outline:none;width:100%;box-sizing:border-box;-webkit-appearance:none;appearance:none;transition:border-color 0.25s,box-shadow 0.25s,background 0.25s;box-shadow:inset 0 1px 6px rgba(0,0,0,0.3),0 0 0 0 transparent}
+input:focus,textarea:focus,select:focus{border-color:var(--acc);box-shadow:inset 0 1px 4px rgba(0,0,0,0.2),0 0 0 3px rgba(201,168,76,0.10),0 0 20px rgba(201,168,76,0.06);background:rgba(201,168,76,0.05)}
+input::placeholder,textarea::placeholder{color:var(--dm);opacity:0.6}
+select{cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23c9a84c' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
 select option{background:var(--card);color:var(--wh)}
 button{font-family:var(--body);cursor:pointer;border:none;outline:none;transition:all 0.18s ease}
-.btn{background:var(--goldGrad);background-size:300% 100%;color:#1a1408;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0.12em;padding:14px 18px;border-radius:8px;width:100%;box-shadow:0 4px 24px rgba(212,164,74,0.35),0 0 40px rgba(212,164,74,0.08),inset 0 1px 0 rgba(255,255,255,0.15);text-transform:uppercase;animation:shimmer 3s ease-in-out infinite}
-.btn:hover{box-shadow:0 6px 32px rgba(212,164,74,0.45),0 0 60px rgba(212,164,74,0.12);transform:translateY(-1px)}
-.btn:active{transform:translateY(0) scale(0.98);box-shadow:0 2px 16px rgba(212,164,74,0.3)}
+.btn{background:var(--goldGrad);background-size:300% 100%;color:#0a0808;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0.12em;padding:14px 18px;border-radius:10px;width:100%;box-shadow:0 4px 28px rgba(201,168,76,0.30),0 0 40px rgba(201,168,76,0.06),inset 0 1px 0 rgba(255,255,255,0.12);text-transform:uppercase;animation:shimmer 3s ease-in-out infinite}
+.btn:hover{box-shadow:0 6px 36px rgba(201,168,76,0.40),0 0 60px rgba(201,168,76,0.10);transform:translateY(-1px)}
+.btn:active{transform:translateY(0) scale(0.98);box-shadow:0 2px 16px rgba(201,168,76,0.25)}
 .btn:disabled{opacity:0.4;pointer-events:none;animation:none}
 .btn:focus-visible,.btn2:focus-visible,.chip:focus-visible{outline:2px solid var(--accBright);outline-offset:2px}
-.btn2{background:rgba(212,164,74,0.05);color:var(--acc);border:1px solid rgba(212,164,74,0.2);font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.1em;padding:10px 16px;border-radius:8px;text-transform:uppercase;transition:all 0.18s}
-.btn2:hover{background:rgba(212,164,74,0.12);border-color:var(--acc);color:var(--accBright);box-shadow:0 0 20px rgba(212,164,74,0.1)}
+.btn2{background:rgba(201,168,76,0.04);color:var(--acc);border:1px solid rgba(201,168,76,0.15);font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.1em;padding:10px 16px;border-radius:10px;text-transform:uppercase;transition:all 0.18s}
+.btn2:hover{background:rgba(201,168,76,0.10);border-color:var(--acc);color:var(--accBright);box-shadow:0 0 20px rgba(201,168,76,0.08)}
 .btn2:active{transform:scale(0.97)}
 .btn-danger{background:rgba(216,120,120,0.05);border:1px solid rgba(216,120,120,0.15);color:var(--danger);font-family:var(--mono);font-size:10px;font-weight:700;padding:12px;border-radius:8px;width:100%;letter-spacing:0.08em}
 .btn-danger:hover{background:rgba(216,120,120,0.1);border-color:rgba(216,120,120,0.3)}
 .btn-success{background:rgba(120,200,120,0.08);border:1px solid rgba(120,200,120,0.2);color:var(--success);font-family:var(--mono);font-size:10px;font-weight:700;padding:12px;border-radius:8px;width:100%;letter-spacing:0.08em}
-.cd{background:linear-gradient(160deg,rgba(16,15,20,0.99),rgba(8,7,12,0.99));border:1px solid rgba(212,164,74,0.12);border-radius:12px;padding:16px;margin-bottom:10px;transition:border-color 0.25s,box-shadow 0.25s;box-shadow:0 2px 16px rgba(0,0,0,0.5),0 0 1px rgba(212,164,74,0.08),inset 0 1px 0 rgba(212,164,74,0.06);border-top:1px solid rgba(212,164,74,0.16)}
+.cd{background:linear-gradient(160deg,rgba(10,10,16,0.99),rgba(4,4,8,0.99));border:1px solid rgba(212,168,72,0.08);border-radius:14px;padding:16px;margin-bottom:10px;transition:border-color 0.25s,box-shadow 0.25s;box-shadow:0 2px 24px rgba(0,0,0,0.7),0 0 1px rgba(212,168,72,0.05),inset 0 1px 0 rgba(255,255,255,0.015);border-top:1px solid rgba(212,168,72,0.10)}
 .cd-link{cursor:pointer;transition:border-color 0.25s,box-shadow 0.25s,transform 0.15s}.cd-link:hover{border-color:var(--borderH);box-shadow:0 4px 28px rgba(0,0,0,0.4),0 0 12px rgba(212,164,74,0.06);transform:translateY(-1px)}
 .cd-link:active{transform:scale(0.995) translateY(0);border-color:var(--accB)}
-.gw{height:1px;background:linear-gradient(90deg,transparent,var(--accDeep),var(--acc),var(--accBright),var(--acc),var(--accDeep),transparent);box-shadow:0 0 24px var(--accGlow),0 0 48px rgba(212,164,74,0.08);margin:28px 0;position:relative}
-.gw::after{content:'';position:absolute;top:-1px;left:30%;right:30%;height:3px;background:linear-gradient(90deg,transparent,rgba(212,164,74,0.15),transparent);filter:blur(2px)}
+.gw{height:1px;background:linear-gradient(90deg,transparent,var(--accDeep),var(--acc),var(--accBright),var(--acc),var(--accDeep),transparent);box-shadow:0 0 20px var(--accGlow),0 0 40px rgba(201,168,76,0.06);margin:28px 0;position:relative}
+.gw::after{content:'';position:absolute;top:-1px;left:25%;right:25%;height:3px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.12),transparent);filter:blur(3px)}
 .sl{font-size:10px;font-weight:700;color:var(--acc);letter-spacing:0.22em;font-family:var(--mono);text-shadow:0 0 24px var(--accGlow),0 0 48px rgba(212,164,74,0.06);margin-bottom:12px;text-transform:uppercase}
 .pt{font-size:24px;font-weight:700;color:var(--ice);font-family:var(--display);letter-spacing:0.04em;margin-bottom:20px;line-height:1.2}
 .lb{font-size:10px;font-weight:700;color:var(--acc);font-family:var(--mono);letter-spacing:0.1em;display:block;margin-bottom:7px;text-transform:uppercase}
-.chip{display:inline-flex;padding:6px 14px;border-radius:8px;font-size:10px;font-weight:700;font-family:var(--mono);background:rgba(212,164,74,0.04);border:1px solid rgba(212,164,74,0.12);color:var(--ow);cursor:pointer;margin:2px;user-select:none;transition:all 0.18s;min-height:34px;align-items:center}
-.chip:hover{background:rgba(212,164,74,0.1);border-color:rgba(212,164,74,0.25);color:var(--wh)}
+.chip{display:inline-flex;padding:6px 14px;border-radius:10px;font-size:10px;font-weight:700;font-family:var(--mono);background:rgba(201,168,76,0.03);border:1px solid rgba(201,168,76,0.10);color:var(--ow);cursor:pointer;margin:2px;user-select:none;transition:all 0.18s;min-height:34px;align-items:center}
+.chip:hover{background:rgba(201,168,76,0.08);border-color:rgba(201,168,76,0.20);color:var(--wh)}
 .chip:active{transform:scale(0.94)}
-.chip.on{background:rgba(212,164,74,0.18);border-color:var(--acc);color:var(--accBright);box-shadow:0 0 20px rgba(212,164,74,0.12)}
+.chip.on{background:rgba(201,168,76,0.14);border-color:var(--acc);color:var(--accBright);box-shadow:0 0 16px rgba(201,168,76,0.10)}
 .status-chip{display:inline-flex;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;font-family:var(--mono);letter-spacing:0.06em}
 .status-complete{background:rgba(120,200,120,0.1);border:1px solid rgba(120,200,120,0.2);color:var(--success)}
 .status-cancelled{background:rgba(216,120,120,0.08);border:1px solid rgba(216,120,120,0.15);color:var(--danger)}
 .status-noshow{background:rgba(180,140,100,0.08);border:1px solid rgba(180,140,100,0.2);color:#c4a070}
 .status-latecancel{background:rgba(232,184,120,0.08);border:1px solid rgba(232,184,120,0.2);color:var(--warn)}
 #app{max-width:640px;margin:0 auto;min-height:100vh;min-height:100dvh;position:relative;z-index:1}
-.hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 12px;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(8,8,10,0.95);backdrop-filter:blur(28px);z-index:10}
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 12px;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(2,2,4,0.97);backdrop-filter:blur(36px);z-index:10}
 .ct{padding:20px 16px 110px}
-.tabs{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:640px;background:rgba(8,8,10,0.97);backdrop-filter:blur(28px);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:10px 0 max(10px,env(safe-area-inset-bottom));z-index:10}
+.tabs{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:640px;background:rgba(2,2,4,0.98);backdrop-filter:blur(36px);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:10px 0 max(10px,env(safe-area-inset-bottom));z-index:10}
 .ti{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:6px 10px;font-size:9px;font-weight:700;font-family:var(--mono);letter-spacing:0.04em;color:var(--dm);position:relative;user-select:none;transition:color 0.2s,transform 0.15s;min-width:44px;min-height:44px;justify-content:center}
 .ti:active{transform:scale(0.92)}
 .ti.on{color:var(--acc);filter:drop-shadow(0 0 12px var(--accGlow))}
@@ -77,17 +77,17 @@ button{font-family:var(--body);cursor:pointer;border:none;outline:none;transitio
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
 .g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px}
 .field{margin-bottom:18px}
-.stat{padding:18px 10px;text-align:center;background:linear-gradient(160deg,rgba(22,21,26,0.95),rgba(10,9,12,0.98));border-radius:12px;border:1px solid rgba(212,164,74,0.14);border-top:1px solid rgba(212,164,74,0.25);transition:border-color 0.2s,box-shadow 0.2s;box-shadow:0 2px 16px rgba(0,0,0,0.4),0 0 1px rgba(212,164,74,0.08);position:relative;overflow:hidden}
-.stat::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:60%;height:1px;background:linear-gradient(90deg,transparent,rgba(212,164,74,0.35),transparent)}
-.stat:hover{border-color:var(--accB);box-shadow:0 0 24px rgba(212,164,74,0.1)}
+.stat{padding:18px 10px;text-align:center;background:linear-gradient(160deg,rgba(10,10,16,0.98),rgba(4,4,8,0.99));border-radius:14px;border:1px solid rgba(212,168,72,0.08);border-top:1px solid rgba(212,168,72,0.14);transition:border-color 0.2s,box-shadow 0.2s;box-shadow:0 4px 24px rgba(0,0,0,0.6),0 0 1px rgba(212,168,72,0.04);position:relative;overflow:hidden}
+.stat::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:40%;height:1px;background:linear-gradient(90deg,transparent,rgba(212,168,72,0.25),transparent)}
+.stat:hover{border-color:var(--accB);box-shadow:0 0 32px rgba(212,168,72,0.06)}
 .stat b{font-size:26px;font-weight:800;font-family:var(--mono);display:block;line-height:1;letter-spacing:-0.02em}
 .stat small{font-size:9px;color:var(--dm);letter-spacing:0.14em;display:block;margin-top:6px;font-weight:700;font-family:var(--mono)}
-.fab{position:fixed;bottom:82px;right:20px;width:56px;height:56px;border-radius:16px;background:var(--goldGrad);background-size:300% 100%;color:#1a1408;font-size:24px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(212,164,74,0.4),0 0 40px rgba(212,164,74,0.1),inset 0 1px 0 rgba(255,255,255,0.12);z-index:9;cursor:pointer;border:none;font-family:var(--mono);animation:shimmer 3s ease-in-out infinite}
+.fab{position:fixed;bottom:82px;right:20px;width:56px;height:56px;border-radius:16px;background:var(--goldGrad);background-size:300% 100%;color:#080808;font-size:24px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 28px rgba(201,168,76,0.35),0 0 40px rgba(201,168,76,0.08),inset 0 1px 0 rgba(255,255,255,0.10);z-index:9;cursor:pointer;border:none;font-family:var(--mono);animation:shimmer 3s ease-in-out infinite}
 .fab:hover{transform:scale(1.08)}.fab:active{transform:scale(0.95)}
 .timer-bar{position:fixed;top:0;left:0;right:0;height:2px;z-index:200;pointer-events:none;opacity:0;transition:opacity 0.3s}
 .timer-bar.active{opacity:1}
 .timer-bar-fill{height:100%;background:linear-gradient(90deg,var(--accDeep),var(--accBright));transition:width 1s linear;box-shadow:0 0 8px var(--accGlow)}
-.toast{position:fixed;top:64px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,rgba(16,14,20,0.98),rgba(22,18,28,0.98));color:var(--accBright);border:1px solid var(--accB);font-family:var(--mono);font-size:11px;font-weight:700;padding:11px 28px;border-radius:10px;z-index:1000;animation:toastIn 0.3s ease;box-shadow:0 8px 32px rgba(0,0,0,0.5),0 0 20px rgba(212,164,74,0.08);letter-spacing:0.08em;pointer-events:none;max-width:90vw;overflow-wrap:break-word;text-align:center}
+.toast{position:fixed;top:64px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,rgba(12,12,20,0.98),rgba(18,18,30,0.98));color:var(--accBright);border:1px solid var(--accB);font-family:var(--mono);font-size:11px;font-weight:700;padding:11px 28px;border-radius:12px;z-index:1000;animation:toastIn 0.3s ease;box-shadow:0 8px 36px rgba(0,0,0,0.6),0 0 16px rgba(201,168,76,0.06);letter-spacing:0.08em;pointer-events:none;max-width:90vw;overflow-wrap:break-word;text-align:center}
 .set-row{display:flex;gap:6px;align-items:center;margin-bottom:6px;padding:8px 10px;background:rgba(212,164,74,0.03);border-radius:8px;border:1px solid rgba(212,164,74,0.08)}
 .set-badge{min-width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;font-family:var(--mono);flex-shrink:0;background:rgba(212,164,74,0.08);color:var(--acc);border:1px solid rgba(212,164,74,0.18)}
 .ex-summary{padding:14px 16px;background:rgba(212,164,74,0.03);border-radius:10px;border:1px solid rgba(212,164,74,0.1);margin-top:8px;box-shadow:0 1px 6px rgba(0,0,0,0.2)}
@@ -130,7 +130,7 @@ html{scroll-behavior:smooth}
 </style>
 </head>
 <body>
-<div style="position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 120% 60% at 50% -15%,rgba(212,164,74,0.10) 0%,transparent 50%),radial-gradient(ellipse 60% 50% at 100% 50%,rgba(154,112,32,0.04) 0%,transparent 40%),radial-gradient(ellipse 70% 80% at -10% 100%,rgba(154,112,32,0.06) 0%,transparent 45%),radial-gradient(circle at 50% 50%,rgba(212,164,74,0.015) 0%,transparent 70%),var(--bg)"></div>
+<div style="position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 80% 40% at 50% -20%,rgba(212,168,72,0.04) 0%,transparent 50%),radial-gradient(ellipse 40% 30% at 100% 50%,rgba(15,15,30,0.12) 0%,transparent 40%),radial-gradient(ellipse 50% 60% at -10% 100%,rgba(10,10,25,0.10) 0%,transparent 45%),var(--bg)"></div>
 <div class="timer-bar" id="timerBar"><div class="timer-bar-fill" id="timerBarFill" style="width:100%"></div></div>
 <div id="app" style="display:none">
 <div class="hdr" id="hdr">
@@ -147,7 +147,7 @@ html{scroll-behavior:smooth}
 
 var SUPA_URL="https://pwopwvvgjflunjxwkkql.supabase.co";
 var SUPA_KEY="sb_publishable_6slliEpPsWV9JXIDvz8pyw_FNPrPMhv";
-var VERSION="4.2";
+var VERSION="5.0";
 var LANGS={
 en:{
 days:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],
@@ -858,7 +858,29 @@ function timerStop(){clearInterval(timer.interval);timer.running=false;timerUpda
 function timerToggle(){if(timer.running)timerStop();else timerStart();}
 function timerReset(){timerStop();timer.seconds=timer.preset;timerUpdateUI();}
 function timerSetPreset(s){timer.preset=s;if(!timer.running)timer.seconds=s;timerUpdateUI();}
-function timerUpdateUI(){var td=$("timerDisplay"),tb=$("timerBtn"),bar=$("timerBar"),fill=$("timerBarFill");if(td){td.textContent=fmtTime(timer.seconds>0?timer.seconds:timer.preset);td.style.color=timer.seconds<=5&&timer.seconds>0&&timer.running?"var(--warn)":timer.seconds<=0?"var(--accVib)":"var(--ice)";}if(tb)tb.textContent=timer.running?"PAUSE":"START";if(bar)bar.className="timer-bar"+(timer.running?" active":"");if(fill&&timer.preset>0)fill.style.width=((timer.seconds/timer.preset)*100)+"%";document.querySelectorAll("[data-timer-preset]").forEach(function(el){el.className="chip"+(timer.preset===parseInt(el.dataset.timerPreset)?" on":"");});}
+function timerUpdateUI(){var td=$("timerDisplay"),tb=$("timerBtn"),bar=$("timerBar"),fill=$("timerBarFill");if(td){td.textContent=fmtTime(timer.seconds>0?timer.seconds:timer.preset);td.style.color=timer.seconds<=5&&timer.seconds>0&&timer.running?"var(--warn)":timer.seconds<=0?"var(--accVib)":"var(--ice)";}if(tb)tb.textContent=timer.running?"PAUSE":"START";if(bar)bar.className="timer-bar"+(timer.running?" active":"");if(fill&&timer.preset>0)fill.style.width=((timer.seconds/timer.preset)*100)+"%";var inlineBar=$("timerBarInline");if(inlineBar&&timer.preset>0)inlineBar.style.width=((timer.seconds/timer.preset)*100)+"%";document.querySelectorAll("[data-timer-preset]").forEach(function(el){el.className="chip"+(timer.preset===parseInt(el.dataset.timerPreset)?" on":"");});if($("timerModal"))updateTimerModal();}
+
+// Premium Timer Modal
+function showTimerModal(){
+var presets=[{s:30,l:"30s"},{s:45,l:"45s"},{s:60,l:"1:00"},{s:90,l:"1:30"},{s:120,l:"2:00"},{s:150,l:"2:30"},{s:180,l:"3:00"},{s:240,l:"4:00"},{s:300,l:"5:00"}];
+var ph="";for(var i=0;i<presets.length;i++){var p=presets[i];ph+='<div class="chip'+(timer.preset===p.s?" on":"")+'" data-timer-preset="'+p.s+'" onclick="timerSetPreset('+p.s+');updateTimerModal()" style="padding:8px 14px;font-size:11px">'+p.l+'</div>';}
+var ov=document.createElement("div");ov.id="timerModal";ov.style.cssText="position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.90);backdrop-filter:blur(16px);padding:20px;animation:fadeIn 0.3s";
+ov.innerHTML='<div style="width:100%;max-width:400px;background:linear-gradient(160deg,rgba(14,14,22,0.99),rgba(8,8,14,0.99));border:1px solid var(--accB);border-radius:20px;padding:32px;box-shadow:0 0 80px rgba(201,168,76,0.10);text-align:center"><div style="font-size:9px;color:var(--acc);font-family:var(--mono);letter-spacing:0.2em;margin-bottom:20px">PRO REST TIMER</div><div class="gw" style="margin:0 0 24px"></div><div id="tmDisplay" style="font-family:var(--mono);font-size:72px;font-weight:300;color:var(--ice);line-height:1;margin-bottom:8px;text-shadow:0 0 40px rgba(201,168,76,0.15);letter-spacing:0.04em;transition:color 0.3s">'+fmtTime(timer.seconds>0?timer.seconds:timer.preset)+'</div><div id="tmStatus" style="font-size:10px;color:var(--dm);font-family:var(--mono);letter-spacing:0.15em;margin-bottom:24px">'+(timer.running?"RUNNING":"READY")+'</div><div style="height:3px;background:rgba(201,168,76,0.08);border-radius:2px;margin-bottom:24px;overflow:hidden"><div id="tmBar" style="height:100%;background:linear-gradient(90deg,var(--accDeep),var(--accBright));border-radius:2px;transition:width 1s linear;width:'+(timer.preset>0?((timer.seconds/timer.preset)*100):100)+'%"></div></div><div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:center;margin-bottom:20px">'+ph+'</div><div style="display:flex;gap:8px"><button class="btn2" style="flex:1;padding:14px;font-size:12px" onclick="timerToggle();updateTimerModal()" id="tmBtn">'+(timer.running?"PAUSE":"START")+'</button><button class="btn2" style="flex:1;padding:14px;font-size:12px" onclick="timerReset();updateTimerModal()">RESET</button></div><div class="gw" style="margin:20px 0 16px"></div><button class="btn2" onclick="document.getElementById(\'timerModal\').remove()" style="width:100%;font-size:10px">CLOSE</button></div>';
+document.body.appendChild(ov);
+if(timer.running)_timerModalInterval=setInterval(updateTimerModal,500);
+}
+var _timerModalInterval=null;
+function updateTimerModal(){
+var d=$("tmDisplay");if(d)d.textContent=fmtTime(timer.seconds>0?timer.seconds:timer.preset);
+var s=$("tmStatus");if(s)s.textContent=timer.running?"RUNNING":timer.seconds<=0?"COMPLETE":"READY";
+var b=$("tmBtn");if(b)b.textContent=timer.running?"PAUSE":"START";
+var bar=$("tmBar");if(bar&&timer.preset>0)bar.style.width=((timer.seconds/timer.preset)*100)+"%";
+if(d){d.style.color=timer.seconds<=5&&timer.seconds>0&&timer.running?"var(--warn)":timer.seconds<=0?"var(--accVib)":"var(--ice)";d.style.textShadow=timer.running&&timer.seconds<=5?"0 0 60px rgba(232,168,85,0.4)":"0 0 40px rgba(201,168,76,0.15)";}
+document.querySelectorAll("#timerModal [data-timer-preset]").forEach(function(el){el.className="chip"+(timer.preset===parseInt(el.dataset.timerPreset)?" on":"");el.style.padding="8px 14px";el.style.fontSize="11px";});
+if(timer.running&&!_timerModalInterval)_timerModalInterval=setInterval(updateTimerModal,500);
+if(!timer.running&&_timerModalInterval){clearInterval(_timerModalInterval);_timerModalInterval=null;}
+if(!$("timerModal")&&_timerModalInterval){clearInterval(_timerModalInterval);_timerModalInterval=null;}
+}
 
 // Auth
 async function signIn(email,password){var r=await fetch(SUPA_URL+"/auth/v1/token?grant_type=password",{method:"POST",headers:{"Content-Type":"application/json","apikey":SUPA_KEY},body:JSON.stringify({email:email,password:password})});var d=await r.json();if(d.access_token){LS.set("userId",d.user.id);LS.set("userEmail",d.user.email);LS.set("accessToken",d.access_token);if(d.refresh_token)LS.set("refreshToken",d.refresh_token);return{ok:true};}return{ok:false,error:d.error_description||d.msg||d.error||"Sign in failed"};}
@@ -922,7 +944,7 @@ if(currentView.view==="newProgram")return renderProgramBuilder();
 if(currentView.view==="programDetail")return renderProgramDetail();
 if(currentView.view==="programLibrary")return renderProgramLibrary();
 if(!clients.length)return'<div class="pt">'+t("addFirstClient")+'</div><div style="font-size:12px;color:var(--mu);margin-bottom:14px;line-height:1.5">'+t("everythingStarts")+'</div>'+clientFormFields()+'<button class="btn" style="margin-top:16px" onclick="saveNewClient()">'+t("save")+'</button>';
-var html='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div class="pt" style="margin-bottom:0">'+t("clients")+' <span style="font-size:13px;color:var(--dm);font-family:var(--mono);font-weight:400">'+clients.length+'</span></div><div style="display:flex;gap:6px"><button class="btn2" onclick="push(\'programLibrary\')" style="font-size:8px;padding:6px 10px">\uD83D\uDCCB '+t("programs")+'</button><button class="btn2" onclick="push(\'add\')" style="box-shadow:0 0 12px rgba(212,164,74,0.08)">+ '+t("addClient")+'</button></div></div>';
+var html='<div class="gw" style="margin:0 0 18px"></div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div class="pt" style="margin-bottom:0">'+t("clients")+' <span style="font-size:13px;color:var(--dm);font-family:var(--mono);font-weight:400">'+clients.length+'</span></div><div style="display:flex;gap:6px"><button class="btn2" onclick="push(\'programLibrary\')" style="font-size:8px;padding:6px 10px">\uD83D\uDCCB '+t("programs")+'</button><button class="btn2" onclick="push(\'add\')" style="box-shadow:0 0 12px rgba(201,168,76,0.08)">+ '+t("addClient")+'</button></div></div>';
 if(clients.length>3)html+='<div style="margin-bottom:14px"><input id="clientSearch" placeholder="'+t("searchClients")+'" oninput="filterClients(this.value)" style="padding:10px 14px;font-size:13px"></div>';
 html+='<div id="clientList">';
 for(var i=0;i<clients.length;i++){var c=clients[i];var count=sessions.filter(function(x){return x.clientId===c.id;}).length;html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:14px" onclick="push(\'detail\',{clientIdx:'+i+'})"><div style="width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,rgba(212,164,74,0.25),rgba(212,164,74,0.08));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:16px;font-weight:700;color:var(--accBright);flex-shrink:0;box-shadow:0 0 16px rgba(212,164,74,0.08)">'+safeInitial(c.name)+'</div><div style="flex:1"><div style="font-size:14px;font-weight:600;color:var(--wh)">'+escHtml(c.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+escHtml(c.type||"Training")+' \u00B7 $'+escHtml(c.rate||70)+'/hr \u00B7 '+count+' '+t("sessions").toLowerCase()+'</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}
@@ -979,12 +1001,12 @@ return html;}
 // SESSIONS - Rebuilt Exercise Logging System
 var _exCount=0,_sessionRating=0;
 function renderSessions(){if(currentView.view==="new")return renderLogSession();if(currentView.view==="detail")return renderSessionDetail();return renderSessionList();}
-function renderTimerWidget(compact){var presets=[30,45,60,90,120];var ph="";for(var i=0;i<presets.length;i++){var s=presets[i];ph+='<div class="chip'+(timer.preset===s?" on":"")+'" data-timer-preset="'+s+'" onclick="timerSetPreset('+s+')"'+(compact?' style="padding:3px 7px;font-size:8px"':'')+'>'+(s<60?s+"s":fmtTime(s))+'</div>';}
-if(compact)return'<div class="cd" style="padding:12px;margin-bottom:12px;display:flex;align-items:center;gap:10px;border:1px solid var(--accB);flex-wrap:wrap"><span style="font-size:9px;color:var(--dm);font-family:var(--mono)">'+t("restTimer")+'</span><span id="timerDisplay" style="font-family:var(--mono);font-size:22px;font-weight:300;color:var(--ice);flex:1">'+fmtTime(timer.seconds>0?timer.seconds:timer.preset)+'</span><div style="display:flex;gap:3px;flex-wrap:wrap">'+ph+'</div><button class="btn2" onclick="timerToggle()" id="timerBtn" style="padding:5px 10px;font-size:9px">'+(timer.running?"PAUSE":"START")+'</button><button class="btn2" onclick="timerReset()" style="padding:5px 10px;font-size:9px">RESET</button></div>';
-return'<div class="cd" style="padding:16px;margin-bottom:16px;border:1px solid var(--accB)"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span class="sl" style="margin:0">'+t("restTimer")+'</span><span id="timerDisplay" style="font-family:var(--mono);font-size:28px;font-weight:300;color:var(--ice)">'+fmtTime(timer.seconds>0?timer.seconds:timer.preset)+'</span></div><div style="display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap">'+ph+'</div><div style="display:flex;gap:6px"><button class="btn2" style="flex:1" onclick="timerToggle()" id="timerBtn">'+(timer.running?"PAUSE":"START")+'</button><button class="btn2" style="flex:1" onclick="timerReset()">RESET</button></div></div>';}
+function renderTimerWidget(compact){var presets=[30,45,60,90,120,180];var ph="";for(var i=0;i<presets.length;i++){var s=presets[i];ph+='<div class="chip'+(timer.preset===s?" on":"")+'" data-timer-preset="'+s+'" onclick="timerSetPreset('+s+')"'+(compact?' style="padding:4px 8px;font-size:9px"':'')+'>'+(s<60?s+"s":fmtTime(s))+'</div>';}
+if(compact)return'<div class="cd" style="padding:14px;margin-bottom:12px;border:1px solid var(--accB);background:linear-gradient(160deg,rgba(12,12,20,0.99),rgba(6,6,12,0.99))"><div style="display:flex;align-items:center;gap:12px;margin-bottom:10px"><span style="font-size:9px;color:var(--acc);font-family:var(--mono);letter-spacing:0.12em">\u23F1 '+t("restTimer")+'</span><span id="timerDisplay" style="font-family:var(--mono);font-size:28px;font-weight:300;color:var(--ice);flex:1;text-align:right;letter-spacing:0.06em;text-shadow:0 0 24px rgba(201,168,76,0.10)">'+fmtTime(timer.seconds>0?timer.seconds:timer.preset)+'</span></div><div style="height:2px;background:rgba(201,168,76,0.06);border-radius:1px;margin-bottom:10px;overflow:hidden"><div id="timerBarInline" style="height:100%;background:linear-gradient(90deg,var(--accDeep),var(--accBright));border-radius:1px;transition:width 1s linear;width:'+(timer.preset>0?((timer.seconds/timer.preset)*100):100)+'%"></div></div><div style="display:flex;gap:3px;flex-wrap:wrap;margin-bottom:8px">'+ph+'</div><div style="display:flex;gap:6px"><button class="btn2" onclick="timerToggle()" id="timerBtn" style="flex:1;padding:8px 10px;font-size:10px">'+(timer.running?"PAUSE":"START")+'</button><button class="btn2" onclick="timerReset()" style="flex:1;padding:8px 10px;font-size:10px">RESET</button><button class="btn2" onclick="showTimerModal()" style="padding:8px 10px;font-size:10px">\u2197</button></div></div>';
+return'<div class="cd" style="padding:20px;margin-bottom:16px;border:1px solid var(--accB);background:linear-gradient(160deg,rgba(12,12,20,0.99),rgba(6,6,12,0.99))"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><span class="sl" style="margin:0">\u23F1 '+t("restTimer")+'</span><span id="timerDisplay" style="font-family:var(--mono);font-size:36px;font-weight:300;color:var(--ice);letter-spacing:0.06em;text-shadow:0 0 30px rgba(201,168,76,0.12)">'+fmtTime(timer.seconds>0?timer.seconds:timer.preset)+'</span></div><div style="height:3px;background:rgba(201,168,76,0.06);border-radius:2px;margin-bottom:12px;overflow:hidden"><div id="timerBarInline" style="height:100%;background:linear-gradient(90deg,var(--accDeep),var(--accBright));border-radius:2px;transition:width 1s linear;width:'+(timer.preset>0?((timer.seconds/timer.preset)*100):100)+'%"></div></div><div style="display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap">'+ph+'</div><div style="display:flex;gap:6px"><button class="btn2" style="flex:1;padding:10px" onclick="timerToggle()" id="timerBtn">'+(timer.running?"PAUSE":"START")+'</button><button class="btn2" style="flex:1;padding:10px" onclick="timerReset()">RESET</button><button class="btn2" onclick="showTimerModal()" style="padding:10px">\u2197 FULLSCREEN</button></div></div>';}
 function renderSessionList(){
 if(!clients.length)return'<div class="pt">'+t("log")+'</div><div class="cd" style="padding:24px;text-align:center;border:1px dashed var(--border)"><div style="font-size:14px;font-weight:600;color:var(--ow);margin-bottom:6px">'+t("noSessionsYet")+'</div><button class="btn" onclick="go(\'clients\')" style="max-width:200px;margin:0 auto">'+t("addFirstClient")+'</button></div>';
-var html='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div class="pt" style="margin-bottom:0">'+t("log")+' <span style="font-size:13px;color:var(--dm);font-family:var(--mono);font-weight:400">'+sessions.length+'</span></div><button class="btn2" onclick="push(\'new\')" style="box-shadow:0 0 12px rgba(212,164,74,0.08)">+ '+t("logSession")+'</button></div>';
+var html='<div class="gw" style="margin:0 0 18px"></div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div class="pt" style="margin-bottom:0">'+t("log")+' <span style="font-size:13px;color:var(--dm);font-family:var(--mono);font-weight:400">'+sessions.length+'</span></div><button class="btn2" onclick="push(\'new\')" style="box-shadow:0 0 12px rgba(201,168,76,0.08)">+ '+t("logSession")+'</button></div>';
 if(sessions.length){var rev=sessions.slice().reverse();for(var i=0;i<rev.length;i++){var s=rev[i];var sc=s.status==="cancelled"?' <span class="status-chip status-cancelled">'+t("noCharge")+'</span>':s.status==="latecancel"?' <span class="status-chip status-latecancel">'+t("lateCancel")+'</span>':s.status==="noshow"?' <span class="status-chip status-noshow">'+t("noShow")+'</span>':"";html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="push(\'detail\',{sessionId:\''+escJs(s.id)+'\'})"><div style="width:36px;height:36px;border-radius:8px;background:var(--accS);border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;font-weight:700;color:var(--accVib)">'+safeInitial(s.clientName)+'</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(s.clientName)+sc+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+escHtml(s.type)+' \u00B7 '+(s.duration||60)+'min \u00B7 '+fmtDate(s.date)+'</div></div><div style="font-size:11px;color:var(--ow);font-family:var(--mono)">$'+escHtml(s.rate)+'</div></div>';}}
 
 return html;
@@ -1027,7 +1049,9 @@ $("exList").appendChild(d);
 d.querySelectorAll(".exGroup").forEach(function(g){addSet(g);});
 }
 function addGiantExercise(btn){var card=btn.closest(".cd");var groups=card.querySelectorAll(".exGroup");var n=groups.length+1;var div=document.createElement("div");div.innerHTML='<div style="text-align:center;font-size:8px;color:var(--dm);font-family:var(--mono);margin:6px 0">\u2193</div><div class="exGroup"><input class="xN" placeholder="'+t("exercise")+' '+String.fromCharCode(64+n)+'" style="margin-bottom:6px;font-weight:600"><div class="xSets"></div><button class="btn2" onclick="addSet(this.closest(\'.exGroup\'))" style="margin-top:4px;padding:4px 10px;font-size:8px">'+t("addSet")+'</button></div>';card.insertBefore(div,btn);addSet(div.querySelector(".exGroup"));}
-function addSet(group){var rows=group.querySelector(".xSets");var n=rows.querySelectorAll(".set-row").length+1;var d=document.createElement("div");d.className="set-row set-normal";d.innerHTML='<div class="set-badge">S'+n+'</div><input class="sw" placeholder="'+t("lbs")+'" style="width:55px;padding:8px;font-size:12px;text-align:center"><span style="font-size:10px;color:var(--dmL)">\u00D7</span><input class="sr" placeholder="'+t("reps")+'" style="width:48px;padding:8px;font-size:12px;text-align:center"><input class="sn" placeholder="'+t("notes").toLowerCase()+'" style="flex:1;padding:8px;font-size:11px"><span style="font-size:12px;color:var(--danger);cursor:pointer;padding:2px 4px" onclick="this.parentElement.remove()">\u2715</span>';rows.appendChild(d);}
+function _weightOpts(){var o='<option value="">'+t("lbs")+'</option>';for(var w=5;w<=500;w+=5)o+='<option value="'+w+'">'+w+'</option>';return o;}
+function _repOpts(){var o='<option value="">'+t("reps")+'</option>';for(var r=1;r<=30;r++)o+='<option value="'+r+'">'+r+'</option>';o+='<option value="AMRAP">AMRAP</option><option value="Failure">Fail</option>';return o;}
+function addSet(group){var rows=group.querySelector(".xSets");var n=rows.querySelectorAll(".set-row").length+1;var d=document.createElement("div");d.className="set-row set-normal";d.innerHTML='<div class="set-badge">S'+n+'</div><select class="sw" style="width:68px;padding:8px 4px;font-size:12px;text-align:center;background-position:right 4px center;padding-right:18px">'+_weightOpts()+'</select><span style="font-size:10px;color:var(--dmL)">\u00D7</span><select class="sr" style="width:62px;padding:8px 4px;font-size:12px;text-align:center;background-position:right 4px center;padding-right:18px">'+_repOpts()+'</select><input class="sn" placeholder="'+t("notes").toLowerCase()+'" style="flex:1;padding:8px;font-size:11px"><span style="font-size:12px;color:var(--danger);cursor:pointer;padding:2px 4px" onclick="this.parentElement.remove()">\u2715</span>';rows.appendChild(d);}
 function collectExercises(){var exercises=[];document.querySelectorAll("#exList .cd").forEach(function(card){var mode=card.dataset.mode||"normal";var nt=(card.querySelector(".xNote")||{}).value||"";var rest=(card.querySelector(".xRest")||{}).value||"";var te=card.querySelector(".chip.on");var tempo=te?te.textContent.trim():"Normal";var groups=[];card.querySelectorAll(".exGroup").forEach(function(g){var nm=(g.querySelector(".xN")||{}).value||"";var sets=[];g.querySelectorAll(".set-row").forEach(function(row){sets.push({w:(row.querySelector(".sw")||{}).value||"",r:(row.querySelector(".sr")||{}).value||"",n:(row.querySelector(".sn")||{}).value||""});});if(nm)groups.push({name:nm,sets:sets});});if(groups.length===1)exercises.push({name:groups[0].name,tempo:tempo,sets:groups[0].sets,note:nt,rest:rest,mode:mode});else if(groups.length>1)exercises.push({name:groups.map(function(g){return g.name;}).join(" + "),tempo:tempo,mode:mode,note:nt,rest:rest,grouped:groups});});return exercises;}
 function prefillExercises(){var pfEx=(currentView.data||{}).prefillExercises||[];for(var i=0;i<pfEx.length;i++){var ex=pfEx[i];var mode=ex.mode||"normal";if(ex.grouped){addExercise(mode);var card=document.getElementById("ex"+_exCount);if(!card)continue;var groups=card.querySelectorAll(".exGroup");for(var g=0;g<Math.min(groups.length,ex.grouped.length);g++){var nm=groups[g].querySelector(".xN");if(nm)nm.value=ex.grouped[g].name||"";var sets=ex.grouped[g].sets||[];for(var j=1;j<sets.length;j++)addSet(groups[g]);var rows=groups[g].querySelectorAll(".set-row");for(var j=0;j<Math.min(rows.length,sets.length);j++){var sw=rows[j].querySelector(".sw");if(sw)sw.value=sets[j].w||"";var sr=rows[j].querySelector(".sr");if(sr)sr.value=sets[j].r||"";}}}else{addExercise(mode);var card=document.getElementById("ex"+_exCount);if(!card)continue;var nm=card.querySelector(".xN");if(nm)nm.value=ex.name||"";var sets=ex.sets||[];for(var j=1;j<sets.length;j++)addSet(card.querySelector(".exGroup"));var rows=card.querySelectorAll(".set-row");for(var j=0;j<Math.min(rows.length,sets.length);j++){var sw=rows[j].querySelector(".sw");if(sw)sw.value=sets[j].w||"";var sr=rows[j].querySelector(".sr");if(sr)sr.value=sets[j].r||"";}}}toast("\u2713 Exercises loaded");}
 function restoreDraft(){var d=loadDraft();if(!d)return;
@@ -1076,7 +1100,7 @@ var now=new Date();var startDay=new Date(now);startDay.setDate(now.getDate()-3+(
 var days=[];for(var i=0;i<7;i++){var d=new Date(startDay);d.setDate(startDay.getDate()+i);days.push(d);}
 var _loc=getLang()==="hu"?"hu-HU":"en-US";var wl=days[0].toLocaleDateString(_loc,{month:"short",day:"numeric"})+" \u2014 "+days[6].toLocaleDateString(_loc,{month:"short",day:"numeric"});
 var _ws=0,_wr=0;for(var di=0;di<days.length;di++){var dayIso=toLocalISO(days[di]);schedule.filter(function(s){return s.date===dayIso&&s.status!=="cancelled";}).forEach(function(s){_ws++;_wr+=parseFloat(s.rate||70);});}
-var html='<div style="display:flex;justify-content:space-between;align-items:center"><div class="pt" style="margin-bottom:0">'+t("schedule")+'</div><button class="btn2" onclick="var f=document.getElementById(\'schForm\');if(f){f.style.display=\'block\';f.scrollIntoView({behavior:\'smooth\'});}" style="padding:6px 14px;font-size:10px;box-shadow:0 0 12px rgba(212,164,74,0.08)">+ ADD</button></div>';
+var html='<div class="gw" style="margin:0 0 18px"></div><div style="display:flex;justify-content:space-between;align-items:center"><div class="pt" style="margin-bottom:0">'+t("schedule")+'</div><button class="btn2" onclick="var f=document.getElementById(\'schForm\');if(f){f.style.display=\'block\';f.scrollIntoView({behavior:\'smooth\'});}" style="padding:6px 14px;font-size:10px;box-shadow:0 0 12px rgba(201,168,76,0.08)">+ ADD</button></div>';
 if(_ws)html+='<div style="font-size:11px;color:var(--mu);font-family:var(--mono);margin-bottom:14px">'+_ws+' '+t("sessions").toLowerCase()+' \u00B7 $'+roundMoney(_wr)+' '+t("thisWeek").toLowerCase()+'</div>';
 html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><button class="btn2" onclick="scheduleWeekOffset--;_selectedDay=null;render()" style="padding:6px 12px">\u2039</button><div style="font-size:11px;color:var(--mu);font-family:var(--mono)">'+wl+(scheduleWeekOffset===0?" \u00B7 "+t("thisWeek"):"")+'</div><button class="btn2" onclick="scheduleWeekOffset++;_selectedDay=null;render()" style="padding:6px 12px">\u203A</button></div>';
 html+='<div style="display:flex;gap:3px;margin-bottom:18px">';
@@ -1980,12 +2004,18 @@ women:{
 {n:"Upright Row (Wide Grip Cable)",s:"3x12",note:"Wide grip reduces impingement risk. Elbows lead."}
 ],
 "Back":[
-{n:"Lat Pulldown (Wide)",s:"4x10-12",note:"Full stretch at top. Squeeze lats at bottom. Slight lean back."},
+{n:"Lat Pulldown (Wide Overhand)",s:"4x10-12",note:"Full stretch at top. Squeeze lats at bottom. Slight lean back."},
+{n:"Lat Pulldown (Neutral Close Grip)",s:"4x10-12",note:"V-bar attachment. More lower lat emphasis. Full stretch at top."},
+{n:"Lat Pulldown (Reverse Close Grip)",s:"3x10-12",note:"Underhand grip. Emphasizes lower lats and bicep involvement."},
+{n:"Incline Pulldown (Prone)",s:"3x12",note:"Lie face down on incline bench pulling cables. Unique lat contraction angle."},
 {n:"Seated Cable Row (V-bar)",s:"4x10-12",note:"Drive elbows back. Chest up. Squeeze shoulder blades."},
+{n:"Seated Cable Row (Wide)",s:"3x10-12",note:"Wide grip bar. Upper back thickness. Drive elbows wide."},
 {n:"Single-Arm Dumbbell Row",s:"3x10-12 each",note:"Full stretch at bottom. Drive elbow past torso."},
 {n:"T-Bar Row",s:"3x10-12",note:"Neutral grip. Keep back flat. Strong contraction."},
+{n:"Dumbbell Pullover",s:"3x12",note:"Cross-bench. Deep stretch. Works lats and serratus. Keep hips low."},
 {n:"Straight Arm Pulldown",s:"3x12-15",note:"Great mind-muscle connection exercise. Keep arms straight.",tech:"FST-7 finisher option"},
-{n:"Hyperextension",s:"3x15",note:"Squeeze glutes and erectors at top. Add plate for resistance."}
+{n:"Hyperextension",s:"3x15",note:"Squeeze glutes and erectors at top. Add plate for resistance."},
+{n:"Meadows Row",s:"3x10-12 each",note:"Landmine variation. John Meadows special. Elbow drives past hip."}
 ],
 "Quads":[
 {n:"Leg Extension",s:"4x12-15",note:"Pre-exhaust quads. Squeeze at top. Control the negative.",tech:"FST-7: 7x10-12 as finisher"},
@@ -2026,12 +2056,20 @@ men:{
 {n:"Svend Press (Plate Squeeze)",s:"3x12-15",note:"Squeeze plates together at chest level. Inner chest activation. Flex between sets."}
 ],
 "Back":[
-{n:"Weighted Pull-Up",s:"4x8-10",note:"Full stretch at bottom. Drive elbows down. Wide grip."},
+{n:"Weighted Pull-Up (Wide)",s:"4x8-10",note:"Full stretch at bottom. Drive elbows down. Wide overhand grip."},
+{n:"Pull-Up (Neutral Grip)",s:"3x8-10",note:"Parallel grip handles. Easier on shoulders. Full stretch bottom."},
 {n:"Barbell Row (Overhand)",s:"4x8-10",note:"Slight bend at hips. Pull to lower chest. Squeeze."},
+{n:"Barbell Row (Underhand)",s:"3x8-10",note:"Reverse grip. More lower lat and bicep recruitment. Yates row style."},
 {n:"Hammer Strength Row (Unilateral)",s:"4x10-12 each",note:"Full stretch. Drive elbow behind torso. Big squeeze."},
-{n:"Lat Pulldown (Close Grip)",s:"4x10-12",note:"Full stretch at top. Lean back slightly. Squeeze lats hard."},
+{n:"Lat Pulldown (Wide Overhand)",s:"4x10-12",note:"Full stretch at top. Slight lean back. Drive elbows to floor.",tech:"FST-7: 7x10-12 as finisher"},
+{n:"Lat Pulldown (Neutral Close)",s:"4x10-12",note:"V-bar. More lower lat emphasis. Full stretch at top."},
+{n:"Lat Pulldown (Reverse Grip)",s:"3x10-12",note:"Underhand close grip. Lower lat and bicep emphasis."},
+{n:"Incline Pulldown",s:"3x12",note:"Prone on incline bench pulling cables. Unique contraction angle."},
 {n:"Seated Cable Row (Wide)",s:"3x10-12",note:"Wide grip for upper back thickness. Drive elbows wide."},
+{n:"Seated Cable Row (Close V-bar)",s:"3x10-12",note:"Neutral grip. Drive elbows back. Squeeze rhomboids."},
 {n:"T-Bar Row",s:"3x8-10",note:"Heavy compound. Keep back flat. Full range."},
+{n:"Dumbbell Pullover",s:"3x10-12",note:"Cross-bench. Deep lat stretch. Keep hips low for more stretch."},
+{n:"Meadows Row (Landmine)",s:"3x10-12 each",note:"John Meadows special. Landmine setup. Elbow drives past hip."},
 {n:"Straight Arm Pulldown",s:"3x12-15",note:"Lat isolation. Arms stay straight. Mind-muscle connection.",tech:"FST-7 finisher option"},
 {n:"Rack Pull (Below Knee)",s:"3x6-8",note:"Upper back and trap thickness. Heavy but controlled."}
 ],
@@ -2168,6 +2206,146 @@ return html;}
 function deleteCardioProtocol(id){if(!confirm('Delete this cardio protocol?'))return;var plans=getCardioPlans().filter(function(p){return p.id!==id;});saveCardioPlans(plans);toast('\u2713 Deleted');pop();}
 
 // ═══════════════════════════════════════════════════════════════════
+// SUPPLEMENT BUILDER — Scientifically-Backed Protocols
+// ═══════════════════════════════════════════════════════════════════
+var SUPPLEMENT_DB=[
+{n:"Creatine Monohydrate",cat:"performance",dose:"5g",timing:"Daily (any time)",unit:"g",min:3,max:10,def:5,
+research:"The most researched supplement in sports science. Over 500+ peer-reviewed studies confirm its safety and efficacy. Increases phosphocreatine stores for improved ATP regeneration during high-intensity exercise. Shown to increase lean mass by 2-5 lbs in 4-12 weeks. Also demonstrates cognitive benefits.",
+refs:"Kreider et al. (2017) ISSN Position Stand; Branch (2003) Int J Sport Nutr"},
+{n:"Whey Protein Isolate",cat:"protein",dose:"25-40g",timing:"Post-workout or between meals",unit:"g",min:20,max:50,def:30,
+research:"Complete protein with high leucine content (2.5-3g per 25g serving) — the key amino acid for muscle protein synthesis (MPS). Fast-digesting. Meta-analyses show protein supplementation increases lean mass gains by ~0.7 kg over 12+ weeks when combined with resistance training.",
+refs:"Morton et al. (2018) Br J Sports Med; Jäger et al. (2017) ISSN Position Stand"},
+{n:"L-Glutamine",cat:"recovery",dose:"5-10g",timing:"Post-workout and before bed",unit:"g",min:5,max:20,def:10,
+research:"Most abundant amino acid in the body. Depleted during intense training. Supports gut barrier integrity, immune function, and recovery. Particularly beneficial during caloric restriction or intense training phases. May reduce muscle soreness and improve recovery between sessions.",
+refs:"Gleeson (2008) J Nutr; Legault et al. (2015) Int J Sport Nutr"},
+{n:"BCAAs (2:1:1)",cat:"recovery",dose:"5-10g",timing:"During training or between meals",unit:"g",min:5,max:15,def:7,
+research:"Branched-chain amino acids (leucine, isoleucine, valine) in 2:1:1 ratio. Leucine directly activates mTOR pathway for MPS. May reduce perceived exertion and muscle soreness. Most beneficial during fasted training or caloric deficit. If total protein intake is adequate (1.6g/kg+), standalone BCAA benefit is reduced.",
+refs:"Shimomura et al. (2010) JISSN; Wolfe (2017) JISSN"},
+{n:"Fish Oil (EPA/DHA)",cat:"health",dose:"2-4g",timing:"With meals (fat-containing)",unit:"g",min:1,max:6,def:3,
+research:"Omega-3 fatty acids with potent anti-inflammatory properties. EPA and DHA support cardiovascular health, joint function, and may enhance recovery from exercise-induced inflammation. Higher doses (3-4g EPA+DHA combined) shown to reduce muscle soreness. Also supports brain health and mood.",
+refs:"Philpott et al. (2019) Eur J Sport Sci; Calder (2017) Ann Nutr Metab"},
+{n:"Vitamin D3",cat:"health",dose:"2000-5000 IU",timing:"Morning with fat-containing meal",unit:"IU",min:1000,max:10000,def:4000,
+research:"Over 40% of adults are deficient. Critical for bone health, immune function, testosterone production, and muscle function. Deficiency associated with increased injury risk, impaired recovery, and reduced strength. Blood levels of 40-60 ng/mL considered optimal for athletes.",
+refs:"Owens et al. (2018) Eur J Sport Sci; Close et al. (2013) J Sports Sci"},
+{n:"Magnesium Glycinate",cat:"health",dose:"200-400mg",timing:"Before bed",unit:"mg",min:100,max:600,def:400,
+research:"Involved in 300+ enzymatic reactions including muscle contraction, energy production, and protein synthesis. Glycinate form has superior bioavailability and calming effect. Supports sleep quality, reduces muscle cramps, and may improve exercise performance. Most athletes are suboptimally supplemented.",
+refs:"Zhang et al. (2017) Nutrients; Nielsen & Lukaski (2006) Magnes Res"},
+{n:"Zinc",cat:"health",dose:"15-30mg",timing:"With evening meal",unit:"mg",min:10,max:50,def:25,
+research:"Essential for testosterone production, immune function, and protein synthesis. Heavy training increases zinc losses through sweat. Deficiency impairs thyroid function and reduces anabolic hormone levels. ZMA form combines with magnesium and B6 for enhanced absorption.",
+refs:"Kilic et al. (2006) Neuro Endocrinol Lett; Prasad (2008) Mol Med"},
+{n:"Caffeine",cat:"performance",dose:"100-300mg",timing:"30-60 min pre-workout",unit:"mg",min:50,max:400,def:200,
+research:"The most widely used ergogenic aid. Improves endurance, strength, power output, and cognitive focus. Works by blocking adenosine receptors and increasing catecholamine release. Effective dose: 3-6mg/kg body weight. Tolerance develops — cycling off periodically recommended. Avoid within 6-8 hours of sleep.",
+refs:"Goldstein et al. (2010) JISSN; Grgic et al. (2020) Br J Sports Med"},
+{n:"Ashwagandha (KSM-66)",cat:"adaptogen",dose:"300-600mg",timing:"Morning or evening",unit:"mg",min:150,max:900,def:600,
+research:"Adaptogenic herb with strong evidence for reducing cortisol (14-28% reduction), improving stress resilience, and enhancing testosterone in men. 8-week studies show significant improvements in strength, muscle size, and recovery. KSM-66 is the most researched standardized extract.",
+refs:"Wankhede et al. (2015) JISSN; Chandrasekhar et al. (2012) Indian J Psychol Med"},
+{n:"Probiotics (Multi-Strain)",cat:"health",dose:"10-50 billion CFU",timing:"Morning on empty stomach",unit:"B CFU",min:5,max:100,def:25,
+research:"Gut microbiome directly influences immune function, nutrient absorption, inflammation, and even mood. Athletes have unique microbiome needs due to training stress. Multi-strain formulas with Lactobacillus and Bifidobacterium species reduce upper respiratory infections in athletes by 30-50%.",
+refs:"Jäger et al. (2019) JISSN Position Stand; Pyne et al. (2015) Eur J Sport Sci"},
+{n:"Citrulline Malate",cat:"performance",dose:"6-8g",timing:"30-45 min pre-workout",unit:"g",min:3,max:10,def:8,
+research:"Converts to arginine and boosts nitric oxide production, improving blood flow and nutrient delivery to muscles. 6-8g dose shown to increase training volume (reps to failure) and reduce muscle soreness by 40%. More effective than direct arginine supplementation.",
+refs:"Pérez-Guisado & Jakeman (2010) J Strength Cond; Wax et al. (2015) JSCR"},
+{n:"Beta-Alanine",cat:"performance",dose:"3.2-6.4g",timing:"Daily (split doses to reduce tingling)",unit:"g",min:2,max:6,def:4,
+research:"Increases intramuscular carnosine levels, buffering hydrogen ion accumulation during high-intensity exercise. Most effective for exercise lasting 1-4 minutes. 4+ weeks of loading needed. The tingling sensation (paresthesia) is harmless. Improves total work capacity by 10-15%.",
+refs:"Hobson et al. (2012) Amino Acids; Saunders et al. (2017) Br J Sports Med"},
+{n:"Collagen Peptides",cat:"recovery",dose:"10-15g",timing:"30-60 min before activity with vitamin C",unit:"g",min:5,max:20,def:15,
+research:"Type I and III collagen peptides support tendon, ligament, and joint health. Combined with vitamin C (50mg+) and timed before exercise, increases collagen synthesis rates by 2x. Particularly valuable for injury prevention and joint-heavy training phases. Takes 3+ months for full benefit.",
+refs:"Shaw et al. (2017) Am J Clin Nutr; Clark et al. (2008) Curr Med Res Opin"},
+{n:"Digestive Enzymes",cat:"health",dose:"1-2 capsules",timing:"With protein-heavy meals",unit:"caps",min:1,max:4,def:2,
+research:"Supports breakdown and absorption of protein, fats, and carbohydrates. Particularly beneficial for athletes consuming 150g+ protein daily. Protease, lipase, and amylase enzymes reduce bloating and improve nutrient utilization. Essential when eating 5-6 meals per day on a competition diet.",
+refs:"Oben et al. (2008) JISSN; Roxas (2008) Altern Med Rev"},
+{n:"Taurine",cat:"performance",dose:"1-3g",timing:"Pre or post-workout",unit:"g",min:1,max:6,def:2,
+research:"Conditionally essential amino acid with antioxidant properties. Improves exercise capacity, reduces oxidative stress, and supports cardiovascular function. May enhance fat oxidation during exercise. Works synergistically with caffeine without adding stimulant effect.",
+refs:"Waldron et al. (2018) Sports Med; Zhang et al. (2004) Amino Acids"},
+{n:"Melatonin",cat:"recovery",dose:"0.5-3mg",timing:"30-60 min before bed",unit:"mg",min:0.3,max:5,def:1,
+research:"Regulates circadian rhythm and sleep onset. Low doses (0.5-1mg) are often more effective than high doses. Improves sleep quality which is critical for recovery, growth hormone release, and next-day performance. Use lowest effective dose. Avoid dependency — use intermittently.",
+refs:"Costello et al. (2014) Eur J Sport Sci; Ferracioli-Oda et al. (2013) PLoS One"},
+{n:"Electrolyte Complex",cat:"performance",dose:"1-2 scoops",timing:"During training",unit:"scoops",min:1,max:3,def:1,
+research:"Sodium, potassium, magnesium, and calcium lost through sweat during training. A 2% reduction in body water decreases performance by 10-20%. Essential during prolonged sessions, hot environments, or heavy sweaters. Sodium is the primary electrolyte lost — 500-1000mg per liter of sweat.",
+refs:"Sawka et al. (2007) ACSM Position Stand; Thomas et al. (2016) ACSM/AND/DC"}
+];
+
+function getSupplementPlans(){return LS.get("supplementPlans",[]);}
+function saveSupplementPlans(p){LS.set("supplementPlans",p);}
+
+function renderSupplementBuilder(){
+var data=currentView.data||{};var clientId=data.clientId||"";
+var c=clientById(clientId);
+var html='<button class="btn2" onclick="pop()" style="margin-bottom:14px">\u2039 '+t("back")+'</button>';
+html+='<div class="pt">Supplement Protocol Builder</div>';
+if(c)html+='<div style="font-size:11px;color:var(--dm);margin-bottom:16px;font-family:var(--mono)">Client: <span style="color:var(--acc)">'+escHtml(c.name)+'</span></div>';
+html+='<div class="cd" style="padding:18px"><div class="field"><span class="lb">PROTOCOL NAME *</span><input id="suppName" placeholder="e.g. Competition Prep Stack, Off-Season Basics"></div>';
+html+='<div class="field"><span class="lb">GOAL</span><div style="display:flex;gap:4px;flex-wrap:wrap"><div class="chip on" data-value="General Health" onclick="pickChip(this,\'suppGoal\')">General Health</div><div class="chip" data-value="Performance" onclick="pickChip(this,\'suppGoal\')">Performance</div><div class="chip" data-value="Recovery" onclick="pickChip(this,\'suppGoal\')">Recovery</div><div class="chip" data-value="Competition Prep" onclick="pickChip(this,\'suppGoal\')">Comp Prep</div></div><input type="hidden" id="suppGoal" value="General Health"></div>';
+html+='<div class="field"><span class="lb">NOTES</span><textarea id="suppNotes" rows="2" placeholder="Client-specific considerations..."></textarea></div></div>';
+// Category filters
+var cats=[{k:"all",l:"All"},{k:"performance",l:"Performance"},{k:"protein",l:"Protein"},{k:"recovery",l:"Recovery"},{k:"health",l:"Health"},{k:"adaptogen",l:"Adaptogen"}];
+html+='<div class="sl" style="margin-top:18px">SELECT SUPPLEMENTS</div>';
+html+='<div style="display:flex;gap:3px;flex-wrap:wrap;margin-bottom:14px">';
+for(var ci=0;ci<cats.length;ci++){html+='<div class="chip'+(ci===0?" on":"")+'" onclick="filterSupps(\''+cats[ci].k+'\',this)">'+cats[ci].l+'</div>';}
+html+='</div>';
+html+='<div id="suppList">';
+for(var si=0;si<SUPPLEMENT_DB.length;si++){var sp=SUPPLEMENT_DB[si];
+html+='<div class="cd supp-item" data-cat="'+sp.cat+'" style="padding:14px">';
+html+='<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">';
+html+='<div style="flex:1"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><input type="checkbox" id="suppChk'+si+'" style="width:18px;height:18px;accent-color:var(--acc);flex-shrink:0" onchange="toggleSuppDetail('+si+')">';
+html+='<span style="font-size:14px;font-weight:700;color:var(--wh)">'+escHtml(sp.n)+'</span></div>';
+html+='<div style="font-size:10px;color:var(--acc);font-family:var(--mono);margin-bottom:4px">'+sp.dose+' \u00B7 '+sp.timing+'</div>';
+html+='<div style="font-size:9px;color:var(--dm);font-family:var(--mono);padding:2px 6px;background:rgba(201,168,76,0.06);border-radius:4px;display:inline-block;border:1px solid rgba(201,168,76,0.10)">'+sp.cat.toUpperCase()+'</div>';
+html+='</div></div>';
+// Expandable detail
+html+='<div id="suppDetail'+si+'" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--borderS)">';
+// Dose adjuster
+html+='<div style="margin-bottom:12px"><span class="lb">AMOUNT ('+sp.unit.toUpperCase()+')</span>';
+html+='<div style="display:flex;align-items:center;gap:8px"><input type="range" id="suppDose'+si+'" min="'+sp.min+'" max="'+sp.max+'" value="'+sp.def+'" style="flex:1;accent-color:var(--acc)" oninput="$(\'suppDoseVal'+si+'\').textContent=this.value+\' '+sp.unit+'\'">';
+html+='<span id="suppDoseVal'+si+'" style="font-size:14px;font-weight:700;color:var(--accBright);font-family:var(--mono);min-width:60px;text-align:right">'+sp.def+' '+sp.unit+'</span></div></div>';
+// Research note
+html+='<div style="padding:10px 12px;background:rgba(72,200,120,0.04);border:1px solid rgba(72,200,120,0.12);border-radius:8px;margin-bottom:8px">';
+html+='<div style="font-size:8px;font-weight:700;color:var(--success);font-family:var(--mono);letter-spacing:0.1em;margin-bottom:6px">\u2713 RESEARCH-BACKED</div>';
+html+='<div style="font-size:11px;color:var(--ow);line-height:1.7">'+sp.research+'</div>';
+html+='<div style="font-size:9px;color:var(--dm);font-family:var(--mono);margin-top:6px;font-style:italic">'+sp.refs+'</div>';
+html+='</div></div></div>';}
+html+='</div>';
+html+='<button class="btn" style="margin-top:18px" onclick="saveSupplementProtocol(\''+escJs(clientId||'')+'\')">SAVE SUPPLEMENT PROTOCOL</button>';
+return html;}
+
+function filterSupps(cat,el){el.parentElement.querySelectorAll('.chip').forEach(function(c){c.classList.remove('on');});el.classList.add('on');document.querySelectorAll('#suppList .supp-item').forEach(function(item){item.style.display=(cat==='all'||item.dataset.cat===cat)?'':'none';});}
+function toggleSuppDetail(idx){var chk=$('suppChk'+idx);var det=$('suppDetail'+idx);if(det)det.style.display=chk&&chk.checked?'block':'none';}
+
+function saveSupplementProtocol(clientId){
+var name=v('suppName');if(!name){toast('Name is required');return;}
+var supplements=[];
+for(var i=0;i<SUPPLEMENT_DB.length;i++){var chk=$('suppChk'+i);if(chk&&chk.checked){var doseEl=$('suppDose'+i);supplements.push({name:SUPPLEMENT_DB[i].n,category:SUPPLEMENT_DB[i].cat,dose:(doseEl?doseEl.value:SUPPLEMENT_DB[i].def)+' '+SUPPLEMENT_DB[i].unit,timing:SUPPLEMENT_DB[i].timing,research:SUPPLEMENT_DB[i].research.substring(0,120)+'...'});}}
+if(!supplements.length){toast('Select at least one supplement');return;}
+var plan={id:Date.now().toString(),clientId:clientId,name:name,goal:v('suppGoal')||'General Health',supplements:supplements,notes:v('suppNotes')||'',createdAt:new Date().toISOString()};
+var plans=getSupplementPlans();plans.push(plan);saveSupplementPlans(plans);
+toast('\u2713 Supplement protocol saved');pop();}
+
+function renderSupplementDetail(){
+var planId=currentView.data.planId;var plans=getSupplementPlans();var plan=plans.find(function(p){return p.id===planId;});
+if(!plan){pop();return'';}var c=clientById(plan.clientId);
+var html='<button class="btn2" onclick="pop()" style="margin-bottom:14px">\u2039 '+t("back")+'</button>';
+html+='<div class="pt">'+escHtml(plan.name)+'</div>';
+html+='<div style="font-size:10px;color:var(--acc);font-family:var(--mono);margin-bottom:14px">'+(c?escHtml(c.name)+' \u00B7 ':'')+plan.goal+' \u00B7 '+plan.supplements.length+' supplements</div>';
+for(var i=0;i<plan.supplements.length;i++){var sp=plan.supplements[i];
+html+='<div class="cd" style="padding:14px;border-left:3px solid var(--acc)"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div style="flex:1"><div style="font-size:14px;font-weight:700;color:var(--wh)">'+escHtml(sp.name)+'</div><div style="font-size:11px;color:var(--acc);font-family:var(--mono);margin-top:3px">'+escHtml(sp.dose)+' \u00B7 '+escHtml(sp.timing)+'</div></div><div style="font-size:8px;color:var(--dm);font-family:var(--mono);padding:2px 6px;border:1px solid var(--borderS);border-radius:4px">'+escHtml(sp.category.toUpperCase())+'</div></div>';
+if(sp.research)html+='<div style="font-size:10px;color:var(--mu);margin-top:8px;padding:8px;background:rgba(72,200,120,0.03);border-radius:6px;border:1px solid rgba(72,200,120,0.08);line-height:1.5"><span style="color:var(--success);font-family:var(--mono);font-size:8px">\u2713 EVIDENCE:</span> '+escHtml(sp.research)+'</div>';
+html+='</div>';}
+if(plan.notes)html+='<div class="cd" style="margin-top:10px;border-left:3px solid var(--acc);padding:12px"><div style="font-size:12px;color:var(--mu);line-height:1.7">'+escHtml(plan.notes)+'</div></div>';
+html+='<button class="btn-danger" style="margin-top:16px" onclick="deleteSupplementProtocol(\''+escJs(plan.id)+'\')">DELETE PROTOCOL</button>';
+return html;}
+
+function deleteSupplementProtocol(id){if(!confirm('Delete this supplement protocol?'))return;var plans=getSupplementPlans().filter(function(p){return p.id!==id;});saveSupplementPlans(plans);toast('\u2713 Deleted');pop();}
+
+function startSupplementPlan(){
+if(!clients.length){push('supplementBuilder',{clientId:''});return;}
+if(clients.length===1){push('supplementBuilder',{clientId:clients[0].id});return;}
+var sel='<div style="position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);padding:20px;animation:fadeIn 0.3s" id="clientPicker3"><div style="width:100%;max-width:380px;background:linear-gradient(160deg,rgba(14,14,22,0.99),rgba(8,8,14,0.99));border:1px solid var(--accB);border-radius:16px;padding:24px;box-shadow:0 0 60px rgba(201,168,76,0.10)"><div class="pt" style="font-size:18px;margin-bottom:14px">Select Client</div>';
+for(var i=0;i<clients.length;i++){sel+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="document.getElementById(\'clientPicker3\').remove();push(\'supplementBuilder\',{clientId:\''+escJs(clients[i].id)+'\'})"><div style="width:36px;height:36px;border-radius:8px;background:var(--accS);border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:14px;font-weight:700;color:var(--accVib)">'+safeInitial(clients[i].name)+'</div><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(clients[i].name)+'</div></div>';}
+sel+='<div class="cd cd-link" style="text-align:center;border:1px dashed var(--border)" onclick="document.getElementById(\'clientPicker3\').remove();push(\'supplementBuilder\',{clientId:\'\'})"><span style="font-size:12px;color:var(--dm)">General (no client)</span></div>';
+sel+='<button class="btn2" onclick="document.getElementById(\'clientPicker3\').remove()" style="width:100%;margin-top:10px">'+t("cancel")+'</button></div></div>';
+var el=document.createElement('div');el.innerHTML=sel;document.body.appendChild(el.firstChild);}
+
+// ═══════════════════════════════════════════════════════════════════
 // PRO EXERCISE DATABASE VIEWER
 // ═══════════════════════════════════════════════════════════════════
 var _proGender="women",_proMuscle="";
@@ -2208,10 +2386,12 @@ if(currentView.view==='mealPlanBuilder')return renderMealPlanBuilder();
 if(currentView.view==='mealPlanDetail')return renderMealPlanDetail();
 if(currentView.view==='cardioBuilder')return renderCardioBuilder();
 if(currentView.view==='cardioDetail')return renderCardioDetail();
+if(currentView.view==='supplementBuilder')return renderSupplementBuilder();
+if(currentView.view==='supplementDetail')return renderSupplementDetail();
 if(currentView.view==='proExercises')return renderProExercises();
 if(currentView.view==='foodBrowser')return renderFoodBrowser();
 
-var html='<div class="pt">'+t("proTools")+'</div>';
+var html='<div class="gw" style="margin:0 0 18px"></div><div class="pt">'+t("proTools")+'</div>';
 html+='<div style="font-size:11px;color:var(--mu);margin-bottom:20px;line-height:1.6">Olympian-level coaching tools. Build meal plans, cardio protocols, and access the Hany Rambod exercise database.</div>';
 
 // Quick actions grid
@@ -2226,8 +2406,14 @@ html+='</div>';
 html+='<div class="g2" style="margin-bottom:14px">';
 // Exercise DB
 html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="push(\'proExercises\')"><div style="font-size:28px;margin-bottom:8px">\uD83C\uDFCB</div><div style="font-size:13px;font-weight:700;color:var(--wh)">FST-7 Exercises</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">HANY RAMBOD METHOD</div></div>';
+// Supplement Builder
+html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="startSupplementPlan()"><div style="font-size:28px;margin-bottom:8px">\uD83D\uDC8A</div><div style="font-size:13px;font-weight:700;color:var(--wh)">Supplement Protocol</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">SCIENCE-BACKED</div></div>';
+html+='</div>';
+html+='<div class="g2" style="margin-bottom:14px">';
 // Food Database
 html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="push(\'foodBrowser\')"><div style="font-size:28px;margin-bottom:8px">\uD83E\uDD66</div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("foodDatabase")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">'+getAllFoods().length+' GF FOODS</div></div>';
+// Timer Tool
+html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="showTimerModal()"><div style="font-size:28px;margin-bottom:8px">\u23F1</div><div style="font-size:13px;font-weight:700;color:var(--wh)">Pro Timer</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">REST & COACHING</div></div>';
 html+='</div>';
 
 // Saved meal plans
@@ -2242,7 +2428,14 @@ var allCardioPlan=getCardioPlans();
 if(allCardioPlan.length){
 html+='<div class="sl" style="margin-top:18px">SAVED CARDIO PROTOCOLS ('+allCardioPlan.length+')</div>';
 for(var i=allCardioPlan.length-1;i>=Math.max(0,allCardioPlan.length-5);i--){var cp=allCardioPlan[i];var c=clientById(cp.clientId);
-html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="push(\'cardioDetail\',{planId:\''+escJs(cp.id)+'\'})"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(212,164,74,0.18),rgba(212,164,74,0.06));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">\u2764</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(cp.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+(c?escHtml(c.name)+' \u00B7 ':'')+cp.phase+' \u00B7 '+cp.frequency+'x/wk</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}}
+html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="push(\'cardioDetail\',{planId:\''+escJs(cp.id)+'\'})"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(201,168,76,0.18),rgba(201,168,76,0.06));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">\u2764</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(cp.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+(c?escHtml(c.name)+' \u00B7 ':'')+cp.phase+' \u00B7 '+cp.frequency+'x/wk</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}}
+
+// Saved supplement plans
+var allSuppPlans=getSupplementPlans();
+if(allSuppPlans.length){
+html+='<div class="sl" style="margin-top:18px">SAVED SUPPLEMENT PROTOCOLS ('+allSuppPlans.length+')</div>';
+for(var i=allSuppPlans.length-1;i>=Math.max(0,allSuppPlans.length-5);i--){var sp2=allSuppPlans[i];var c2=clientById(sp2.clientId);
+html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="push(\'supplementDetail\',{planId:\''+escJs(sp2.id)+'\'})"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(72,200,120,0.18),rgba(72,200,120,0.06));border:1px solid rgba(72,200,120,0.2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">\uD83D\uDC8A</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(sp2.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+(c2?escHtml(c2.name)+' \u00B7 ':'')+sp2.goal+' \u00B7 '+sp2.supplements.length+' supps</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}}
 
 return html;}
 
@@ -2292,7 +2485,23 @@ function filterFoodBrowseCat(cat,el){el.parentElement.querySelectorAll('.chip').
 
 // SETTINGS
 function renderSettings(){var tr=roundMoney(sessions.filter(function(s){return s.status!=="cancelled";}).reduce(function(a,s){return a+parseFloat(s.rate||0);},0));var go2=Math.round(tr*getGymCut());var pcts=[10,15,20,25,30],ph="";for(var i=0;i<pcts.length;i++)ph+='<div class="chip'+(Math.round(getGymCut()*100)===pcts[i]?" on":"")+'" onclick="setGymCut('+pcts[i]+')">'+pcts[i]+'%</div>';
-return'<button class="btn2" onclick="go(\'home\')" style="margin-bottom:12px">\u2039 '+t("back").toUpperCase()+'</button><div class="pt">'+t("settings")+'</div><div class="sl">'+t("security")+'</div><div class="cd" style="padding:16px"><div style="margin-bottom:12px"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+t("pin")+'</div><div style="font-size:10px;color:var(--dm)">'+t("quickAccessSecurity")+'</div></div><div class="g2"><button class="btn2" onclick="changePIN()" style="width:100%">'+t("changePIN")+'</button><button class="btn2" onclick="sessionStorage.removeItem(\'regi_unlocked\');showLockScreen()" style="width:100%">'+t("lockNow")+'</button></div></div><div class="sl" style="margin-top:18px">'+t("dataOverview")+'</div><div class="cd" style="padding:16px"><div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--borderS)"><span style="font-size:12px;color:var(--mu)">'+t("clients")+'</span><span style="font-size:13px;font-weight:700;color:var(--wh);font-family:var(--mono)">'+clients.length+'</span></div><div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--borderS)"><span style="font-size:12px;color:var(--mu)">'+t("sessions")+'</span><span style="font-size:13px;font-weight:700;color:var(--wh);font-family:var(--mono)">'+sessions.length+'</span></div><div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--borderS)"><span style="font-size:12px;color:var(--mu)">'+t("gross")+'</span><span style="font-size:13px;font-weight:700;color:var(--accVib);font-family:var(--mono)">$'+tr+'</span></div><div style="display:flex;justify-content:space-between;padding:8px 0"><span style="font-size:12px;color:var(--mu)">'+t("gymCut")+'</span><span style="font-size:13px;font-weight:700;color:var(--dm);font-family:var(--mono)">$'+go2+'</span></div></div><div class="sl" style="margin-top:18px">'+t("backupRestore")+'</div><div class="cd" style="padding:16px"><div class="g2"><button class="btn2" onclick="exportData()" style="width:100%">'+t("export")+' JSON</button><button class="btn2" onclick="$(\'importFile\').click()" style="width:100%">'+t("import")+'</button></div><button class="btn2" onclick="generateMonthlyPDF()" style="width:100%;margin-top:8px;background:rgba(212,164,74,0.06);border-color:var(--accB)"><span style="margin-right:6px">\u2193</span>'+t("monthlyPDF")+'</button><button class="btn" onclick="showEarningsReportPicker()" style="width:100%;margin-top:8px;font-size:10px;padding:12px 18px">\u2193 '+t("earningsTaxMulti")+'</button><input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)"></div><div class="sl" style="margin-top:18px">'+t("gymSettings")+'</div><div class="cd" style="padding:16px"><div class="field"><span class="lb">'+t("gymCut")+'</span><div style="display:flex;gap:4px;flex-wrap:wrap">'+ph+'</div></div><div class="field"><span class="lb">'+t("defaultRate")+'</span><input id="defRate" type="number" min="0" value="'+LS.get("defaultRate","70")+'" onchange="LS.set(\'defaultRate\',this.value)"></div></div><div class="sl" style="margin-top:18px">'+t("display")+'</div><div class="cd" style="padding:16px"><div class="field"><span class="lb">'+t("timeFormat")+'</span><div style="display:flex;gap:4px"><div class="chip'+(is24Hr()?"":" on")+'" onclick="LS.set(\'timeFormat\',\'12\');render()">12-Hour (7:00 PM)</div><div class="chip'+(is24Hr()?" on":"")+'" onclick="LS.set(\'timeFormat\',\'24\');render()">24-Hour (19:00)</div></div></div><div class="field"><span class="lb">'+t("lang").toUpperCase()+'</span><div style="display:flex;gap:4px"><div class="chip'+(getLang()==="en"?" on":"")+'" onclick="LS.set(\'lang\',\'en\');render()">English</div><div class="chip'+(getLang()==="hu"?" on":"")+'" onclick="LS.set(\'lang\',\'hu\');render()">Magyar</div></div></div></div>'+renderAutomation()+'<div class="sl" style="margin-top:18px">'+t("dangerZone")+'</div><div class="cd" style="padding:16px;border:1px solid rgba(216,120,120,0.15)"><div style="font-size:11px;color:var(--danger);margin-bottom:12px">'+t("cannotUndo")+'</div><div class="g2"><button class="btn-danger" onclick="if(confirm(\'Delete ALL sessions?\')&&confirm(\'Sure?\')){sessions=[];save();toast(\'Cleared\');render();}">'+t("clearSessions")+'</button><button class="btn-danger" onclick="if(confirm(\'RESET EVERYTHING?\')&&confirm(\'Last chance?\')){clients=[];sessions=[];schedule=[];save();toast(\'Reset\');render();}">'+t("resetAll")+'</button></div></div><div style="text-align:center;padding:20px 0"><div style="font-size:9px;color:var(--dmL);font-family:var(--mono)">REGI '+t("coachingStudio")+' v'+VERSION+'</div><div style="font-size:8px;color:var(--dmL);font-family:var(--mono);margin-top:4px">regi.fitness \u00B7 Built by DK Fit Coaching Lab</div><button class="btn-danger" style="margin-top:16px;max-width:200px;margin-left:auto;margin-right:auto" onclick="if(confirm(\'Sign out of REGI?\'))signOut()">'+t("signOut")+'</button></div>';}
+var html='<div class="gw" style="margin:0 0 18px"></div><button class="btn2" onclick="go(\'home\')" style="margin-bottom:12px">\u2039 '+t("back").toUpperCase()+'</button><div class="pt">'+t("settings")+'</div>';
+html+='<div class="sl">\uD83D\uDCB0 BUSINESS & FINANCE</div>';
+html+='<div class="cd" style="padding:16px"><div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--borderS)"><span style="font-size:12px;color:var(--mu)">'+t("clients")+'</span><span style="font-size:13px;font-weight:700;color:var(--wh);font-family:var(--mono)">'+clients.length+'</span></div><div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--borderS)"><span style="font-size:12px;color:var(--mu)">'+t("sessions")+'</span><span style="font-size:13px;font-weight:700;color:var(--wh);font-family:var(--mono)">'+sessions.length+'</span></div><div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--borderS)"><span style="font-size:12px;color:var(--mu)">'+t("gross")+'</span><span style="font-size:13px;font-weight:700;color:var(--accVib);font-family:var(--mono)">$'+tr+'</span></div><div style="display:flex;justify-content:space-between;padding:8px 0"><span style="font-size:12px;color:var(--mu)">'+t("gymCut")+'</span><span style="font-size:13px;font-weight:700;color:var(--dm);font-family:var(--mono)">$'+go2+'</span></div></div>';
+html+='<div class="cd" style="padding:16px"><div class="field"><span class="lb">'+t("gymCut")+'</span><div style="display:flex;gap:4px;flex-wrap:wrap">'+ph+'</div></div><div class="field" style="margin-bottom:0"><span class="lb">'+t("defaultRate")+'</span><input id="defRate" type="number" min="0" value="'+LS.get("defaultRate","70")+'" onchange="LS.set(\'defaultRate\',this.value)"></div></div>';
+html+='<div class="cd" style="padding:16px"><div class="g2"><button class="btn2" onclick="generateMonthlyPDF()" style="width:100%;background:rgba(201,168,76,0.05);border-color:var(--accB)">\u2193 '+t("monthlyPDF")+'</button><button class="btn" onclick="showEarningsReportPicker()" style="width:100%;font-size:10px;padding:10px 14px">\u2193 TAX REPORT</button></div></div>';
+html+='<div class="sl" style="margin-top:22px">\uD83D\uDD14 NOTIFICATIONS</div>';
+html+=renderAutomation();
+html+='<div class="sl" style="margin-top:22px">\uD83C\uDFA8 DISPLAY & PREFERENCES</div>';
+html+='<div class="cd" style="padding:16px"><div class="field"><span class="lb">'+t("timeFormat")+'</span><div style="display:flex;gap:4px"><div class="chip'+(is24Hr()?"":" on")+'" onclick="LS.set(\'timeFormat\',\'12\');render()">12-Hour</div><div class="chip'+(is24Hr()?" on":"")+'" onclick="LS.set(\'timeFormat\',\'24\');render()">24-Hour</div></div></div><div class="field" style="margin-bottom:0"><span class="lb">'+t("lang").toUpperCase()+'</span><div style="display:flex;gap:4px"><div class="chip'+(getLang()==="en"?" on":"")+'" onclick="LS.set(\'lang\',\'en\');render()">English</div><div class="chip'+(getLang()==="hu"?" on":"")+'" onclick="LS.set(\'lang\',\'hu\');render()">Magyar</div></div></div></div>';
+html+='<div class="sl" style="margin-top:22px">\uD83D\uDD12 '+t("security")+'</div>';
+html+='<div class="cd" style="padding:16px"><div style="margin-bottom:12px"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+t("pin")+'</div><div style="font-size:10px;color:var(--dm)">'+t("quickAccessSecurity")+'</div></div><div class="g2"><button class="btn2" onclick="changePIN()" style="width:100%">'+t("changePIN")+'</button><button class="btn2" onclick="sessionStorage.removeItem(\'regi_unlocked\');showLockScreen()" style="width:100%">'+t("lockNow")+'</button></div></div>';
+html+='<div class="sl" style="margin-top:22px">\uD83D\uDCBE DATA & BACKUP</div>';
+html+='<div class="cd" style="padding:16px"><div class="g2"><button class="btn2" onclick="exportData()" style="width:100%">'+t("export")+' JSON</button><button class="btn2" onclick="$(\'importFile\').click()" style="width:100%">'+t("import")+'</button></div><input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)"></div>';
+html+='<div class="sl" style="margin-top:22px">\u26A0 '+t("dangerZone")+'</div>';
+html+='<div class="cd" style="padding:16px;border:1px solid rgba(224,88,88,0.12)"><div style="font-size:11px;color:var(--danger);margin-bottom:12px">'+t("cannotUndo")+'</div><div class="g2"><button class="btn-danger" onclick="if(confirm(\'Delete ALL sessions?\')&&confirm(\'Sure?\')){sessions=[];save();toast(\'Cleared\');render();}">'+t("clearSessions")+'</button><button class="btn-danger" onclick="if(confirm(\'RESET EVERYTHING?\')&&confirm(\'Last chance?\')){clients=[];sessions=[];schedule=[];save();toast(\'Reset\');render();}">'+t("resetAll")+'</button></div></div>';
+html+='<div style="text-align:center;padding:24px 0"><div class="gw" style="margin:0 0 20px"></div><div style="font-size:9px;color:var(--dmL);font-family:var(--mono);letter-spacing:0.08em">REGI '+t("coachingStudio")+' v'+VERSION+'</div><div style="font-size:8px;color:var(--dmL);font-family:var(--mono);margin-top:4px;letter-spacing:0.06em">regi.fitness \u00B7 Built by DK Fit Coaching Lab</div><button class="btn-danger" style="margin-top:16px;max-width:200px;margin-left:auto;margin-right:auto" onclick="if(confirm(\'Sign out of REGI?\'))signOut()">'+t("signOut")+'</button></div>';
+return html;}
 function setGymCut(p){LS.set("gymCut",p);toast("\u2713 Gym cut "+p+"%");render();}
 
 // GUIDE - Empowering, professional tone
@@ -2360,7 +2569,7 @@ var GUIDE_DATA=[
 ]}
 ];
 function renderGuide(){
-var html='<div style="display:flex;justify-content:space-between;align-items:center"><div class="pt" style="margin-bottom:0">'+t("trainingGuide")+'</div><button class="btn2" onclick="toggleAllGuide()" id="guideExpandBtn" style="padding:5px 12px;font-size:8px">'+t("expandAll")+'</button></div><div style="font-size:13px;color:var(--mu);margin-bottom:18px;line-height:1.6;max-width:600px">'+t("knowledgeBase")+'</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:18px">';
+var html='<div class="gw" style="margin:0 0 18px"></div><div style="display:flex;justify-content:space-between;align-items:center"><div class="pt" style="margin-bottom:0">'+t("trainingGuide")+'</div><button class="btn2" onclick="toggleAllGuide()" id="guideExpandBtn" style="padding:5px 12px;font-size:8px">'+t("expandAll")+'</button></div><div style="font-size:13px;color:var(--mu);margin-bottom:18px;line-height:1.6;max-width:600px">'+t("knowledgeBase")+'</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:18px">';
 for(var si=0;si<GUIDE_DATA.length;si++)html+='<div class="chip'+(_guideSec===si?" on":"")+'" onclick="showGuideSec('+si+')" id="gNav'+si+'" style="padding:6px 14px">'+GUIDE_DATA[si].t+'</div>';
 html+='</div><div id="guideBody">'+guideSecHTML(_guideSec)+'</div>';return html;}
 function guideSecHTML(si){var sec=GUIDE_DATA[si];if(!sec)return"";var h="";for(var ii=0;ii<sec.items.length;ii++){var it=sec.items[ii];h+='<div class="cd" style="cursor:pointer" onclick="toggleGuideItem('+si+','+ii+')"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:14px;font-weight:600;color:var(--wh);line-height:1.3">'+it.t+'</span><span style="color:var(--dm);font-size:10px;transition:transform 0.25s;flex-shrink:0;margin-left:12px" id="gia'+si+'_'+ii+'">\u25BC</span></div><div id="git'+si+'_'+ii+'" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--borderS);font-size:13px;color:var(--mu);line-height:1.9">'+it.d+'</div></div>';}return h;}
@@ -2399,13 +2608,13 @@ var overlay=document.createElement("div");
 overlay.id="whatsNew";
 overlay.style.cssText="position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);padding:20px;animation:fadeIn 0.3s ease";
 var wnItems=[
-{icon:"\uD83C\uDF7D",title:"Meal Plan Builder",desc:"Build complete client meal plans with a gluten-free food database. "+FOOD_DB.length+" competition-ready foods with full P/C/F macros. Multi-meal layouts with live macro totals."},
-{icon:"\uD83C\uDFCB",title:"FST-7 Exercise Database",desc:"Hany Rambod's Olympian exercise selections for men's and women's divisions. Every major muscle group with FST-7 finishing protocols, set/rep schemes, and coaching cues."},
-{icon:"\u2764",title:"Cardio Protocol Builder",desc:"Build pro cardio protocols with StairMaster, assault bike, incline treadmill, recumbent bike, rowing, and more. Phase-based with timing, frequency, and mode selection."},
-{icon:"\uD83E\uDD66",title:"GF Food Database",desc:FOOD_DB.length+" gluten-free foods organized by protein, carbs, fats, and veggies. Full macro breakdown per serving. Search and filter instantly."},
-{icon:"\uD83D\uDCC4",title:"Fixed PDF Export",desc:"PDF export now works on iPhone, iPad, Safari, and all browsers. Opens in a new tab on iOS for easy sharing and saving."},
-{icon:"\uD83D\uDEE0",title:"Pro Tools Tab",desc:"New dedicated Pro Tools tab with quick access to meal plans, cardio protocols, exercise database, and food browser. Everything a pro coach needs in one place."},
-{icon:"\u2728",title:"Bug Fixes & Polish",desc:"80+ bug fixes including settings navigation, PDF saves, missing functions, layout optimization for iPhone and desktop, and improved overall stability."}
+{icon:"\u2728",title:"Premium Dark UI Overhaul",desc:"Complete aesthetic redesign — cool-dark theme with refined gold accents. Every tab, card, button, and input redesigned with premium feel. Zero beige. Pure sophistication."},
+{icon:"\uD83D\uDC8A",title:"Supplement Protocol Builder",desc:"18 scientifically-backed supplements with adjustable dosing, peer-reviewed research notes, and auto-generated protocols. Creatine to collagen — everything evidence-based."},
+{icon:"\u23F1",title:"Pro Coaching Timer",desc:"Fullscreen premium timer with progress bar, pulse animations, expanded presets (30s to 5min), and inline session display. Optimized for coaching scenarios."},
+{icon:"\uD83C\uDFCB",title:"Exercise Builder Upgrade",desc:"Dropdown selectors for weight (5-500 lbs) and reps (1-30 + AMRAP/Failure) — no more typing. Premium exercise logging with pro-grade controls."},
+{icon:"\uD83D\uDCCA",title:"Settings Reorganized",desc:"Settings grouped into logical sections: Business & Finance, Notifications, Display, Security, Data & Backup. Everything where you'd expect it."},
+{icon:"\uD83C\uDF1F",title:"Gold Accent Line",desc:"The signature golden accent line now appears consistently across every tab for a cohesive, branded experience."},
+{icon:"\uD83D\uDE80",title:"100+ Improvements",desc:"Refined card styling, enhanced timer progress bars, expanded supplement database, premium modal overlays, and polished micro-interactions throughout."}
 ];var wnHtml="";for(var wi=0;wi<wnItems.length;wi++){var wn=wnItems[wi];wnHtml+='<div style="display:flex;gap:14px;padding:12px 0;'+(wi<wnItems.length-1?"border-bottom:1px solid var(--borderS)":"")+'"><div style="font-size:20px;width:32px;flex-shrink:0;text-align:center;padding-top:2px">'+wn.icon+'</div><div style="flex:1"><div style="font-size:12px;font-weight:700;color:var(--accBright)">'+wn.title+'</div><div style="font-size:11px;color:var(--mu);margin-top:4px;line-height:1.6">'+wn.desc+'</div></div></div>';}
 overlay.innerHTML='<div style="width:100%;max-width:420px;max-height:82vh;overflow-y:auto;background:linear-gradient(160deg,rgba(22,21,26,0.99),rgba(10,9,12,0.99));border:1px solid var(--accB);border-radius:16px;padding:28px;box-shadow:0 0 80px rgba(212,164,74,0.15),0 0 1px rgba(212,164,74,0.3)"><div style="text-align:center;margin-bottom:22px"><div style="width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#0e0e14,#1a1a24);border:1px solid var(--borderH);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:24px;font-weight:900;color:var(--acc);box-shadow:0 0 40px var(--accGlow);margin:0 auto 14px">R</div><div style="font-family:var(--display);font-size:22px;font-weight:700;color:var(--ice);letter-spacing:0.06em">REGI v'+VERSION+'</div><div style="font-size:9px;color:var(--acc);font-family:var(--mono);margin-top:6px;letter-spacing:0.14em">WHAT\u2019S NEW</div></div><div class="gw" style="margin:16px 0"></div><div>'+wnHtml+'</div><button class="btn" style="margin-top:22px" onclick="LS.set(\'seenVersion\',VERSION);LS.set(\'whatsNewFirstSeen\',\'\');document.getElementById(\'whatsNew\').remove()">LET\u2019S GO</button></div>';
 document.body.appendChild(overlay);
