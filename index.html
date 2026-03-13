@@ -138,7 +138,7 @@ html{scroll-behavior:smooth}
 <div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#0e0e14,#1a1a24);border:1px solid var(--borderH);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:20px;font-weight:900;color:var(--acc);box-shadow:0 0 32px var(--accGlow);animation:breathe 4s ease-in-out infinite">R</div>
 <div><div style="font-family:var(--display);font-size:15px;font-weight:700;letter-spacing:0.08em;color:var(--ice)">REGI</div><div style="font-size:8px;color:var(--dm);font-family:var(--mono);letter-spacing:0.12em;margin-top:1px">COACHING STUDIO</div></div>
 </div>
-<div style="display:flex;align-items:center;gap:8px"><span id="syncBadge" onclick="syncFromCloud().then(render)" style="font-size:10px;cursor:pointer;transition:color 0.3s;padding:6px;border-radius:6px;font-family:var(--mono);font-weight:700" title="Tap to sync">&#9675;</span><span onclick="go('settings')" style="cursor:pointer;padding:6px;display:flex;align-items:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--dm)" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></span></div>
+<div style="display:flex;align-items:center;gap:8px"><span id="syncBadge" onclick="syncFromCloud().then(render)" style="font-size:10px;cursor:pointer;transition:color 0.3s;padding:6px;border-radius:6px;font-family:var(--mono);font-weight:700" title="Tap to sync">&#9675;</span></div>
 </div>
 <div class="tabs" id="tabs"></div>
 <div class="ct" id="ct"></div>
@@ -147,7 +147,7 @@ html{scroll-behavior:smooth}
 
 var SUPA_URL="https://pwopwvvgjflunjxwkkql.supabase.co";
 var SUPA_KEY="sb_publishable_6slliEpPsWV9JXIDvz8pyw_FNPrPMhv";
-var VERSION="5.4";
+var VERSION="5.5";
 var LANGS={
 en:{
 days:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],
@@ -167,7 +167,7 @@ pin:"PIN Lock",changePIN:"CHANGE PIN",lockNow:"LOCK NOW",
 incorrectPIN:"Incorrect PIN",unlock:"UNLOCK",
 signIn:"SIGN IN",signUp:"CREATE ACCOUNT",signOut:"SIGN OUT",
 networkError:"Network error. Check your connection.",
-defaultReminder:"Hey {name}! Just a reminder about your {type} session tomorrow at {time}. See you there! - Regina",
+defaultReminder:"Hey {name}! Just a reminder about your {type} session tomorrow at {time}. See you there!",
 sendReminder:"SEND REMINDER",customReminder:"Custom Reminder Message",
 reminderSaved:"Reminder template saved",
 lang:"Language",
@@ -197,7 +197,7 @@ enableNotif:"ENABLE NOTIFICATIONS",
 reminderActive:"You'll receive browser notifications 30 minutes before each scheduled session.",
 clientReminder:"Client Reminder Templates",
 reminderDesc:"Set custom text reminders for each client",
-exercises:"EXERCISES",
+exercises:"EXERCISES",sets:"Sets",volume:"Volume (lbs)",meals:"meals",noMealPlans:"No meal plans yet",
 sessionNotes:"SESSION NOTES",
 workoutSummary:"WORKOUT SUMMARY",
 notes:"NOTES",
@@ -345,10 +345,10 @@ off:"OFF",
 on:"ON",
 saveTemplateLabel:"SAVE TEMPLATE",
 searchClients:"Search clients...",
-proTools:"Pro Tools",
+proTools:"Tools",
 mealPlanBuilder:"Meal Plan Builder",
 cardioBuilder:"Cardio Protocol Builder",
-fstExercises:"FST-7 Exercise Database",
+fstExercises:"Exercise Database",
 foodDatabase:"Food Database",
 savedMealPlans:"Saved Meal Plans",
 savedCardioProtocols:"Saved Cardio Protocols",
@@ -455,10 +455,12 @@ targetMacros:"TARGET MACROS",
 meal:"MEAL",
 exportMealPDF:"EXPORT MEAL PLAN PDF",
 deleteMealPlan:"DELETE MEAL PLAN",
-proToolsDesc:"Olympian-level coaching tools for your clients.",
+proToolsDesc:"Coaching tools for your clients.",
 macroBuilder:"GF MACRO BUILDER",
-proCardioBuilder:"PRO CARDIO BUILDER",
-hanyMethod:"HANY RAMBOD METHOD",
+proCardioBuilder:"CARDIO BUILDER",
+exerciseDatabase:"Exercise Database",
+exerciseDBDesc:"Browse exercises by muscle group. Add directly to programs or sessions.",
+byMuscle:"BY MUSCLE GROUP",
 scienceBacked:"SCIENCE-BACKED",
 savedCardio:"SAVED CARDIO PROTOCOLS",
 savedSupplements:"SAVED SUPPLEMENT PROTOCOLS",
@@ -493,7 +495,7 @@ pin:"PIN z\u00e1r",changePIN:"PIN M\u00d3DOS\u00cdT\u00c1S",lockNow:"Z\u00c1ROL\
 incorrectPIN:"Helytelen PIN",unlock:"FELOLD\u00c1S",
 signIn:"BEJELENTKEZ\u00c9S",signUp:"REGISZTR\u00c1CI\u00d3",signOut:"KIJELENTKEZ\u00c9S",
 networkError:"H\u00e1l\u00f3zati hiba. Ellen\u0151rizze a kapcsolatot.",
-defaultReminder:"Szia {name}! Eml\u00e9keztet\u0151 a holnapi {type} edz\u00e9sedre {time}-kor. V\u00e1rlak! - Regina",
+defaultReminder:"Szia {name}! Eml\u00e9keztet\u0151 a holnapi {type} edz\u00e9sedre {time}-kor. V\u00e1rlak!",
 sendReminder:"EML\u00c9KEZTET\u0151 K\u00dcLD\u00c9SE",customReminder:"Egyedi eml\u00e9keztet\u0151 \u00fczenet",
 reminderSaved:"Eml\u00e9keztet\u0151 sablon mentve",
 lang:"Nyelv",
@@ -523,7 +525,7 @@ enableNotif:"\u00c9RTES\u00cdT\u00c9SEK ENGED\u00c9LYEZ\u00c9SE",
 reminderActive:"B\u00f6ng\u00e9sz\u0151 \u00e9rtes\u00edt\u00e9seket kapsz 30 perccel minden be\u00fctemezett edz\u00e9s el\u0151tt.",
 clientReminder:"\u00dcgyf\u00e9l eml\u00e9keztet\u0151 sablonok",
 reminderDesc:"\u00c1ll\u00edts be egyedi sz\u00f6veges eml\u00e9keztet\u0151ket minden \u00fcgyf\u00e9lhez",
-exercises:"GYAKORLATOK",
+exercises:"GYAKORLATOK",sets:"Szettek",volume:"Volumen (lbs)",meals:"\u00e9tkez\u00e9s",noMealPlans:"M\u00e9g nincsenek \u00e9trendek",
 sessionNotes:"EDZ\u00c9S JEGYZET",
 workoutSummary:"EDZ\u00c9S \u00d6SSZEFOGLAL\u00d3",
 notes:"JEGYZETEK",
@@ -671,10 +673,10 @@ off:"KI",
 on:"BE",
 saveTemplateLabel:"SABLON MENT\u00c9SE",
 searchClients:"\u00dcgyfelek keres\u00e9se...",
-proTools:"Pro Eszk\u00f6z\u00f6k",
+proTools:"Eszk\u00f6z\u00f6k",
 mealPlanBuilder:"\u00c9trend Tervez\u0151",
 cardioBuilder:"Kardi\u00f3 Protokoll Tervez\u0151",
-fstExercises:"FST-7 Gyakorlat Adatb\u00e1zis",
+fstExercises:"Gyakorlat Adatb\u00e1zis",
 foodDatabase:"\u00c9tel Adatb\u00e1zis",
 savedMealPlans:"Mentett \u00c9trendek",
 savedCardioProtocols:"Mentett Kardi\u00f3 Protokollok",
@@ -781,10 +783,12 @@ targetMacros:"C\u00c9L MAKR\u00d3K",
 meal:"\u00c9TKEZ\u00c9S",
 exportMealPDF:"\u00c9TREND TERV PDF EXPORT",
 deleteMealPlan:"\u00c9TREND TERV T\u00d6RL\u00c9SE",
-proToolsDesc:"Olimpiai szint\u0171 edz\u0151i eszk\u00f6z\u00f6k az \u00fcgyfeleidnek.",
+proToolsDesc:"Edz\u0151i eszk\u00f6z\u00f6k az \u00fcgyfeleidnek.",
 macroBuilder:"GF MAKR\u00d3 \u00c9P\u00cdT\u0150",
-proCardioBuilder:"PRO KARDI\u00d3 \u00c9P\u00cdT\u0150",
-hanyMethod:"HANY RAMBOD M\u00d3DSZER",
+proCardioBuilder:"KARDI\u00d3 \u00c9P\u00cdT\u0150",
+exerciseDatabase:"Gyakorlat Adatb\u00e1zis",
+exerciseDBDesc:"Gyakorlatok b\u00f6ng\u00e9sz\u00e9se izomcsoport szerint. K\u00f6zvetlen hozz\u00e1ad\u00e1s programokhoz.",
+byMuscle:"IZOMCSOPORT SZERINT",
 scienceBacked:"TUDOM\u00c1NYOS",
 savedCardio:"MENTETT KARDI\u00d3 PROTOKOLLOK",
 savedSupplements:"MENTETT KIEG\u00c9SZ\u00cdT\u0150 PROTOKOLLOK",
@@ -956,7 +960,7 @@ html+='<div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">
 if(prog.notes)html+='<div class="cd" style="margin-bottom:14px;border-left:3px solid var(--acc)"><div style="font-size:12px;color:var(--mu);line-height:1.7">'+escHtml(prog.notes)+'</div></div>';
 var exs=prog.exercises||[];
 var _totalSets=0,_totalVol=0;exs.forEach(function(ex){if(ex.grouped){ex.grouped.forEach(function(g){(g.sets||[]).forEach(function(s){_totalSets++;_totalVol+=(parseFloat(s.w)||0)*(parseFloat(s.r)||0);});});}else{(ex.sets||[]).forEach(function(s){_totalSets++;_totalVol+=(parseFloat(s.w)||0)*(parseFloat(s.r)||0);});}});
-html+='<div class="g3" style="margin-bottom:16px"><div class="stat"><b style="color:var(--acc)">'+exs.length+'</b><small>'+t("exercises").toUpperCase()+'</small></div><div class="stat"><b style="color:var(--ow)">'+_totalSets+'</b><small>SETS</small></div><div class="stat"><b style="color:var(--accVib)">'+(_totalVol>0?(_totalVol/1000).toFixed(1)+"K":"0")+'</b><small>VOLUME (LBS)</small></div></div>';
+html+='<div class="g3" style="margin-bottom:16px"><div class="stat"><b style="color:var(--acc)">'+exs.length+'</b><small>'+t("exercises").toUpperCase()+'</small></div><div class="stat"><b style="color:var(--ow)">'+_totalSets+'</b><small>'+t("sets").toUpperCase()+'</small></div><div class="stat"><b style="color:var(--accVib)">'+(_totalVol>0?(_totalVol/1000).toFixed(1)+"K":"0")+'</b><small>'+t("volume").toUpperCase()+'</small></div></div>';
 if(exs.length){html+='<div class="sl">'+t("exercises")+' ('+exs.length+')</div>';for(var i=0;i<exs.length;i++)html+=renderExerciseSummary(exs[i]);}
 else html+='<div class="cd" style="text-align:center;padding:24px;border:1px dashed var(--border);color:var(--dm)">'+t("noPrograms")+'</div>';
 html+='<div style="display:flex;gap:8px;margin-top:18px"><button class="btn" style="flex:1" onclick="generateProgramPDF(\''+escJs(prog.id)+'\')">\u2193 '+t("exportPDF")+'</button>';
@@ -1048,17 +1052,18 @@ if(!$("timerModal")&&_timerModalInterval){clearInterval(_timerModalInterval);_ti
 
 // Auth
 async function signIn(email,password){var r=await fetch(SUPA_URL+"/auth/v1/token?grant_type=password",{method:"POST",headers:{"Content-Type":"application/json","apikey":SUPA_KEY},body:JSON.stringify({email:email,password:password})});var d=await r.json();if(d.access_token){LS.set("userId",d.user.id);LS.set("userEmail",d.user.email);LS.set("accessToken",d.access_token);if(d.refresh_token)LS.set("refreshToken",d.refresh_token);return{ok:true};}return{ok:false,error:d.error_description||d.msg||d.error||"Sign in failed"};}
-async function signUp(email,password,name){var r=await fetch(SUPA_URL+"/auth/v1/signup",{method:"POST",headers:{"Content-Type":"application/json","apikey":SUPA_KEY},body:JSON.stringify({email:email,password:password,data:{name:name}})});var d=await r.json();if(d.user||(d.id&&!d.error)){var si=await signIn(email,password);if(si.ok){try{await supaFetch("trainers","POST",[{id:LS.get("userId",null),email:email,name:name}]);}catch(e){}return{ok:true};}return si;}var msg=d.error_description||d.msg||d.error||"Sign up failed";return{ok:false,error:msg};}
+async function signUp(email,password,name){var r=await fetch(SUPA_URL+"/auth/v1/signup",{method:"POST",headers:{"Content-Type":"application/json","apikey":SUPA_KEY},body:JSON.stringify({email:email,password:password,data:{name:name}})});var d=await r.json();if(d.user||(d.id&&!d.error)){LS.set("coachName",name);var si=await signIn(email,password);if(si.ok){try{await supaFetch("trainers","POST",[{id:LS.get("userId",null),email:email,name:name}]);}catch(e){}return{ok:true};}return si;}var msg=d.error_description||d.msg||d.error||"Sign up failed";return{ok:false,error:msg};}
 async function refreshAccessToken(){var rt=LS.get("refreshToken",null);if(!rt)return false;try{var r=await fetch(SUPA_URL+"/auth/v1/token?grant_type=refresh_token",{method:"POST",headers:{"Content-Type":"application/json","apikey":SUPA_KEY},body:JSON.stringify({refresh_token:rt})});var d=await r.json();if(d.access_token){LS.set("accessToken",d.access_token);if(d.refresh_token)LS.set("refreshToken",d.refresh_token);return true;}}catch(e){}return false;}
 function signOut(){LS.set("userId",null);LS.set("accessToken",null);LS.set("refreshToken",null);clients=[];sessions=[];schedule=[];LS.set("clients",[]);LS.set("sessions",[]);LS.set("schedule",[]);sessionStorage.removeItem("regi_unlocked");showAuthScreen();}
 function isLoggedIn(){return!!LS.get("userId",null);}
+function getCoachName(){return LS.get("coachName","Coach");}
 function showAuthScreen(){var app=$("app");if(app)app.style.display="none";var el=$("authScreen");if(!el){el=document.createElement("div");el.id="authScreen";document.body.appendChild(el);}el.style.cssText="position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;background:var(--bg);padding:24px";el.innerHTML='<div style="position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 30%,rgba(212,164,74,0.06),transparent 60%);pointer-events:none"></div><div style="position:relative;width:100%;max-width:340px"><div style="text-align:center;margin-bottom:36px"><div style="width:80px;height:80px;border-radius:20px;background:linear-gradient(135deg,#0e0e14,#1a1a24);border:1px solid var(--borderH);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:38px;font-weight:900;color:var(--acc);box-shadow:0 0 60px var(--accGlow);animation:breathe 4s ease-in-out infinite;margin:0 auto 20px">R</div><div style="font-family:var(--display);font-size:24px;font-weight:700;letter-spacing:0.12em;color:var(--ice)">REGI</div><div style="font-size:9px;color:var(--dm);font-family:var(--mono);letter-spacing:0.2em;margin-top:4px">COACHING STUDIO</div></div><div style="display:flex;gap:0;margin-bottom:20px;border:1px solid var(--border);border-radius:8px;overflow:hidden"><div onclick="switchAuthTab(\'signin\')" id="tabSignin" style="flex:1;padding:10px;text-align:center;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.1em;cursor:pointer;background:rgba(212,164,74,0.1);color:var(--acc)">SIGN IN</div><div onclick="switchAuthTab(\'signup\')" id="tabSignup" style="flex:1;padding:10px;text-align:center;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.1em;cursor:pointer;color:var(--dm)">CREATE ACCOUNT</div></div><div id="authSignin"><div style="margin-bottom:12px"><input id="siEmail" type="email" placeholder="Email" autocomplete="email"></div><div style="margin-bottom:16px"><input id="siPass" type="password" placeholder="Password" autocomplete="current-password"></div><button class="btn" onclick="doSignIn()" id="siBtn">SIGN IN</button></div><div id="authSignup" style="display:none"><div style="margin-bottom:12px"><input id="suName" type="text" placeholder="Your name"></div><div style="margin-bottom:12px"><input id="suEmail" type="email" placeholder="Email" autocomplete="email"></div><div style="margin-bottom:16px"><input id="suPass" type="password" placeholder="Password (min 6 chars)" autocomplete="new-password"></div><button class="btn" onclick="doSignUp()" id="suBtn">CREATE ACCOUNT</button></div><div id="authError" style="margin-top:12px;text-align:center;font-size:11px;color:var(--danger);font-family:var(--mono);min-height:18px"></div></div>';setTimeout(function(){var e=$("siEmail");if(e){e.focus();e.addEventListener("keydown",function(ev){if(ev.key==="Enter")doSignIn();});}var p=$("siPass");if(p)p.addEventListener("keydown",function(ev){if(ev.key==="Enter")doSignIn();});var sp=$("suPass");if(sp)sp.addEventListener("keydown",function(ev){if(ev.key==="Enter")doSignUp();});},100);}
 function switchAuthTab(tab){$("authSignin").style.display=tab==="signin"?"":"none";$("authSignup").style.display=tab==="signup"?"":"none";$("tabSignin").style.background=tab==="signin"?"rgba(212,164,74,0.1)":"transparent";$("tabSignin").style.color=tab==="signin"?"var(--acc)":"var(--dm)";$("tabSignup").style.background=tab==="signup"?"rgba(212,164,74,0.1)":"transparent";$("tabSignup").style.color=tab==="signup"?"var(--acc)":"var(--dm)";}
 async function doSignIn(){var btn=$("siBtn");btn.disabled=true;btn.textContent=t("signingIn");try{var result=await signIn($("siEmail").value.trim(),$("siPass").value);if(result.ok){var el=$("authScreen");if(el)el.remove();$("app").style.display="";await syncFromCloud();render();}else{$("authError").textContent=result.error;btn.disabled=false;btn.textContent=t("signIn");}}catch(e){$("authError").textContent=t("networkError");btn.disabled=false;btn.textContent=t("signIn");}}
 async function doSignUp(){var btn=$("suBtn");btn.disabled=true;btn.textContent=t("signingIn");var name=$("suName").value.trim(),email=$("suEmail").value.trim(),pass=$("suPass").value;if(!name){$("authError").textContent=t("nameRequired");btn.disabled=false;btn.textContent=t("signUp");return;}if(pass.length<6){$("authError").textContent=t("passwordMin");btn.disabled=false;btn.textContent=t("signUp");return;}try{var result=await signUp(email,pass,name);if(result.ok){var el=$("authScreen");if(el)el.remove();$("app").style.display="";render();}else{$("authError").textContent=result.error;btn.disabled=false;btn.textContent=t("signUp");}}catch(e){$("authError").textContent=t("networkError");btn.disabled=false;btn.textContent=t("signUp");}}
 
 // Tabs + Render
-var TABS=[{k:"home",l:"Home",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1"/></svg>'},{k:"clients",l:"Clients",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>'},{k:"schedule",l:"Schedule",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>'},{k:"sessions",l:"Log",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>'},{k:"tools",l:"Pro Tools",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>'},{k:"guide",l:"Guide",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>'}];
+var TABS=[{k:"home",l:"Home",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1"/></svg>'},{k:"clients",l:"Clients",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>'},{k:"schedule",l:"Schedule",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>'},{k:"sessions",l:"Log",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>'},{k:"tools",l:"Tools",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>'},{k:"guide",l:"Guide",svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>'}];
 
 function render(){
 DN=LANGS[getLang()].days;
@@ -1081,7 +1086,7 @@ var cut=Math.round(gross*getGymCut()),take=roundMoney(gross-cut);
 var iso=todayISO();
 var todaySched=schedule.filter(function(s){return s.date===iso;}).sort(function(a,b){return(a.time||"").localeCompare(b.time||"");});
 var h=now_.getHours(),gr=h<12?t("greetMorn"):h<17?t("greetAfter"):t("greetEve");
-var html='<div style="margin:-20px -16px 0;padding:44px 28px 36px;position:relative;overflow:hidden;background:linear-gradient(160deg,#181210 0%,#111114 45%,var(--bg) 100%);border-bottom:1px solid var(--borderS)"><div style="position:absolute;top:-80px;right:-60px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(212,164,74,0.1),transparent 55%);pointer-events:none;filter:blur(30px)"></div><div style="position:relative"><div style="font-size:11px;color:var(--dm);font-family:var(--mono);letter-spacing:0.14em;text-transform:uppercase">'+DN[now_.getDay()]+' \u00B7 '+now_.toLocaleDateString(getLang()==="hu"?"hu-HU":"en-US",{month:"long",day:"numeric",year:"numeric"})+'</div><div style="margin-top:16px;font-size:32px;font-weight:800;color:var(--wh);line-height:1.05;font-family:var(--display)">'+gr+',</div><div style="font-size:32px;font-weight:800;line-height:1.15;font-family:var(--display);animation:glowPulse 4s ease-in-out infinite"><span style="background:linear-gradient(135deg,var(--accVib),var(--acc),var(--accD));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Regina</span></div></div></div>';
+var html='<div style="margin:-20px -16px 0;padding:44px 28px 36px;position:relative;overflow:hidden;background:linear-gradient(160deg,#181210 0%,#111114 45%,var(--bg) 100%);border-bottom:1px solid var(--borderS)"><div style="position:absolute;top:-80px;right:-60px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(212,164,74,0.1),transparent 55%);pointer-events:none;filter:blur(30px)"></div><div style="position:relative"><div style="font-size:11px;color:var(--dm);font-family:var(--mono);letter-spacing:0.14em;text-transform:uppercase">'+DN[now_.getDay()]+' \u00B7 '+now_.toLocaleDateString(getLang()==="hu"?"hu-HU":"en-US",{month:"long",day:"numeric",year:"numeric"})+'</div><div style="margin-top:16px;font-size:32px;font-weight:800;color:var(--wh);line-height:1.05;font-family:var(--display)">'+gr+',</div><div style="font-size:32px;font-weight:800;line-height:1.15;font-family:var(--display);animation:glowPulse 4s ease-in-out infinite"><span style="background:linear-gradient(135deg,var(--accVib),var(--acc),var(--accD));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">'+escHtml(getCoachName())+'</span></div></div></div>';
 html+='<div class="sl" style="margin-top:20px">'+now_.toLocaleDateString(getLang()==="hu"?"hu-HU":"en-US",{month:"long"}).toUpperCase()+' '+t("monthlyEarnings")+'</div>';
 html+='<div class="g3"><div class="stat"><b style="color:var(--acc)">'+moS.length+'</b><small>'+t("sessions").toUpperCase()+'</small></div><div class="stat"><b style="color:var(--ow)">$'+gross+'</b><small>'+t("gross").toUpperCase()+'</small></div><div class="stat" style="border-color:var(--accB)"><b style="color:var(--accVib);text-shadow:0 0 16px var(--accGlow)">$'+take+'</b><small>'+t("yours").toUpperCase()+' <span style="font-size:7px;color:var(--dm)">('+Math.round(getGymCut()*100)+'% gym)</span></small></div></div>';
 var alerts=getRetentionAlerts();
@@ -1092,7 +1097,7 @@ html+='<div class="cd" style="display:flex;align-items:center;gap:12px;border-le
 if(todaySched.length){html+='<div class="sl" style="margin-top:24px">'+t("todaySchedule")+'</div>';for(var i=0;i<todaySched.length;i++){var s=todaySched[i];var ic=s.status==="complete",ix=s.status==="cancelled";var bc=ic?"var(--success)":ix?"var(--danger)":"var(--acc)";var cidx=clients.findIndex(function(cc){return cc.id===s.clientId;});html+='<div class="cd" style="display:flex;align-items:center;gap:14px;border-left:3px solid '+bc+'"><div style="min-width:50px;font-family:var(--mono);font-size:13px;font-weight:700;color:'+(ic?"var(--success)":"var(--acc)")+'">'+fmtTimeStr(s.time)+'</div><div style="flex:1;cursor:pointer" onclick="'+(cidx>=0?"navToClient("+cidx+")":"")+'"><div style="font-size:14px;font-weight:600;color:var(--wh)">'+escHtml(s.clientName)+'</div><div style="font-size:10px;color:var(--dm)">'+escHtml(s.type||"Training")+(ic?' \u00B7 <span class="status-chip status-complete">'+t("complete")+'</span>':ix?' \u00B7 <span class="status-chip status-cancelled">'+t("cancelled")+'</span>':"")+'</div></div>'+(!ic&&!ix?'<button class="btn2" onclick="completeScheduled(\''+escJs(s.id)+'\')" style="padding:5px 10px;font-size:8px">'+t("log2")+'</button>':"")+'<div style="font-size:11px;color:var(--ow);font-family:var(--mono)">$'+escHtml(s.rate||70)+'</div></div>';}}
 else html+='<div class="cd" style="text-align:center;padding:22px;margin-top:24px;border:1px dashed var(--border)"><div style="color:var(--dm);margin-bottom:10px">'+t("noSessions")+'</div><button class="btn2" onclick="go(\'schedule\')">'+t("scheduleOne")+'</button></div>';
 if(sessions.length){html+='<div class="sl" style="margin-top:24px">'+t("recentSessions")+'</div>';var rec=sessions.slice(-3).reverse();for(var i=0;i<rec.length;i++){var s=rec[i];html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="navToSession(\''+escJs(s.id)+'\')"><div style="width:34px;height:34px;border-radius:8px;background:var(--accS);border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;font-weight:700;color:var(--accVib)">'+safeInitial(s.clientName)+'</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(s.clientName)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+escHtml(s.type)+' \u00B7 '+fmtDate(s.date)+'</div></div><div style="font-size:10px;color:var(--ow);font-family:var(--mono)">$'+escHtml(s.rate)+'</div></div>';}}
-html+='<div style="text-align:center;padding:20px 0 8px"><div style="font-size:8px;color:var(--dmL);font-family:var(--mono)">REGI v'+VERSION+'</div></div>';
+html+='<div style="text-align:center;padding:20px 0 8px"><button class="btn2" onclick="go(\'settings\')" style="padding:8px 20px;font-size:9px;margin-bottom:12px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="vertical-align:-2px;margin-right:6px"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>'+t("settings")+'</button><div style="font-size:8px;color:var(--dmL);font-family:var(--mono)">REGI v'+VERSION+'</div></div>';
 return html;
 }
 function completeScheduled(schedId){var sched=schedule.find(function(s){return s.id===schedId;});if(!sched)return;navStack=[];currentView={tab:"sessions",view:"main",data:{}};push("new",{prefillClientId:sched.clientId,prefillType:sched.type,prefillRate:sched.rate,prefillDate:sched.date,scheduleId:schedId});}
@@ -1108,7 +1113,7 @@ if(currentView.view==="newProgram")return renderProgramBuilder();
 if(currentView.view==="programDetail")return renderProgramDetail();
 if(currentView.view==="programLibrary")return renderProgramLibrary();
 if(!clients.length)return'<div class="pt">'+t("addFirstClient")+'</div><div style="font-size:12px;color:var(--mu);margin-bottom:14px;line-height:1.5">'+t("everythingStarts")+'</div>'+clientFormFields()+'<button class="btn" style="margin-top:16px" onclick="saveNewClient()">'+t("save")+'</button>';
-var html='<div class="gw" style="margin:0 0 18px"></div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div class="pt" style="margin-bottom:0">'+t("clients")+' <span style="font-size:13px;color:var(--dm);font-family:var(--mono);font-weight:400">'+clients.length+'</span></div><div style="display:flex;gap:6px"><button class="btn2" onclick="push(\'programLibrary\')" style="font-size:8px;padding:6px 10px">\uD83D\uDCCB '+t("programs")+'</button><button class="btn2" onclick="push(\'add\')" style="box-shadow:0 0 12px rgba(201,168,76,0.08)">+ '+t("addClient")+'</button></div></div>';
+var html='<div class="gw" style="margin:0 0 18px"></div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div class="pt" style="margin-bottom:0">'+t("clients")+' <span style="font-size:13px;color:var(--dm);font-family:var(--mono);font-weight:400">'+clients.length+'</span></div><div style="display:flex;gap:6px"><button class="btn2" onclick="push(\'programLibrary\')" style="padding:8px 14px;font-size:9px">\uD83D\uDCCB '+t("programs")+'</button><button class="btn2" onclick="push(\'add\')" style="padding:8px 14px;font-size:9px;box-shadow:0 0 12px rgba(201,168,76,0.08)">+ '+t("addClient")+'</button></div></div>';
 if(clients.length>3)html+='<div style="margin-bottom:14px"><input id="clientSearch" placeholder="'+t("searchClients")+'" oninput="filterClients(this.value)" style="padding:10px 14px;font-size:13px"></div>';
 html+='<div id="clientList">';
 for(var i=0;i<clients.length;i++){var c=clients[i];var count=sessions.filter(function(x){return x.clientId===c.id;}).length;html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:14px" onclick="push(\'detail\',{clientIdx:'+i+'})"><div style="width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,rgba(212,164,74,0.25),rgba(212,164,74,0.08));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:16px;font-weight:700;color:var(--accBright);flex-shrink:0;box-shadow:0 0 16px rgba(212,164,74,0.08)">'+safeInitial(c.name)+'</div><div style="flex:1"><div style="font-size:14px;font-weight:600;color:var(--wh)">'+escHtml(c.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+escHtml(c.type||"Training")+' \u00B7 $'+escHtml(c.rate||70)+'/hr \u00B7 '+count+' '+t("sessions").toLowerCase()+'</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}
@@ -1146,15 +1151,17 @@ else html+='<div class="cd" style="text-align:center;padding:18px;border:1px das
 
 // Meal plans section
 var cMeals=getClientMealPlans(c.id);
-html+='<div class="sl" style="margin-top:20px;display:flex;justify-content:space-between;align-items:center"><span>\uD83C\uDF7D '+t("mealPlan").toUpperCase()+'S <span style="font-size:9px;color:var(--dm)">'+cMeals.length+'</span></span><button class="btn2" onclick="navStack=[];currentView={tab:\'tools\',view:\'main\',data:{}};push(\'mealPlanBuilder\',{clientId:\''+escJs(c.id)+'\'})" style="padding:4px 10px;font-size:8px;margin-top:-4px">+ NEW PLAN</button></div>';
-if(cMeals.length){for(var mi2=0;mi2<cMeals.length;mi2++){var mp=cMeals[mi2];html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="navStack=[];currentView={tab:\'tools\',view:\'main\',data:{}};push(\'mealPlanDetail\',{planId:\''+escJs(mp.id)+'\'})"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(120,200,120,0.18),rgba(120,200,120,0.06));border:1px solid rgba(120,200,120,0.2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">\uD83C\uDF7D</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(mp.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+mp.mealCount+' meals \u00B7 P'+mp.targetP+'/C'+mp.targetC+'/F'+mp.targetF+' \u00B7 '+(mp.targetP*4+mp.targetC*4+mp.targetF*9)+' cal</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}}
-else html+='<div class="cd" style="text-align:center;padding:18px;border:1px dashed var(--border);color:var(--dm);font-size:11px">'+t("tapFoodToAdd")+'</div>';
+html+='<div class="sl" style="margin-top:20px;display:flex;justify-content:space-between;align-items:center"><span>'+t("mealPlan").toUpperCase()+'S <span style="font-size:9px;color:var(--dm)">'+cMeals.length+'</span></span><button class="btn2" onclick="navStack=[];currentView={tab:\'tools\',view:\'main\',data:{}};push(\'mealPlanBuilder\',{clientId:\''+escJs(c.id)+'\'})" style="padding:4px 10px;font-size:8px;margin-top:-4px">+ '+t("newProgram").split(" ")[0]+' '+t("mealPlan")+'</button></div>';
+if(cMeals.length){for(var mi2=0;mi2<cMeals.length;mi2++){var mp=cMeals[mi2];html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="navStack=[];currentView={tab:\'tools\',view:\'main\',data:{}};push(\'mealPlanDetail\',{planId:\''+escJs(mp.id)+'\'})"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(120,200,120,0.18),rgba(120,200,120,0.06));border:1px solid rgba(120,200,120,0.2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">\uD83C\uDF7D</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(mp.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+mp.mealCount+' '+t("meals")+' \u00B7 P'+mp.targetP+'/C'+mp.targetC+'/F'+mp.targetF+' \u00B7 '+(mp.targetP*4+mp.targetC*4+mp.targetF*9)+' cal</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}}
+else html+='<div class="cd" style="text-align:center;padding:18px;border:1px dashed var(--border);color:var(--dm);font-size:11px">'+t("noMealPlans")+'</div>';
 
 // Cardio plans section
 var cCardio=(typeof getCardioPlans==="function")?getCardioPlans().filter(function(p){return p.clientId===c.id;}):[];
-if(cCardio.length){html+='<div class="sl" style="margin-top:20px;display:flex;justify-content:space-between;align-items:center"><span>\u2764 '+t("cardioBuilder").toUpperCase()+' <span style="font-size:9px;color:var(--dm)">'+cCardio.length+'</span></span></div>';
-for(var ci2=0;ci2<cCardio.length;ci2++){var cp=cCardio[ci2];html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="navStack=[];currentView={tab:\'tools\',view:\'main\',data:{}};push(\'cardioDetail\',{planId:\''+escJs(cp.id)+'\'})"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(201,168,76,0.18),rgba(201,168,76,0.06));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">\u2764</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(cp.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+escHtml(cp.phase)+' \u00B7 '+cp.frequency+'x/wk \u00B7 '+cp.duration+'min</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}}
-html+='<div style="display:flex;gap:8px;margin-top:16px"><button class="btn" style="flex:1" onclick="navToLogFromClient(\''+escJs(c.id)+'\',\''+escJs(c.rate)+'\',\''+escJs(c.type)+'\')">'+t("logSession")+'</button><button class="btn2" style="flex:1" onclick="navToScheduleFromClient(\''+escJs(c.id)+'\')">'+t("schedule").toUpperCase()+'</button></div><div class="g2" style="margin-top:8px"><button class="btn2" onclick="navStack=[];currentView={tab:\'tools\',view:\'main\',data:{}};push(\'mealPlanBuilder\',{clientId:\''+escJs(c.id)+'\'})" style="width:100%">\uD83C\uDF7D MEAL PLAN</button><button class="btn2" onclick="navStack=[];currentView={tab:\'tools\',view:\'main\',data:{}};push(\'cardioBuilder\',{clientId:\''+escJs(c.id)+'\'})" style="width:100%">\u2764 CARDIO</button></div><div class="g2" style="margin-top:8px"><button class="btn2" style="width:100%;background:rgba(212,164,74,0.06);border-color:var(--accB)" onclick="generateClientPDF('+idx+')"><span style="margin-right:6px">\u2193</span>'+t("clientReportPDF")+'</button><button class="btn2" onclick="sendReminderToClient(\''+escJs(c.id)+'\')" style="width:100%">\u2709 '+t("sendReminder")+'</button></div><div style="margin-top:24px;text-align:center"><span onclick="deleteClient('+idx+')" style="cursor:pointer;font-size:9px;color:var(--dm);font-family:var(--mono);letter-spacing:0.06em">'+t("removeClient")+'</span></div>';
+html+='<div class="sl" style="margin-top:20px;display:flex;justify-content:space-between;align-items:center"><span>'+t("cardioBuilder").toUpperCase()+' <span style="font-size:9px;color:var(--dm)">'+cCardio.length+'</span></span><button class="btn2" onclick="navStack=[];currentView={tab:\'tools\',view:\'main\',data:{}};push(\'cardioBuilder\',{clientId:\''+escJs(c.id)+'\'})" style="padding:4px 10px;font-size:8px;margin-top:-4px">+ '+t("newProgram").split(" ")[0]+' '+t("cardioBuilder")+'</button></div>';
+if(cCardio.length){for(var ci2=0;ci2<cCardio.length;ci2++){var cp=cCardio[ci2];html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="navStack=[];currentView={tab:\'tools\',view:\'main\',data:{}};push(\'cardioDetail\',{planId:\''+escJs(cp.id)+'\'})"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(201,168,76,0.18),rgba(201,168,76,0.06));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">\u2764</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(cp.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+escHtml(cp.phase)+' \u00B7 '+cp.frequency+'x/wk \u00B7 '+cp.duration+'min</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}}
+else html+='<div class="cd" style="text-align:center;padding:18px;border:1px dashed var(--border);color:var(--dm);font-size:11px">'+t("noProtocolsSaved")+'</div>';
+
+html+='<div style="display:flex;gap:8px;margin-top:16px"><button class="btn" style="flex:1" onclick="navToLogFromClient(\''+escJs(c.id)+'\',\''+escJs(c.rate)+'\',\''+escJs(c.type)+'\')">'+t("logSession")+'</button><button class="btn2" style="flex:1" onclick="navToScheduleFromClient(\''+escJs(c.id)+'\')">'+t("schedule").toUpperCase()+'</button></div><div class="g2" style="margin-top:8px"><button class="btn2" style="width:100%;background:rgba(212,164,74,0.06);border-color:var(--accB)" onclick="generateClientPDF('+idx+')"><span style="margin-right:6px">\u2193</span>'+t("clientReportPDF")+'</button><button class="btn2" onclick="sendReminderToClient(\''+escJs(c.id)+'\')" style="width:100%">\u2709 '+t("sendReminder")+'</button></div><div style="margin-top:24px;text-align:center"><span onclick="deleteClient('+idx+')" style="cursor:pointer;font-size:9px;color:var(--dm);font-family:var(--mono);letter-spacing:0.06em">'+t("removeClient")+'</span></div>';
 return html;
 }
 function deleteClient(idx){if(!clients[idx])return;if(!confirm("Remove "+clients[idx].name+"?\n\nTheir session history will be preserved."))return;var id=clients[idx].id;var name=clients[idx].name;clients.splice(idx,1);sessions.forEach(function(s){if(s.clientId===id)s.clientName=name;});schedule.forEach(function(s){if(s.clientId===id){s.clientName=name;s.clientId="";}});save();cloudDelete("clients",id);toast("\u2713 "+name+" removed");pop();}
@@ -1331,8 +1338,9 @@ var days=[];for(var i=0;i<7;i++){var d=new Date(startDay);d.setDate(startDay.get
 var _loc=getLang()==="hu"?"hu-HU":"en-US";var wl=days[0].toLocaleDateString(_loc,{month:"short",day:"numeric"})+" \u2014 "+days[6].toLocaleDateString(_loc,{month:"short",day:"numeric"});
 var _ws=0,_wr=0;for(var di=0;di<days.length;di++){var dayIso=toLocalISO(days[di]);schedule.filter(function(s){return s.date===dayIso&&s.status!=="cancelled";}).forEach(function(s){_ws++;_wr+=parseFloat(s.rate||70);});}
 var html='<div class="gw" style="margin:0 0 18px"></div><div style="display:flex;justify-content:space-between;align-items:center"><div class="pt" style="margin-bottom:0">'+t("schedule")+'</div><button class="btn2" onclick="var f=document.getElementById(\'schForm\');if(f){f.style.display=\'block\';f.scrollIntoView({behavior:\'smooth\'});}" style="padding:6px 14px;font-size:10px;box-shadow:0 0 12px rgba(201,168,76,0.08)">+ ADD</button></div>';
-if(_ws)html+='<div style="font-size:11px;color:var(--mu);font-family:var(--mono);margin-bottom:14px">'+_ws+' '+t("sessions").toLowerCase()+' \u00B7 $'+roundMoney(_wr)+' '+t("thisWeek").toLowerCase()+'</div>';
-html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><button class="btn2" onclick="scheduleWeekOffset--;_selectedDay=null;render()" style="padding:6px 12px">\u2039</button><div style="font-size:11px;color:var(--mu);font-family:var(--mono)">'+wl+(scheduleWeekOffset===0?" \u00B7 "+t("thisWeek"):"")+'</div><button class="btn2" onclick="scheduleWeekOffset++;_selectedDay=null;render()" style="padding:6px 12px">\u203A</button></div>';
+if(_ws)html+='<div style="font-size:11px;color:var(--mu);font-family:var(--mono);margin-bottom:6px">'+_ws+' '+t("sessions").toLowerCase()+' \u00B7 $'+roundMoney(_wr)+' '+t("thisWeek").toLowerCase()+'</div>';
+else html+='<div style="margin-bottom:6px"></div>';
+html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;margin-top:14px"><button class="btn2" onclick="scheduleWeekOffset--;_selectedDay=null;render()" style="padding:8px 14px;font-size:14px">\u2039</button><div style="font-size:11px;color:var(--mu);font-family:var(--mono)">'+wl+(scheduleWeekOffset===0?" \u00B7 "+t("thisWeek"):"")+'</div><button class="btn2" onclick="scheduleWeekOffset++;_selectedDay=null;render()" style="padding:8px 14px;font-size:14px">\u203A</button></div>';
 html+='<div style="display:flex;gap:3px;margin-bottom:18px">';
 for(var i=0;i<days.length;i++){var d=days[i];var di=toLocalISO(d);var isT=d.toDateString()===now.toDateString();var isSel=_selectedDay===di;var n=schedule.filter(function(s){return s.date===di;}).length;
 html+='<div onclick="_selectedDay=(_selectedDay===\''+di+'\'?null:\''+di+'\');render()" style="flex:1;text-align:center;padding:10px 2px;border-radius:10px;background:'+(isSel?"rgba(212,164,74,0.16)":(isT&&!_selectedDay)?"rgba(212,164,74,0.10)":"var(--glass)")+';border:'+(isSel?"2px":(isT&&!_selectedDay)?"2px":"1px")+' solid '+(isSel?"var(--accBright)":(isT&&!_selectedDay)?"var(--acc)":"var(--glassB)")+';cursor:pointer"><div style="font-size:8px;color:'+(isSel?"var(--accBright)":(isT&&!_selectedDay)?"var(--acc)":"var(--dm)")+';font-family:var(--mono);font-weight:700">'+DN[d.getDay()].toUpperCase()+'</div><div style="font-size:18px;font-weight:800;color:'+(isSel?"var(--accBright)":(isT&&!_selectedDay)?"var(--acc)":"var(--ow)")+';font-family:var(--mono);margin:4px 0;line-height:1">'+d.getDate()+'</div>'+(n?'<div style="width:5px;height:5px;border-radius:50%;background:var(--acc);margin:0 auto"></div>':'<div style="height:5px"></div>')+'</div>';}
@@ -2205,28 +2213,28 @@ safePDFSave(doc,fname);}
 function deleteMealPlan(id){if(!confirm(t("deleteMealPlan")+'?'))return;var plans=getMealPlans().filter(function(p){return p.id!==id;});saveMealPlans(plans);toast('\u2713 Deleted');pop();}
 
 // ═══════════════════════════════════════════════════════════════════
-// HANY RAMBOD FST-7 OLYMPIAN EXERCISE DATABASE
+// EXERCISE DATABASE
 // ═══════════════════════════════════════════════════════════════════
 var PRO_EXERCISES={
 women:{
 "Glutes & Hamstrings":[
-{n:"Lying Leg Curl",s:"4x10-12",note:"Pre-exhaust hamstrings before compounds. Squeeze 2s at top.",tech:"FST-7 finisher option"},
+{n:"Lying Leg Curl",s:"4x10-12",note:"Pre-exhaust hamstrings before compounds. Squeeze 2s at top.",tech:"Finisher option"},
 {n:"Stiff-Leg Deadlift",s:"4x10-12",note:"Hinge at hips, slight knee bend. Feel the stretch in hamstrings."},
 {n:"Hip Thrust (Barbell)",s:"4x12-15",note:"Pause and squeeze at top. Drive through heels."},
 {n:"Walking Lunges (Dumbbell)",s:"3x12 each",note:"Long stride to emphasize glutes. Upright torso."},
 {n:"Bulgarian Split Squat",s:"3x10-12 each",note:"Rear foot elevated. Deep stretch at bottom."},
 {n:"Cable Kickback",s:"3x15 each",note:"Slight forward lean. Full squeeze at contraction."},
 {n:"Glute-Ham Raise",s:"3x10-12",note:"Control the negative. Strong hamstring contraction."},
-{n:"Leg Press (High & Wide)",s:"4x12-15",note:"Feet high on platform. Deep ROM. Glute focused.",tech:"FST-7: 7x10-12 as finisher"},
-{n:"Seated Leg Curl",s:"4x12",note:"Slow eccentric 3s. Squeeze at contraction.",tech:"FST-7 finisher option"},
+{n:"Leg Press (High & Wide)",s:"4x12-15",note:"Feet high on platform. Deep ROM. Glute focused.",tech:"7x10-12 finisher"},
+{n:"Seated Leg Curl",s:"4x12",note:"Slow eccentric 3s. Squeeze at contraction.",tech:"Finisher option"},
 {n:"Sumo Squat (Dumbbell)",s:"3x15",note:"Wide stance, toes out. Squeeze inner thighs and glutes."},
-{n:"Reverse Hack Squat (Glute Focus)",s:"3x12",note:"Face the pad. Wide stance. Deep stretch on glutes. Hany signature for women."},
+{n:"Reverse Hack Squat (Glute Focus)",s:"3x12",note:"Face the pad. Wide stance. Deep stretch on glutes."},
 {n:"B-Stance Hip Thrust",s:"3x12 each",note:"Unilateral glute emphasis. One foot forward. Squeeze at top."},
 {n:"Pull-Through (Cable)",s:"3x15",note:"Hinge at hips. Squeeze glutes at lockout. Great glute-ham connection."}
 ],
 "Shoulders (Capped Delts)":[
 {n:"Seated Dumbbell Press",s:"4x10-12",note:"Control the negative. Don't lock out at top."},
-{n:"Lateral Raise (Dumbbell)",s:"4x12-15",note:"Slight forward lean. Lead with elbows. Don't go above parallel.",tech:"FST-7: 7x10-12 as finisher"},
+{n:"Lateral Raise (Dumbbell)",s:"4x12-15",note:"Slight forward lean. Lead with elbows. Don't go above parallel.",tech:"7x10-12 finisher"},
 {n:"Cable Lateral Raise",s:"3x12-15 each",note:"Behind the body for rear emphasis. Constant tension."},
 {n:"Reverse Pec Deck",s:"4x12-15",note:"Squeeze rear delts hard. Slight pause at contraction."},
 {n:"Face Pull (Rope)",s:"3x15",note:"External rotation at top. Rear delt and rotator cuff health."},
@@ -2243,12 +2251,12 @@ women:{
 {n:"Single-Arm Dumbbell Row",s:"3x10-12 each",note:"Full stretch at bottom. Drive elbow past torso."},
 {n:"T-Bar Row",s:"3x10-12",note:"Neutral grip. Keep back flat. Strong contraction."},
 {n:"Dumbbell Pullover",s:"3x12",note:"Cross-bench. Deep stretch. Works lats and serratus. Keep hips low."},
-{n:"Straight Arm Pulldown",s:"3x12-15",note:"Great mind-muscle connection exercise. Keep arms straight.",tech:"FST-7 finisher option"},
+{n:"Straight Arm Pulldown",s:"3x12-15",note:"Great mind-muscle connection exercise. Keep arms straight.",tech:"Finisher option"},
 {n:"Hyperextension",s:"3x15",note:"Squeeze glutes and erectors at top. Add plate for resistance."},
 {n:"Meadows Row",s:"3x10-12 each",note:"Landmine variation. John Meadows special. Elbow drives past hip."}
 ],
 "Quads":[
-{n:"Leg Extension",s:"4x12-15",note:"Pre-exhaust quads. Squeeze at top. Control the negative.",tech:"FST-7: 7x10-12 as finisher"},
+{n:"Leg Extension",s:"4x12-15",note:"Pre-exhaust quads. Squeeze at top. Control the negative.",tech:"7x10-12 finisher"},
 {n:"Hack Squat",s:"4x10-12",note:"Feet shoulder width, mid platform. Full depth."},
 {n:"Leg Press (Narrow Stance)",s:"4x10-12",note:"Feet together, low on platform. Deep ROM for quad sweep."},
 {n:"Smith Machine Squat",s:"3x10-12",note:"Feet slightly forward for quad emphasis. Control the descent."},
@@ -2260,9 +2268,9 @@ women:{
 {n:"Rope Pushdown",s:"3x12-15",note:"Spread the rope at bottom. Squeeze triceps hard."},
 {n:"Hammer Curl (Dumbbell)",s:"3x10-12 each",note:"Controlled tempo. Builds brachialis for arm shape."},
 {n:"Overhead Tricep Extension (Rope)",s:"3x12",note:"Full stretch behind head. Squeeze at lockout."},
-{n:"Concentration Curl",s:"3x12 each",note:"Peak contraction work. Squeeze at top.",tech:"FST-7 finisher option"},
+{n:"Concentration Curl",s:"3x12 each",note:"Peak contraction work. Squeeze at top.",tech:"Finisher option"},
 {n:"Dip Machine (Tricep)",s:"3x12",note:"Lean slightly forward. Control full range."},
-{n:"Spider Curl (Incline Bench)",s:"3x12",note:"Lie face down on incline. Pure isolation, no momentum. Peak contraction.",tech:"FST-7 finisher option"},
+{n:"Spider Curl (Incline Bench)",s:"3x12",note:"Lie face down on incline. Pure isolation, no momentum. Peak contraction.",tech:"Finisher option"},
 {n:"Drag Curl (Barbell)",s:"3x10-12",note:"Pull elbows back as you curl. Emphasizes long head of bicep."}
 ],
 "Abs & Core":[
@@ -2277,11 +2285,11 @@ men:{
 "Chest":[
 {n:"Incline Dumbbell Press",s:"4x8-12",note:"30-degree incline. Full stretch at bottom. Don't lock out."},
 {n:"Flat Barbell Bench Press",s:"4x8-10",note:"Arch back slightly. Control the descent. Drive through chest."},
-{n:"Machine Chest Press (Hammer Strength)",s:"4x10-12",note:"Squeeze at contraction. Full stretch. Controlled negative.",tech:"FST-7: 7x8-12 as finisher"},
+{n:"Machine Chest Press (Hammer Strength)",s:"4x10-12",note:"Squeeze at contraction. Full stretch. Controlled negative.",tech:"7x8-12 finisher"},
 {n:"Incline Dumbbell Flye",s:"3x10-12",note:"Deep stretch. Slight bend in elbows. Squeeze at top."},
-{n:"Cable Crossover (Low to High)",s:"3x12-15",note:"Upper chest emphasis. Squeeze at peak contraction.",tech:"FST-7 finisher option"},
+{n:"Cable Crossover (Low to High)",s:"3x12-15",note:"Upper chest emphasis. Squeeze at peak contraction.",tech:"Finisher option"},
 {n:"Dip (Chest Emphasis)",s:"3x10-12",note:"Lean forward. Wide grip. Deep stretch at bottom."},
-{n:"Pec Deck",s:"3x12-15",note:"Squeeze and hold at contraction. Constant tension.",tech:"FST-7: 7x10-12 as finisher"},
+{n:"Pec Deck",s:"3x12-15",note:"Squeeze and hold at contraction. Constant tension.",tech:"7x10-12 finisher"},
 {n:"Decline Barbell Press",s:"3x8-10",note:"Lower chest development. Controlled negative. Don't bounce."},
 {n:"Svend Press (Plate Squeeze)",s:"3x12-15",note:"Squeeze plates together at chest level. Inner chest activation. Flex between sets."}
 ],
@@ -2291,7 +2299,7 @@ men:{
 {n:"Barbell Row (Overhand)",s:"4x8-10",note:"Slight bend at hips. Pull to lower chest. Squeeze."},
 {n:"Barbell Row (Underhand)",s:"3x8-10",note:"Reverse grip. More lower lat and bicep recruitment. Yates row style."},
 {n:"Hammer Strength Row (Unilateral)",s:"4x10-12 each",note:"Full stretch. Drive elbow behind torso. Big squeeze."},
-{n:"Lat Pulldown (Wide Overhand)",s:"4x10-12",note:"Full stretch at top. Slight lean back. Drive elbows to floor.",tech:"FST-7: 7x10-12 as finisher"},
+{n:"Lat Pulldown (Wide Overhand)",s:"4x10-12",note:"Full stretch at top. Slight lean back. Drive elbows to floor.",tech:"7x10-12 finisher"},
 {n:"Lat Pulldown (Neutral Close)",s:"4x10-12",note:"V-bar. More lower lat emphasis. Full stretch at top."},
 {n:"Lat Pulldown (Reverse Grip)",s:"3x10-12",note:"Underhand close grip. Lower lat and bicep emphasis."},
 {n:"Incline Pulldown",s:"3x12",note:"Prone on incline bench pulling cables. Unique contraction angle."},
@@ -2300,13 +2308,13 @@ men:{
 {n:"T-Bar Row",s:"3x8-10",note:"Heavy compound. Keep back flat. Full range."},
 {n:"Dumbbell Pullover",s:"3x10-12",note:"Cross-bench. Deep lat stretch. Keep hips low for more stretch."},
 {n:"Meadows Row (Landmine)",s:"3x10-12 each",note:"John Meadows special. Landmine setup. Elbow drives past hip."},
-{n:"Straight Arm Pulldown",s:"3x12-15",note:"Lat isolation. Arms stay straight. Mind-muscle connection.",tech:"FST-7 finisher option"},
+{n:"Straight Arm Pulldown",s:"3x12-15",note:"Lat isolation. Arms stay straight. Mind-muscle connection.",tech:"Finisher option"},
 {n:"Rack Pull (Below Knee)",s:"3x6-8",note:"Upper back and trap thickness. Heavy but controlled."}
 ],
 "Shoulders":[
 {n:"Seated Barbell Press (Smith Machine)",s:"4x8-10",note:"Bring bar to chin level. Press through delts. Don't lock out."},
-{n:"Lateral Raise (Dumbbell)",s:"4x10-12",note:"Lead with elbows. Slight forward lean. Controlled tempo.",tech:"FST-7: 7x10-12 as finisher"},
-{n:"Machine Lateral Raise",s:"4x12-15",note:"Constant tension. Great for FST-7 finishing sets.",tech:"FST-7: 7x10-12 as finisher"},
+{n:"Lateral Raise (Dumbbell)",s:"4x10-12",note:"Lead with elbows. Slight forward lean. Controlled tempo.",tech:"7x10-12 finisher"},
+{n:"Machine Lateral Raise",s:"4x12-15",note:"Constant tension. Great for finishing sets.",tech:"7x10-12 finisher"},
 {n:"Rear Delt Flye (Dumbbell, Incline Bench)",s:"4x12-15",note:"Lying face down on incline. Squeeze rear delts."},
 {n:"Cable Front Raise",s:"3x12",note:"One arm at a time. Full range of motion."},
 {n:"Upright Row (Smith Machine)",s:"3x10-12",note:"Wide grip. Pull to chest level. Elbows high."},
@@ -2317,9 +2325,9 @@ men:{
 {n:"Preacher Curl (EZ Bar)",s:"3x10-12",note:"Full stretch at bottom. Don't swing. Control the negative."},
 {n:"Incline Dumbbell Curl",s:"3x10-12",note:"Arms behind torso for long head stretch. Slow negative."},
 {n:"Hammer Curl (Cross Body)",s:"3x10-12 each",note:"Across body for brachialis emphasis. Controlled."},
-{n:"Cable Curl (Straight Bar)",s:"3x12-15",note:"Constant tension. Great for pump work.",tech:"FST-7: 7x10-12 as finisher"},
+{n:"Cable Curl (Straight Bar)",s:"3x12-15",note:"Constant tension. Great for pump work.",tech:"7x10-12 finisher"},
 {n:"Concentration Curl",s:"3x12 each",note:"Peak contraction. Squeeze and hold at top."},
-{n:"Spider Curl (EZ Bar)",s:"3x10-12",note:"Chest on incline bench. Zero momentum. Incredible pump.",tech:"FST-7 finisher option"},
+{n:"Spider Curl (EZ Bar)",s:"3x10-12",note:"Chest on incline bench. Zero momentum. Incredible pump.",tech:"Finisher option"},
 {n:"Drag Curl (Barbell)",s:"3x10",note:"Bar stays close to body. Elbows travel back. Long head emphasis."},
 {n:"Cable Bayesian Curl",s:"3x12 each",note:"Stand facing away from cable. Full stretch at bottom. Lengthened partial option."}
 ],
@@ -2328,30 +2336,30 @@ men:{
 {n:"Rope Pushdown",s:"4x10-12",note:"Spread rope at bottom. Full squeeze. Elbows pinned."},
 {n:"Overhead Dumbbell Extension (Seated)",s:"3x10-12",note:"Full stretch behind head. Control the weight."},
 {n:"Skull Crushers (EZ Bar)",s:"3x10-12",note:"Lower to forehead. Elbows fixed. Full extension."},
-{n:"Dip Machine",s:"3x10-12",note:"Upright torso for tricep emphasis. Full lockout.",tech:"FST-7: 7x10-12 as finisher"},
+{n:"Dip Machine",s:"3x10-12",note:"Upright torso for tricep emphasis. Full lockout.",tech:"7x10-12 finisher"},
 {n:"Single-Arm Cable Pushdown",s:"3x12 each",note:"Supinate at bottom. Squeeze and hold."},
-{n:"Overhead Cable Extension (Rope)",s:"3x12-15",note:"Face away from cable. Big stretch at bottom. Full lockout.",tech:"FST-7 finisher option"},
-{n:"JM Press",s:"3x8-10",note:"Hybrid skull crusher/close-grip press. Advanced. Hany uses for mass."}
+{n:"Overhead Cable Extension (Rope)",s:"3x12-15",note:"Face away from cable. Big stretch at bottom. Full lockout.",tech:"Finisher option"},
+{n:"JM Press",s:"3x8-10",note:"Hybrid skull crusher/close-grip press. Advanced. Advanced mass builder."}
 ],
 "Legs (Quads)":[
-{n:"Leg Extension",s:"4x12-15",note:"Pre-exhaust. Squeeze and hold at top. 3s negative.",tech:"FST-7: 7x10-12 as finisher"},
+{n:"Leg Extension",s:"4x12-15",note:"Pre-exhaust. Squeeze and hold at top. 3s negative.",tech:"7x10-12 finisher"},
 {n:"Hack Squat",s:"4x8-12",note:"Feet mid-platform. Full depth. Drive through heels."},
 {n:"Barbell Back Squat",s:"4x8-10",note:"Break at hips first. Full depth. Drive up explosively."},
-{n:"Leg Press",s:"4x10-12",note:"Feet low and narrow for quad sweep. Deep ROM.",tech:"FST-7: 7x10-12 as finisher"},
+{n:"Leg Press",s:"4x10-12",note:"Feet low and narrow for quad sweep. Deep ROM.",tech:"7x10-12 finisher"},
 {n:"Walking Lunge (Barbell)",s:"3x12 each",note:"Long strides. Control the knee track."},
 {n:"Front Squat",s:"3x8-10",note:"Upright torso. Cross-arm or clean grip. Deep stretch."},
 {n:"Sissy Squat (Weighted)",s:"3x12-15",note:"Finisher movement. Lean back. Constant quad tension."},
-{n:"Pendulum Squat",s:"4x10-12",note:"Machine squat with arc path. Deep stretch. Quad dominant.",tech:"FST-7 finisher option"},
-{n:"Belt Squat",s:"3x10-12",note:"Zero spinal loading. Pure leg drive. Hany uses for joint-friendly quad work."}
+{n:"Pendulum Squat",s:"4x10-12",note:"Machine squat with arc path. Deep stretch. Quad dominant.",tech:"Finisher option"},
+{n:"Belt Squat",s:"3x10-12",note:"Zero spinal loading. Pure leg drive. Joint-friendly quad work."}
 ],
 "Legs (Hamstrings & Calves)":[
 {n:"Lying Leg Curl",s:"4x10-12",note:"Full stretch at bottom. Squeeze and hold at top."},
 {n:"Stiff-Leg Deadlift (Barbell)",s:"4x8-10",note:"Slow negative. Feel the stretch. Don't round back."},
-{n:"Seated Leg Curl",s:"3x10-12",note:"Different angle than lying. Squeeze hard at contraction.",tech:"FST-7: 7x10-12 as finisher"},
+{n:"Seated Leg Curl",s:"3x10-12",note:"Different angle than lying. Squeeze hard at contraction.",tech:"7x10-12 finisher"},
 {n:"Glute-Ham Raise",s:"3x10",note:"Control the negative. Strong hamstring contraction."},
 {n:"Standing Calf Raise",s:"5x10-15",note:"Full stretch at bottom. 2-3s squeeze at top. Heavy."},
 {n:"Seated Calf Raise",s:"4x12-15",note:"Targets soleus. Full stretch. Heavy weight."},
-{n:"Leg Press Calf Raise",s:"3x15-20",note:"Feet at bottom edge. Full range. Squeeze at top.",tech:"FST-7: 7x12-15 as finisher"}
+{n:"Leg Press Calf Raise",s:"3x15-20",note:"Feet at bottom edge. Full range. Squeeze at top.",tech:"7x12-15 finisher"}
 ],
 "Abs":[
 {n:"Hanging Leg Raise",s:"4x15",note:"Control swing. Curl pelvis up at top."},
@@ -2364,17 +2372,17 @@ men:{
 };
 
 // ═══════════════════════════════════════════════════════════════════
-// CARDIO BUILDER — Hany Rambod Protocol
+// CARDIO BUILDER
 // ═══════════════════════════════════════════════════════════════════
 var CARDIO_OPTIONS=[
-{n:"StairMaster / StepMill",desc:"Hany Rambod's #1 choice. Burns fat while building glutes and hamstrings. LISS at moderate pace.",modes:["LISS (Steady State)","Intervals","Skip-a-Step (Glute Focus)"],durations:[20,25,30,35,40,45,50,60],defDur:30,intensity:"Level 6-8 for LISS, 10-12 for intervals"},
+{n:"StairMaster / StepMill",desc:"Burns fat while building glutes and hamstrings. LISS at moderate pace.",modes:["LISS (Steady State)","Intervals","Skip-a-Step (Glute Focus)"],durations:[20,25,30,35,40,45,50,60],defDur:30,intensity:"Level 6-8 for LISS, 10-12 for intervals"},
 {n:"Incline Treadmill Walk",desc:"Low-impact fat burning. 3.0-3.5 mph at 10-15% incline. Hold no handrails for core engagement.",modes:["LISS (Incline Walk)","Power Walk","HIIT Sprints"],durations:[20,25,30,40,45,60],defDur:30,intensity:"3.0-3.5 mph at 10-15% incline"},
 {n:"Assault Bike (Air Bike)",desc:"Full body conditioning. Great for HIIT intervals. Burns massive calories in short sessions.",modes:["LISS (Easy Spin)","Tabata (20/10)","30/30 Intervals","HIIT (All Out)"],durations:[10,15,20,25,30],defDur:15,intensity:"RPE 6-7 LISS, RPE 9-10 intervals"},
 {n:"Recumbent Bike",desc:"Joint-friendly option. Good for active recovery days and clients with knee/back issues.",modes:["LISS (Steady)","Light Intervals","Active Recovery"],durations:[20,25,30,40,45],defDur:30,intensity:"RPE 4-6 steady, comfortable resistance"},
 {n:"Upright Stationary Bike",desc:"Classic bodybuilder cardio. Good for warming up and steady state fat burning.",modes:["LISS (Steady)","Moderate Intervals","Hill Program"],durations:[20,25,30,40,45],defDur:25,intensity:"RPE 5-7, maintain 75-85 RPM"},
 {n:"Elliptical (Cross Trainer)",desc:"Low impact full body cardio. Good alternative when joints are beat up from heavy training.",modes:["LISS (Steady)","Reverse Stride","Intervals"],durations:[20,25,30,40],defDur:25,intensity:"RPE 5-7, resistance level 6-10"},
 {n:"Rowing Machine (Erg)",desc:"Full body compound cardio. Great for back engagement and conditioning.",modes:["LISS (Steady Row)","500m Intervals","Pyramid"],durations:[15,20,25,30],defDur:20,intensity:"22-26 strokes/min steady, 28-32 for intervals"},
-{n:"Outdoor Walk (Fasted)",desc:"Hany's preferred off-day cardio. Early morning fasted walk for fat oxidation.",modes:["Easy Walk","Brisk Walk","Hill Route"],durations:[30,40,45,60],defDur:40,intensity:"Conversational pace. RPE 3-5"}
+{n:"Outdoor Walk (Fasted)",desc:"Preferred off-day cardio. Early morning fasted walk for fat oxidation.",modes:["Easy Walk","Brisk Walk","Hill Route"],durations:[30,40,45,60],defDur:40,intensity:"Conversational pace. RPE 3-5"}
 ];
 
 function getCardioPlans(){return LS.get("cardioPlans",[]);}
@@ -2582,8 +2590,8 @@ var _proGender="women",_proMuscle="";
 
 function renderProExercises(){
 var html='<button class="btn2" onclick="pop()" style="margin-bottom:14px">\u2039 '+t("back")+'</button>';
-html+='<div class="pt">FST-7 Exercise Database</div>';
-html+='<div style="font-size:11px;color:var(--mu);margin-bottom:14px;line-height:1.6">Hany Rambod\'s FST-7 methodology. Fascia Stretch Training \u2014 finish each muscle group with 7 sets of 8-12 reps, 30-45s rest between sets, to stretch the fascia and maximize blood volume.</div>';
+html+='<div class="pt">'+t("exerciseDatabase")+'</div>';
+html+='<div style="font-size:11px;color:var(--mu);margin-bottom:14px;line-height:1.6">'+t("exerciseDBDesc")+'</div>';
 html+='<div style="display:flex;gap:4px;margin-bottom:14px"><div class="chip'+(_proGender==="women"?" on":"")+'" onclick="_proGender=\'women\';_proMuscle=\'\';render()">'+t("women")+'</div><div class="chip'+(_proGender==="men"?" on":"")+'" onclick="_proGender=\'men\';_proMuscle=\'\';render()">'+t("men")+'</div></div>';
 var groups=Object.keys(PRO_EXERCISES[_proGender]);
 html+='<div style="display:flex;gap:3px;flex-wrap:wrap;margin-bottom:14px">';
@@ -2604,7 +2612,7 @@ html+='<button class="btn2" onclick="showAddCustomExercise(\''+escJs(_proGender)
 return html;}
 
 function addProExToSession(name,setsReps){
-push('new',{prefillExercises:[{name:name,sets:[{w:'',r:setsReps||'',n:'FST-7'}],mode:'normal'}]});
+push('new',{prefillExercises:[{name:name,sets:[{w:'',r:setsReps||'',n:''}],mode:'normal'}]});
 toast('\u2713 '+name+' added to session');
 haptic(12);}
 
@@ -2622,22 +2630,30 @@ if(currentView.view==='proExercises')return renderProExercises();
 if(currentView.view==='foodBrowser')return renderFoodBrowser();
 
 var html='<div class="gw" style="margin:0 0 18px"></div><div class="pt">'+t("proTools")+'</div>';
-html+='<div style="font-size:11px;color:var(--mu);margin-bottom:20px;line-height:1.6">'+t("proToolsDesc")+'</div>';
 
-// Quick actions grid
-html+='<div class="sl">'+t("build")+'</div>';
+// ── NUTRITION ──
+html+='<div class="sl">NUTRITION</div>';
 html+='<div class="g2" style="margin-bottom:14px">';
 html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="startMealPlan()"><div style="font-size:28px;margin-bottom:8px">\uD83C\uDF7D</div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("mealPlan")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">'+t("macroBuilder")+'</div></div>';
+html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="push(\'foodBrowser\')"><div style="font-size:28px;margin-bottom:8px">\uD83E\uDD66</div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("foodDatabase")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">'+getAllFoods().length+' '+t("food")+'s</div></div>';
+html+='</div>';
+html+='<div class="g2" style="margin-bottom:14px">';
+html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="startSupplementPlan()"><div style="font-size:28px;margin-bottom:8px">\uD83D\uDC8A</div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("supplementBuilder")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">'+t("scienceBacked")+'</div></div>';
+html+='<div style="padding:20px"></div>';
+html+='</div>';
+
+// ── TRAINING ──
+html+='<div class="sl" style="margin-top:6px">TRAINING</div>';
+html+='<div class="g2" style="margin-bottom:14px">';
+html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="push(\'proExercises\')"><div style="font-size:28px;margin-bottom:8px">\uD83C\uDFCB</div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("exerciseDatabase")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">'+t("byMuscle")+'</div></div>';
 html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="startCardioPlan()"><div style="font-size:28px;margin-bottom:8px">\u2764</div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("cardioBuilder")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">'+t("proCardioBuilder")+'</div></div>';
 html+='</div>';
 
+// ── COACHING ──
+html+='<div class="sl" style="margin-top:6px">COACHING</div>';
 html+='<div class="g2" style="margin-bottom:14px">';
-html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="push(\'proExercises\')"><div style="font-size:28px;margin-bottom:8px">\uD83C\uDFCB</div><div style="font-size:13px;font-weight:700;color:var(--wh)">FST-7</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">'+t("hanyMethod")+'</div></div>';
-html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="startSupplementPlan()"><div style="font-size:28px;margin-bottom:8px">\uD83D\uDC8A</div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("supplementBuilder")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">'+t("scienceBacked")+'</div></div>';
-html+='</div>';
-html+='<div class="g2" style="margin-bottom:14px">';
-html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="push(\'foodBrowser\')"><div style="font-size:28px;margin-bottom:8px">\uD83E\uDD66</div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("foodDatabase")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">'+getAllFoods().length+' '+t("food")+'S</div></div>';
-html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="showTimerModal()"><div style="font-size:28px;margin-bottom:8px">\u23F1</div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("restTimer")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">REST & COACHING</div></div>';
+html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="showTimerModal()"><div style="font-size:28px;margin-bottom:8px">\u23F1</div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("restTimer")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">REST & RECOVERY</div></div>';
+html+='<div style="padding:20px"></div>';
 html+='</div>';
 
 // Saved meal plans
@@ -2722,7 +2738,7 @@ html+='<div class="cd" style="padding:16px"><div class="g2"><button class="btn2"
 
 // ── DISPLAY & PREFERENCES ──
 html+='<div class="sl" style="margin-top:22px">\uD83C\uDFA8 DISPLAY & PREFERENCES</div>';
-html+='<div class="cd" style="padding:16px"><div class="field"><span class="lb">'+t("timeFormat")+'</span><div style="display:flex;gap:4px"><div class="chip'+(is24Hr()?"":" on")+'" onclick="LS.set(\'timeFormat\',\'12\');render()">12-Hour</div><div class="chip'+(is24Hr()?" on":"")+'" onclick="LS.set(\'timeFormat\',\'24\');render()">24-Hour</div></div></div><div class="field" style="margin-bottom:0"><span class="lb">'+t("lang").toUpperCase()+'</span><div style="display:flex;gap:4px"><div class="chip'+(getLang()==="en"?" on":"")+'" onclick="LS.set(\'lang\',\'en\');render()">English</div><div class="chip'+(getLang()==="hu"?" on":"")+'" onclick="LS.set(\'lang\',\'hu\');render()">Magyar</div></div></div></div>';
+html+='<div class="cd" style="padding:16px"><div class="field"><span class="lb">'+t("name").toUpperCase()+'</span><input id="coachNameInput" value="'+escHtml(getCoachName())+'" placeholder="Your name" onchange="LS.set(\'coachName\',this.value);render()"></div><div class="field"><span class="lb">'+t("timeFormat")+'</span><div style="display:flex;gap:4px"><div class="chip'+(is24Hr()?"":" on")+'" onclick="LS.set(\'timeFormat\',\'12\');render()">12-Hour</div><div class="chip'+(is24Hr()?" on":"")+'" onclick="LS.set(\'timeFormat\',\'24\');render()">24-Hour</div></div></div><div class="field" style="margin-bottom:0"><span class="lb">'+t("lang").toUpperCase()+'</span><div style="display:flex;gap:4px"><div class="chip'+(getLang()==="en"?" on":"")+'" onclick="LS.set(\'lang\',\'en\');render()">English</div><div class="chip'+(getLang()==="hu"?" on":"")+'" onclick="LS.set(\'lang\',\'hu\');render()">Magyar</div></div></div></div>';
 
 // ── SECURITY ──
 html+='<div class="sl" style="margin-top:22px">\uD83D\uDD12 '+t("security")+'</div>';
@@ -2850,7 +2866,7 @@ var overlay=document.createElement("div");
 overlay.id="whatsNew";
 overlay.style.cssText="position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.92);backdrop-filter:blur(20px);padding:16px;animation:fadeIn 0.4s ease";
 var wnItems=[
-{icon:"\uD83C\uDFCB",title:"Quick Add Exercise Database",desc:"Tap exercises from the FST-7 database directly into your session. Muscle group filters, gender toggle, instant add."},
+{icon:"\uD83C\uDFCB",title:"Quick Add Exercise Database",desc:"Tap exercises from the database directly into your session. Muscle group filters, gender toggle, instant add."},
 {icon:"\u23F1",title:"Smarter Exercise Picker",desc:"Remembers your last muscle group, shows a running count, closes by tapping outside."},
 {icon:"\uD83C\uDF10",title:"Full Hungarian Translation",desc:"90+ new keys. Every screen, builder, and toast message now fully translated."},
 {icon:"\uD83D\uDD12",title:"Premium Lock Screen",desc:"Gold dot indicators fill as you type. PIN codes now support up to 9 digits."},
