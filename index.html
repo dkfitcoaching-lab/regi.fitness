@@ -1028,7 +1028,10 @@ var exHist=getExerciseHistory();var dlHtml='<datalist id="exNames">';for(var ei=
 var templates=getTemplates();var tmplHtml="";if(templates.length){tmplHtml='<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:8px">';for(var ti=0;ti<Math.min(templates.length,5);ti++)tmplHtml+='<button class="btn2" onclick="loadTemplate(\''+escJs(templates[ti].name)+'\')" style="padding:4px 10px;font-size:8px">\u21BB '+escHtml(templates[ti].name)+'</button>';tmplHtml+='</div>';}
 var draftHtml="";var draft=loadDraft();if(draft&&!pfId&&draft.exercises&&draft.exercises.length){draftHtml='<div class="cd" style="padding:12px;border:1px solid var(--warn);margin-bottom:12px;display:flex;align-items:center;gap:10px"><span style="font-size:10px;color:var(--warn);font-family:var(--mono);flex:1">'+t("unsavedDraft")+'</span><button class="btn2" onclick="restoreDraft()" style="padding:4px 10px;font-size:8px;color:var(--warn);border-color:rgba(232,184,120,0.3)">'+t("restore")+'</button><button class="btn2" onclick="clearDraft();this.closest(\'.cd\').remove()" style="padding:4px 10px;font-size:8px">'+t("discard")+'</button></div>';}
 html+=dlHtml+draftHtml;
-html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px"><div class="sl" style="margin:0">'+t("exercises")+'</div><div style="display:flex;gap:4px"><button class="btn2" onclick="addExercise(\'normal\')" style="padding:6px 10px;font-size:8px">'+t("addExercise")+'</button><button class="btn2" onclick="addExercise(\'superset\')" style="padding:6px 10px;font-size:8px;color:#88ccdd;border-color:rgba(120,180,200,0.3)">'+t("addSuperset")+'</button><button class="btn2" onclick="addExercise(\'giant\')" style="padding:6px 10px;font-size:8px;color:#cc88ee;border-color:rgba(180,120,200,0.3)">'+t("addGiantSet")+'</button></div></div>'+tmplHtml+'<div id="exList" style="margin-top:8px"></div>';
+html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px"><div class="sl" style="margin:0">'+t("exercises")+'</div><div style="display:flex;gap:4px"><button class="btn2" onclick="addExercise(\'normal\')" style="padding:6px 10px;font-size:8px">'+t("addExercise")+'</button><button class="btn2" onclick="addExercise(\'superset\')" style="padding:6px 10px;font-size:8px;color:#88ccdd;border-color:rgba(120,180,200,0.3)">'+t("addSuperset")+'</button><button class="btn2" onclick="addExercise(\'giant\')" style="padding:6px 10px;font-size:8px;color:#cc88ee;border-color:rgba(180,120,200,0.3)">'+t("addGiantSet")+'</button></div></div>';
+html+='<div style="display:flex;gap:4px;margin-top:6px;flex-wrap:wrap">'+tmplHtml+'<button class="btn2" onclick="showQuickExPicker()" style="padding:4px 10px;font-size:8px;color:var(--accVib);border-color:rgba(212,168,72,0.2)">\uD83C\uDFCB FROM DB</button></div>';
+html+='<div id="exLiveStats" style="display:none;margin-top:8px;padding:8px 12px;background:rgba(212,168,72,0.03);border:1px solid rgba(212,168,72,0.06);border-radius:10px;font-size:10px;color:var(--dm);font-family:var(--mono)"></div>';
+html+='<div id="exList" style="margin-top:8px"></div>';
 html+=renderTimerWidget(true);
 html+='<div class="sl" style="margin-top:22px">'+t("sessionNotes")+'</div><div class="cd" style="padding:18px"><div class="field"><span class="lb">'+t("notes")+'</span><textarea id="sN" rows="3" placeholder="Form notes, adjustments, observations..."></textarea></div><div class="field"><span class="lb">'+t("sessionRating")+'</span><div style="display:flex;gap:4px">'+dots+'</div></div><div><span class="lb">'+t("nextSessionPlan")+'</span><textarea id="sNx" rows="2" placeholder="Focus areas, progressions, notes for next time..."></textarea></div></div>';
 html+='<button class="btn" style="margin-top:18px" onclick="doSaveSession()">'+t("save")+'</button><div style="display:flex;gap:8px;margin-top:10px;justify-content:center"><button class="btn2" onclick="promptSaveTemplate()" style="font-size:9px">'+t("saveTemplate")+'</button></div>';
@@ -1053,6 +1056,50 @@ function _weightOpts(){var o='<option value="">'+t("lbs")+'</option>';for(var w=
 function _repOpts(){var o='<option value="">'+t("reps")+'</option>';for(var r=1;r<=30;r++)o+='<option value="'+r+'">'+r+'</option>';o+='<option value="AMRAP">AMRAP</option><option value="Failure">Fail</option>';return o;}
 function addSet(group){var rows=group.querySelector(".xSets");var n=rows.querySelectorAll(".set-row").length+1;var d=document.createElement("div");d.className="set-row set-normal";d.innerHTML='<div class="set-badge">S'+n+'</div><select class="sw" style="width:68px;padding:8px 4px;font-size:12px;text-align:center;background-position:right 4px center;padding-right:18px">'+_weightOpts()+'</select><span style="font-size:10px;color:var(--dmL)">\u00D7</span><select class="sr" style="width:62px;padding:8px 4px;font-size:12px;text-align:center;background-position:right 4px center;padding-right:18px">'+_repOpts()+'</select><input class="sn" placeholder="'+t("notes").toLowerCase()+'" style="flex:1;padding:8px;font-size:11px"><span style="font-size:12px;color:var(--danger);cursor:pointer;padding:2px 4px" onclick="this.parentElement.remove()">\u2715</span>';rows.appendChild(d);}
 function collectExercises(){var exercises=[];document.querySelectorAll("#exList .cd").forEach(function(card){var mode=card.dataset.mode||"normal";var nt=(card.querySelector(".xNote")||{}).value||"";var rest=(card.querySelector(".xRest")||{}).value||"";var te=card.querySelector(".chip.on");var tempo=te?te.textContent.trim():"Normal";var groups=[];card.querySelectorAll(".exGroup").forEach(function(g){var nm=(g.querySelector(".xN")||{}).value||"";var sets=[];g.querySelectorAll(".set-row").forEach(function(row){sets.push({w:(row.querySelector(".sw")||{}).value||"",r:(row.querySelector(".sr")||{}).value||"",n:(row.querySelector(".sn")||{}).value||""});});if(nm)groups.push({name:nm,sets:sets});});if(groups.length===1)exercises.push({name:groups[0].name,tempo:tempo,sets:groups[0].sets,note:nt,rest:rest,mode:mode});else if(groups.length>1)exercises.push({name:groups.map(function(g){return g.name;}).join(" + "),tempo:tempo,mode:mode,note:nt,rest:rest,grouped:groups});});return exercises;}
+function showQuickExPicker(){
+var groups=Object.keys(PRO_EXERCISES[_proGender]);
+var html='<div style="position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.90);backdrop-filter:blur(12px);padding:20px;animation:fadeIn 0.3s" id="exPicker"><div style="width:100%;max-width:440px;max-height:80vh;overflow-y:auto;background:linear-gradient(160deg,rgba(10,10,16,0.99),rgba(4,4,8,0.99));border:1px solid var(--accB);border-radius:16px;padding:24px;box-shadow:0 0 60px rgba(212,168,72,0.08)">';
+html+='<div class="pt" style="font-size:16px;margin-bottom:10px">Quick Add from Exercise DB</div>';
+html+='<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px"><div class="chip'+((_proGender==="women")?" on":"")+'" onclick="_proGender=\'women\';updateExPickerList()">WOMEN</div><div class="chip'+((_proGender==="men")?" on":"")+'" onclick="_proGender=\'men\';updateExPickerList()">MEN</div></div>';
+html+='<div id="exPickerGroups" style="display:flex;gap:3px;flex-wrap:wrap;margin-bottom:12px">';
+for(var gi=0;gi<groups.length;gi++){html+='<div class="chip'+(gi===0?" on":"")+'" onclick="selectExPickerGroup(\''+escJs(groups[gi])+'\',this)">'+groups[gi]+'</div>';}
+html+='</div><div id="exPickerList" style="max-height:40vh;overflow-y:auto"></div>';
+html+='<button class="btn2" onclick="document.getElementById(\'exPicker\').remove()" style="width:100%;margin-top:12px">CLOSE</button></div></div>';
+var el=document.createElement('div');el.innerHTML=html;document.body.appendChild(el.firstChild);
+selectExPickerGroup(groups[0],document.querySelector('#exPickerGroups .chip.on'));
+}
+function selectExPickerGroup(group,el){
+if(el){el.parentElement.querySelectorAll('.chip').forEach(function(c){c.classList.remove('on');});el.classList.add('on');}
+var exs=PRO_EXERCISES[_proGender][group]||[];
+var h='';for(var i=0;i<exs.length;i++){var ex=exs[i];
+h+='<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;margin-bottom:4px;background:rgba(212,168,72,0.02);border:1px solid rgba(212,168,72,0.06);border-radius:8px;cursor:pointer" onclick="quickAddExFromDB(\''+escJs(ex.n)+'\');this.style.borderColor=\'var(--acc)\';this.querySelector(\'.qaBadge\').textContent=\'\u2713\'"><div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--wh)">'+escHtml(ex.n)+'</div><div style="font-size:9px;color:var(--acc);font-family:var(--mono)">'+ex.s+'</div></div><span class="qaBadge" style="font-size:10px;color:var(--dm)">+</span></div>';}
+var list=$('exPickerList');if(list)list.innerHTML=h;
+}
+function updateExPickerList(){
+var picker=$('exPicker');if(!picker)return;
+var groups=Object.keys(PRO_EXERCISES[_proGender]);
+var gh='';for(var gi=0;gi<groups.length;gi++){gh+='<div class="chip'+(gi===0?" on":"")+'" onclick="selectExPickerGroup(\''+escJs(groups[gi])+'\',this)">'+groups[gi]+'</div>';}
+var gEl=$('exPickerGroups');if(gEl)gEl.innerHTML=gh;
+picker.querySelectorAll('.chip').forEach(function(c){var t=c.textContent.trim();if(t==='WOMEN')c.className='chip'+(_proGender==='women'?' on':'');if(t==='MEN')c.className='chip'+(_proGender==='men'?' on':'');});
+selectExPickerGroup(groups[0],document.querySelector('#exPickerGroups .chip.on'));
+}
+function quickAddExFromDB(name){
+addExercise('normal');
+var card=document.getElementById('ex'+_exCount);
+if(card){var nm=card.querySelector('.xN');if(nm)nm.value=name;}
+updateExLiveStats();
+}
+function updateExLiveStats(){
+var el=$('exLiveStats');if(!el)return;
+var cards=document.querySelectorAll('#exList .cd');
+if(!cards.length){el.style.display='none';return;}
+var totalEx=0,totalSets=0;
+cards.forEach(function(card){
+var groups=card.querySelectorAll('.exGroup');
+groups.forEach(function(g){var nm=(g.querySelector('.xN')||{}).value;if(nm){totalEx++;totalSets+=g.querySelectorAll('.set-row').length;}});});
+if(totalEx){el.style.display='block';el.innerHTML='\u2022 '+totalEx+' exercises \u2022 '+totalSets+' total sets';}
+else el.style.display='none';
+}
 function prefillExercises(){var pfEx=(currentView.data||{}).prefillExercises||[];for(var i=0;i<pfEx.length;i++){var ex=pfEx[i];var mode=ex.mode||"normal";if(ex.grouped){addExercise(mode);var card=document.getElementById("ex"+_exCount);if(!card)continue;var groups=card.querySelectorAll(".exGroup");for(var g=0;g<Math.min(groups.length,ex.grouped.length);g++){var nm=groups[g].querySelector(".xN");if(nm)nm.value=ex.grouped[g].name||"";var sets=ex.grouped[g].sets||[];for(var j=1;j<sets.length;j++)addSet(groups[g]);var rows=groups[g].querySelectorAll(".set-row");for(var j=0;j<Math.min(rows.length,sets.length);j++){var sw=rows[j].querySelector(".sw");if(sw)sw.value=sets[j].w||"";var sr=rows[j].querySelector(".sr");if(sr)sr.value=sets[j].r||"";}}}else{addExercise(mode);var card=document.getElementById("ex"+_exCount);if(!card)continue;var nm=card.querySelector(".xN");if(nm)nm.value=ex.name||"";var sets=ex.sets||[];for(var j=1;j<sets.length;j++)addSet(card.querySelector(".exGroup"));var rows=card.querySelectorAll(".set-row");for(var j=0;j<Math.min(rows.length,sets.length);j++){var sw=rows[j].querySelector(".sw");if(sw)sw.value=sets[j].w||"";var sr=rows[j].querySelector(".sr");if(sr)sr.value=sets[j].r||"";}}}toast("\u2713 Exercises loaded");}
 function restoreDraft(){var d=loadDraft();if(!d)return;
 if(d.clientId){var sel=$("sC");if(sel)sel.value=d.clientId;onClientSelect();}
