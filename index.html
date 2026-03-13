@@ -147,7 +147,7 @@ html{scroll-behavior:smooth}
 
 var SUPA_URL="https://pwopwvvgjflunjxwkkql.supabase.co";
 var SUPA_KEY="sb_publishable_6slliEpPsWV9JXIDvz8pyw_FNPrPMhv";
-var VERSION="4.1";
+var VERSION="4.2";
 var LANGS={
 en:{
 days:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],
@@ -373,7 +373,26 @@ fastedAM:"Fasted AM",
 separateSession:"Separate Session",
 saveProtocol:"SAVE CARDIO PROTOCOL",
 unlockLabel:"UNLOCK",
-enterPIN:"Enter PIN"
+enterPIN:"Enter PIN",
+customFood:"+ CUSTOM FOOD",
+addCustomFood:"Add Custom Food",
+foodName:"Food name",
+servingSize:"Serving size",
+servingUnit:"Unit",
+measured:"Measured",
+cooked:"cooked",
+dry:"dry",
+raw:"raw",
+targetBPM:"TARGET HEART RATE (BPM)",
+customTime:"CUSTOM TIME (MIN)",
+customExercise:"+ CUSTOM EXERCISE",
+addCustomExercise:"Add Custom Exercise",
+setsReps:"Sets x Reps",
+general:"General",
+noClient:"No client",
+myCustomFoods:"MY CUSTOM FOODS",
+myCustomExercises:"MY CUSTOM EXERCISES",
+selectClient:"Select Client"
 },
 hu:{
 days:["Vas","H\u00e9t","Kedd","Sze","Cs\u00fct","P\u00e9n","Szo"],
@@ -599,7 +618,26 @@ fastedAM:"\u00c9hgyomorra reggel",
 separateSession:"K\u00fcl\u00f6n edz\u00e9s",
 saveProtocol:"KARDI\u00d3 PROTOKOLL MENT\u00c9SE",
 unlockLabel:"FELOLD\u00c1S",
-enterPIN:"PIN megad\u00e1sa"
+enterPIN:"PIN megad\u00e1sa",
+customFood:"+ EGY\u00c9NI \u00c9TEL",
+addCustomFood:"Egy\u00e9ni \u00e9tel hozz\u00e1ad\u00e1sa",
+foodName:"\u00c9tel neve",
+servingSize:"Adag m\u00e9rete",
+servingUnit:"Egys\u00e9g",
+measured:"M\u00e9r\u00e9s",
+cooked:"f\u0151tt",
+dry:"sz\u00e1raz",
+raw:"nyers",
+targetBPM:"C\u00c9L SZ\u00cdVFREKVENCIA (BPM)",
+customTime:"EGY\u00c9NI ID\u0150 (PERC)",
+customExercise:"+ EGY\u00c9NI GYAKORLAT",
+addCustomExercise:"Egy\u00e9ni gyakorlat hozz\u00e1ad\u00e1sa",
+setsReps:"Sorozat x Ism\u00e9tl\u00e9s",
+general:"\u00c1ltal\u00e1nos",
+noClient:"Nincs \u00fcgyf\u00e9l",
+myCustomFoods:"EGY\u00c9NI \u00c9TELEK",
+myCustomExercises:"EGY\u00c9NI GYAKORLATOK",
+selectClient:"\u00dcgyf\u00e9l v\u00e1laszt\u00e1sa"
 }
 };
 var DN;/* initialized after LS */
@@ -896,12 +934,13 @@ function formatPhone(el){var v=el.value.replace(/\D/g,"");if(v.length>10)v=v.sli
 function clientFormFields(c){c=c||{};var defRate=LS.get("defaultRate","70");var types=["Training","Mobility","Training + Mobility"];var typeLabels=[t("training"),t("mobility"),t("trainingMobility")];var levels=["Beginner","Some Experience","Intermediate","Advanced"];var levelLabels=[t("beginner"),t("someExp"),t("intermediate"),t("advanced")];
 var hasHealth=c.goals||c.injuries||c.medical||c.activity||c.notes;
 var html='<div class="cd" style="padding:20px"><div class="field"><span class="lb">'+t("name")+' *</span><input id="cN" placeholder="Client\u2019s full name" value="'+escHtml(c.name||"")+'"></div><div class="g2 field"><div><span class="lb">'+t("phone")+'</span><input id="cP" type="tel" placeholder="(555) 123-4567" value="'+escHtml(c.phone||"")+'" oninput="formatPhone(this)"></div><div><span class="lb">'+t("email")+'</span><input id="cE" type="email" placeholder="client@email.com" value="'+escHtml(c.email||"")+'"></div></div><div class="g2 field"><div><span class="lb">'+t("age")+'</span><input id="cA" type="number" min="13" max="99" placeholder="e.g. 32" value="'+(c.age||"")+'"></div><div><span class="lb">'+t("rate")+'</span><input id="cR" type="number" min="0" placeholder="'+defRate+'" value="'+(c.rate||"")+'"></div></div><div class="field"><span class="lb">'+t("sessionType")+'</span><div style="display:flex;flex-wrap:wrap;gap:4px">';for(var i=0;i<types.length;i++)html+='<div class="chip'+((c.type||"Training")===types[i]?" on":"")+'" data-value="'+types[i]+'" onclick="pickChip(this,\'cTv\')">'+typeLabels[i]+'</div>';html+='</div><input type="hidden" id="cTv" value="'+(c.type||"Training")+'"></div><div class="field"><span class="lb">'+t("experience")+'</span><div style="display:flex;flex-wrap:wrap;gap:4px">';for(var i=0;i<levels.length;i++)html+='<div class="chip'+((c.level||"Beginner")===levels[i]?" on":"")+'" data-value="'+levels[i]+'" onclick="pickChip(this,\'cLv\')">'+levelLabels[i]+'</div>';html+='</div><input type="hidden" id="cLv" value="'+(c.level||"Beginner")+'"></div><div style="margin-top:8px;padding-top:14px;border-top:1px solid var(--borderS)"><div onclick="var s=document.getElementById(\'healthSection\');s.style.display=s.style.display===\'none\'?\'block\':\'none\';this.querySelector(\'span\').style.transform=s.style.display===\'none\'?\'rotate(0)\':\' rotate(180deg)\'" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;padding:4px 0"><span class="lb" style="margin:0;cursor:pointer">'+t("healthHistory")+'</span><span style="color:var(--dm);font-size:10px;transition:transform 0.2s;display:inline-block'+(hasHealth?';transform:rotate(180deg)':'')+'">\u25BC</span></div><div id="healthSection" style="display:'+(hasHealth?'block':'none')+';margin-top:14px"><div class="field"><span class="lb">'+t("goals")+'</span><textarea id="cG" rows="2" placeholder="What do they want to achieve?">'+escHtml(c.goals||"")+'</textarea></div><div class="field"><span class="lb">'+t("injuries")+'</span><textarea id="cI" rows="2" placeholder="Surgeries, joint issues, chronic pain...">'+escHtml(c.injuries||"")+'</textarea></div><div class="field"><span class="lb">'+t("medical")+'</span><textarea id="cM" rows="1" placeholder="Conditions, medications...">'+escHtml(c.medical||"")+'</textarea></div><div class="field"><span class="lb">'+t("currentActivity")+'</span><textarea id="cAc" rows="1" placeholder="Sedentary, light gym, active...">'+escHtml(c.activity||"")+'</textarea></div><div><span class="lb">'+t("notes")+'</span><textarea id="cO" rows="2" placeholder="Personality, preferences, anything...">'+escHtml(c.notes||"")+'</textarea></div></div></div></div>';
+html+='<div class="field" style="margin-top:14px"><span class="lb">DIETARY NEEDS</span><div style="display:flex;flex-wrap:wrap;gap:4px"><div class="chip'+(!c.diet||c.diet==="none"?" on":"")+'" data-value="none" onclick="pickChip(this,\'cDiet\')">No Restrictions</div><div class="chip'+(c.diet==="df"?" on":"")+'" data-value="df" onclick="pickChip(this,\'cDiet\')">Dairy-Free</div><div class="chip'+(c.diet==="keto"?" on":"")+'" data-value="keto" onclick="pickChip(this,\'cDiet\')">Keto</div><div class="chip'+(c.diet==="vegan"?" on":"")+'" data-value="vegan" onclick="pickChip(this,\'cDiet\')">Vegan</div><div class="chip'+(c.diet==="lc"?" on":"")+'" data-value="lc" onclick="pickChip(this,\'cDiet\')">Low-Carb</div></div><input type="hidden" id="cDiet" value="'+(c.diet||"none")+'"></div>';
 html+='<input type="hidden" id="cRm" value="'+escHtml(c.reminderMsg||"")+'">';
 return html;
 }
 function renderClientAdd(){return'<button class="btn2" onclick="pop()" style="margin-bottom:14px">\u2039 '+t("back")+'</button><div class="pt">'+t("addClient")+'</div>'+clientFormFields()+'<button class="btn" style="margin-top:16px" onclick="saveNewClient()">'+t("save")+'</button>';}
 function renderClientEdit(){var c=clients[currentView.data.clientIdx];if(!c){pop();return"";}return'<button class="btn2" onclick="pop()" style="margin-bottom:14px">\u2039 '+t("back")+'</button><div class="pt">'+t("edit")+' '+t("client")+'</div>'+clientFormFields(c)+'<button class="btn" style="margin-top:16px" onclick="saveEditClient()">'+t("save")+'</button>';}
-function readClientForm(){return{name:v("cN"),phone:v("cP"),email:v("cE"),type:v("cTv"),rate:v("cR")||"70",age:v("cA"),level:v("cLv"),goals:v("cG"),injuries:v("cI"),medical:v("cM"),activity:v("cAc"),notes:v("cO"),reminderMsg:v("cRm")};}
+function readClientForm(){return{name:v("cN"),phone:v("cP"),email:v("cE"),type:v("cTv"),rate:v("cR")||"70",age:v("cA"),level:v("cLv"),diet:v("cDiet")||"none",goals:v("cG"),injuries:v("cI"),medical:v("cM"),activity:v("cAc"),notes:v("cO"),reminderMsg:v("cRm")};}
 function saveNewClient(){var data=readClientForm();if(!data.name){toast(t("nameRequired"));return;}data.id=Date.now().toString();data.created_at=new Date().toISOString();clients.push(data);save();toast("\u2713 "+data.name+" added");navStack=[];currentView={tab:"clients",view:"detail",data:{clientIdx:clients.length-1}};render();}
 function saveEditClient(){var c=clients[currentView.data.clientIdx];if(!c)return;var data=readClientForm();if(!data.name){toast(t("nameRequired"));return;}Object.assign(c,data);save();toast("\u2713 Updated");pop();}
 function renderClientDetail(){
@@ -1548,62 +1587,163 @@ safePDFSave(doc,fname);}
 // GLUTEN-FREE FOOD DATABASE — Macros per serving (P/C/F in grams)
 // ═══════════════════════════════════════════════════════════════════
 var FOOD_DB=[
-// PROTEINS
-{n:"Chicken Breast (6oz)",cat:"protein",p:38,c:0,f:3,cal:179,gf:true},
-{n:"Ground Turkey 93% (6oz)",cat:"protein",p:33,c:0,f:8,cal:204,gf:true},
-{n:"Egg Whites (1 cup)",cat:"protein",p:26,c:2,f:0,cal:120,gf:true},
-{n:"Whole Eggs (2 large)",cat:"protein",p:12,c:1,f:10,cal:140,gf:true},
-{n:"Wild Salmon (6oz)",cat:"protein",p:34,c:0,f:12,cal:248,gf:true},
-{n:"Tilapia (6oz)",cat:"protein",p:34,c:0,f:3,cal:163,gf:true},
-{n:"Cod (6oz)",cat:"protein",p:30,c:0,f:1,cal:130,gf:true},
-{n:"Shrimp (6oz)",cat:"protein",p:36,c:1,f:2,cal:170,gf:true},
-{n:"Flank Steak (6oz)",cat:"protein",p:36,c:0,f:10,cal:234,gf:true},
-{n:"93% Lean Ground Beef (6oz)",cat:"protein",p:32,c:0,f:12,cal:236,gf:true},
-{n:"Bison (6oz)",cat:"protein",p:36,c:0,f:6,cal:200,gf:true},
-{n:"Whey Protein Isolate (1 scoop)",cat:"protein",p:25,c:2,f:1,cal:120,gf:true},
-{n:"Casein Protein (1 scoop)",cat:"protein",p:24,c:3,f:1,cal:120,gf:true},
-{n:"Greek Yogurt 0% (1 cup)",cat:"protein",p:20,c:9,f:0,cal:120,gf:true},
-{n:"Cottage Cheese 1% (1 cup)",cat:"protein",p:28,c:6,f:2,cal:160,gf:true},
-// CARBS
-{n:"White Rice (1 cup cooked)",cat:"carb",p:4,c:45,f:0,cal:200,gf:true},
-{n:"Jasmine Rice (1 cup cooked)",cat:"carb",p:4,c:45,f:1,cal:205,gf:true},
-{n:"Sweet Potato (1 medium)",cat:"carb",p:2,c:26,f:0,cal:103,gf:true},
-{n:"Red Potato (1 medium)",cat:"carb",p:3,c:26,f:0,cal:110,gf:true},
-{n:"Cream of Rice (1/3 cup dry)",cat:"carb",p:2,c:38,f:0,cal:160,gf:true},
-{n:"GF Oats (1/2 cup dry)",cat:"carb",p:5,c:27,f:3,cal:150,gf:true},
-{n:"Quinoa (1 cup cooked)",cat:"carb",p:8,c:39,f:4,cal:222,gf:true},
-{n:"Banana (1 medium)",cat:"carb",p:1,c:27,f:0,cal:105,gf:true},
-{n:"Blueberries (1 cup)",cat:"carb",p:1,c:21,f:0,cal:84,gf:true},
-{n:"Strawberries (1 cup)",cat:"carb",p:1,c:12,f:0,cal:49,gf:true},
-{n:"Apple (1 medium)",cat:"carb",p:0,c:25,f:0,cal:95,gf:true},
-{n:"Rice Cakes (2 cakes)",cat:"carb",p:1,c:15,f:0,cal:70,gf:true},
-{n:"GF Ezekiel Bread (1 slice)",cat:"carb",p:3,c:15,f:0,cal:80,gf:true},
-{n:"Corn Tortilla (2 small)",cat:"carb",p:2,c:22,f:1,cal:110,gf:true},
-// FATS
-{n:"Avocado (1/2 medium)",cat:"fat",p:1,c:6,f:15,cal:160,gf:true},
-{n:"Extra Virgin Olive Oil (1 tbsp)",cat:"fat",p:0,c:0,f:14,cal:120,gf:true},
-{n:"Coconut Oil (1 tbsp)",cat:"fat",p:0,c:0,f:14,cal:120,gf:true},
-{n:"Natural Almond Butter (1 tbsp)",cat:"fat",p:3,c:3,f:9,cal:98,gf:true},
-{n:"Natural Peanut Butter (1 tbsp)",cat:"fat",p:4,c:3,f:8,cal:94,gf:true},
-{n:"Almonds (1oz/23 nuts)",cat:"fat",p:6,c:6,f:14,cal:162,gf:true},
-{n:"Walnuts (1oz)",cat:"fat",p:4,c:4,f:18,cal:185,gf:true},
-{n:"Cashews (1oz)",cat:"fat",p:5,c:9,f:12,cal:157,gf:true},
-{n:"Macadamia Nuts (1oz)",cat:"fat",p:2,c:4,f:21,cal:204,gf:true},
-{n:"Chia Seeds (1 tbsp)",cat:"fat",p:2,c:5,f:4,cal:60,gf:true},
-{n:"Flax Seeds Ground (1 tbsp)",cat:"fat",p:1,c:2,f:3,cal:37,gf:true},
-{n:"MCT Oil (1 tbsp)",cat:"fat",p:0,c:0,f:14,cal:115,gf:true},
-// VEGGIES
-{n:"Asparagus (1 cup)",cat:"veggie",p:3,c:5,f:0,cal:27,gf:true},
-{n:"Broccoli (1 cup)",cat:"veggie",p:3,c:6,f:0,cal:31,gf:true},
-{n:"Spinach (2 cups raw)",cat:"veggie",p:2,c:2,f:0,cal:14,gf:true},
-{n:"Green Beans (1 cup)",cat:"veggie",p:2,c:7,f:0,cal:31,gf:true},
-{n:"Cucumber (1 cup sliced)",cat:"veggie",p:1,c:4,f:0,cal:16,gf:true},
-{n:"Zucchini (1 medium)",cat:"veggie",p:2,c:6,f:0,cal:31,gf:true},
-{n:"Bell Pepper (1 medium)",cat:"veggie",p:1,c:6,f:0,cal:25,gf:true},
-{n:"Cauliflower Rice (1 cup)",cat:"veggie",p:2,c:5,f:0,cal:25,gf:true},
-{n:"Mixed Greens (2 cups)",cat:"veggie",p:2,c:3,f:0,cal:18,gf:true},
-{n:"Mushrooms (1 cup)",cat:"veggie",p:3,c:3,f:0,cal:22,gf:true}
+// ══ PROTEINS — all meats measured COOKED per 170g (6oz) ══
+// Chicken
+{n:"Chicken Breast (skinless)",cat:"protein",p:38,c:0,f:3,cal:179,gf:true,sz:"170g",m:"cooked"},
+{n:"Chicken Thigh (skinless)",cat:"protein",p:28,c:0,f:10,cal:202,gf:true,sz:"170g",m:"cooked"},
+{n:"Chicken Drumstick",cat:"protein",p:26,c:0,f:8,cal:176,gf:true,sz:"170g",m:"cooked"},
+{n:"Ground Chicken 98%",cat:"protein",p:36,c:0,f:3,cal:170,gf:true,sz:"170g",m:"cooked"},
+// Turkey
+{n:"Ground Turkey 99/1",cat:"protein",p:36,c:0,f:2,cal:160,gf:true,sz:"170g",m:"cooked"},
+{n:"Ground Turkey 93/7",cat:"protein",p:33,c:0,f:8,cal:204,gf:true,sz:"170g",m:"cooked"},
+{n:"Ground Turkey 85/15",cat:"protein",p:30,c:0,f:14,cal:246,gf:true,sz:"170g",m:"cooked"},
+{n:"Turkey Breast (deli sliced)",cat:"protein",p:18,c:2,f:1,cal:90,gf:true,sz:"85g",m:"cooked"},
+// Beef
+{n:"Ground Beef 96/4",cat:"protein",p:34,c:0,f:6,cal:194,gf:true,sz:"170g",m:"cooked"},
+{n:"Ground Beef 93/7",cat:"protein",p:32,c:0,f:12,cal:236,gf:true,sz:"170g",m:"cooked"},
+{n:"Ground Beef 90/10",cat:"protein",p:30,c:0,f:16,cal:264,gf:true,sz:"170g",m:"cooked"},
+{n:"Ground Beef 85/15",cat:"protein",p:28,c:0,f:22,cal:310,gf:true,sz:"170g",m:"cooked"},
+{n:"Ground Beef 80/20",cat:"protein",p:26,c:0,f:28,cal:356,gf:true,sz:"170g",m:"cooked"},
+{n:"Flank Steak",cat:"protein",p:36,c:0,f:10,cal:234,gf:true,sz:"170g",m:"cooked"},
+{n:"Sirloin Steak",cat:"protein",p:36,c:0,f:8,cal:218,gf:true,sz:"170g",m:"cooked"},
+{n:"NY Strip Steak",cat:"protein",p:34,c:0,f:14,cal:262,gf:true,sz:"170g",m:"cooked"},
+{n:"Filet Mignon",cat:"protein",p:34,c:0,f:12,cal:248,gf:true,sz:"170g",m:"cooked"},
+{n:"Bison (ground 90/10)",cat:"protein",p:36,c:0,f:6,cal:200,gf:true,sz:"170g",m:"cooked"},
+{n:"Elk (ground)",cat:"protein",p:38,c:0,f:3,cal:178,gf:true,sz:"170g",m:"cooked"},
+{n:"Venison (ground)",cat:"protein",p:38,c:0,f:4,cal:186,gf:true,sz:"170g",m:"cooked"},
+// Fish & Seafood
+{n:"Wild Salmon",cat:"protein",p:34,c:0,f:12,cal:248,gf:true,sz:"170g",m:"cooked"},
+{n:"Atlantic Salmon (farmed)",cat:"protein",p:34,c:0,f:18,cal:296,gf:true,sz:"170g",m:"cooked"},
+{n:"Tilapia",cat:"protein",p:34,c:0,f:3,cal:163,gf:true,sz:"170g",m:"cooked"},
+{n:"Cod",cat:"protein",p:30,c:0,f:1,cal:130,gf:true,sz:"170g",m:"cooked"},
+{n:"Halibut",cat:"protein",p:36,c:0,f:4,cal:178,gf:true,sz:"170g",m:"cooked"},
+{n:"Mahi Mahi",cat:"protein",p:32,c:0,f:2,cal:148,gf:true,sz:"170g",m:"cooked"},
+{n:"Tuna (fresh)",cat:"protein",p:40,c:0,f:2,cal:178,gf:true,sz:"170g",m:"cooked"},
+{n:"Tuna (canned in water)",cat:"protein",p:20,c:0,f:1,cal:90,gf:true,sz:"85g",m:"cooked"},
+{n:"Shrimp",cat:"protein",p:36,c:1,f:2,cal:170,gf:true,sz:"170g",m:"cooked"},
+{n:"Scallops",cat:"protein",p:26,c:5,f:1,cal:135,gf:true,sz:"140g",m:"cooked"},
+{n:"White Fish (swai)",cat:"protein",p:28,c:0,f:4,cal:148,gf:true,sz:"170g",m:"cooked"},
+// Eggs & Dairy
+{n:"Egg Whites",cat:"protein",p:26,c:2,f:0,cal:120,gf:true,sz:"240ml",m:"raw"},
+{n:"Whole Eggs (2 large)",cat:"protein",p:12,c:1,f:10,cal:140,gf:true,sz:"100g",m:"raw"},
+{n:"Whole Eggs (3 large)",cat:"protein",p:18,c:2,f:15,cal:210,gf:true,sz:"150g",m:"raw"},
+{n:"Greek Yogurt 0%",cat:"protein",p:20,c:9,f:0,cal:120,gf:true,sz:"227g",m:"raw"},
+{n:"Greek Yogurt 2%",cat:"protein",p:20,c:8,f:4,cal:150,gf:true,sz:"227g",m:"raw"},
+{n:"Cottage Cheese 1%",cat:"protein",p:28,c:6,f:2,cal:160,gf:true,sz:"227g",m:"raw"},
+{n:"Cottage Cheese 4%",cat:"protein",p:26,c:6,f:8,cal:200,gf:true,sz:"227g",m:"raw"},
+// Supplements
+{n:"Whey Protein Isolate",cat:"protein",p:25,c:2,f:1,cal:120,gf:true,sz:"1 scoop",m:"dry"},
+{n:"Whey Protein Concentrate",cat:"protein",p:22,c:4,f:2,cal:130,gf:true,sz:"1 scoop",m:"dry"},
+{n:"Casein Protein",cat:"protein",p:24,c:3,f:1,cal:120,gf:true,sz:"1 scoop",m:"dry"},
+{n:"Plant Protein (pea/rice)",cat:"protein",p:20,c:4,f:2,cal:120,gf:true,sz:"1 scoop",m:"dry"},
+// ══ CARBS — rice/grains measured COOKED, oats/dry goods measured DRY ══
+// Rice & Grains
+{n:"White Rice",cat:"carb",p:4,c:45,f:0,cal:200,gf:true,sz:"195g",m:"cooked"},
+{n:"Jasmine Rice",cat:"carb",p:4,c:45,f:1,cal:205,gf:true,sz:"195g",m:"cooked"},
+{n:"Basmati Rice",cat:"carb",p:4,c:45,f:0,cal:200,gf:true,sz:"195g",m:"cooked"},
+{n:"Brown Rice",cat:"carb",p:5,c:45,f:2,cal:216,gf:true,sz:"195g",m:"cooked"},
+{n:"Wild Rice",cat:"carb",p:7,c:35,f:1,cal:166,gf:true,sz:"164g",m:"cooked"},
+{n:"Cream of Rice",cat:"carb",p:2,c:38,f:0,cal:160,gf:true,sz:"45g",m:"dry"},
+{n:"GF Oats",cat:"carb",p:5,c:27,f:3,cal:150,gf:true,sz:"40g",m:"dry"},
+{n:"Instant GF Oats",cat:"carb",p:5,c:27,f:3,cal:150,gf:true,sz:"40g",m:"dry"},
+{n:"Quinoa",cat:"carb",p:8,c:39,f:4,cal:222,gf:true,sz:"185g",m:"cooked"},
+{n:"Buckwheat (kasha)",cat:"carb",p:6,c:34,f:1,cal:155,gf:true,sz:"170g",m:"cooked"},
+// Potatoes & Roots
+{n:"Sweet Potato",cat:"carb",p:2,c:26,f:0,cal:103,gf:true,sz:"130g",m:"cooked"},
+{n:"White Potato",cat:"carb",p:3,c:26,f:0,cal:110,gf:true,sz:"150g",m:"cooked"},
+{n:"Red Potato",cat:"carb",p:3,c:26,f:0,cal:110,gf:true,sz:"150g",m:"cooked"},
+{n:"Yukon Gold Potato",cat:"carb",p:3,c:26,f:0,cal:110,gf:true,sz:"150g",m:"cooked"},
+{n:"Baby Potatoes (5 count)",cat:"carb",p:3,c:30,f:0,cal:130,gf:true,sz:"170g",m:"cooked"},
+// Fruits
+{n:"Banana",cat:"carb",p:1,c:27,f:0,cal:105,gf:true,sz:"1 medium",m:"raw"},
+{n:"Blueberries",cat:"carb",p:1,c:21,f:0,cal:84,gf:true,sz:"150g",m:"raw"},
+{n:"Strawberries",cat:"carb",p:1,c:12,f:0,cal:49,gf:true,sz:"150g",m:"raw"},
+{n:"Raspberries",cat:"carb",p:1,c:15,f:1,cal:64,gf:true,sz:"125g",m:"raw"},
+{n:"Apple",cat:"carb",p:0,c:25,f:0,cal:95,gf:true,sz:"1 medium",m:"raw"},
+{n:"Orange",cat:"carb",p:1,c:18,f:0,cal:73,gf:true,sz:"1 medium",m:"raw"},
+{n:"Pineapple (diced)",cat:"carb",p:1,c:22,f:0,cal:82,gf:true,sz:"165g",m:"raw"},
+{n:"Mango (sliced)",cat:"carb",p:1,c:28,f:0,cal:107,gf:true,sz:"165g",m:"raw"},
+{n:"Grapes",cat:"carb",p:1,c:27,f:0,cal:104,gf:true,sz:"150g",m:"raw"},
+{n:"Medjool Dates (2)",cat:"carb",p:1,c:36,f:0,cal:133,gf:true,sz:"48g",m:"dry"},
+// Bread & Wraps
+{n:"Rice Cakes",cat:"carb",p:1,c:15,f:0,cal:70,gf:true,sz:"2 cakes",m:"dry"},
+{n:"GF Ezekiel Bread",cat:"carb",p:3,c:15,f:0,cal:80,gf:true,sz:"1 slice",m:"dry"},
+{n:"Corn Tortilla",cat:"carb",p:2,c:22,f:1,cal:110,gf:true,sz:"2 small",m:"dry"},
+{n:"GF Wrap/Tortilla",cat:"carb",p:2,c:24,f:3,cal:130,gf:true,sz:"1 wrap",m:"dry"},
+// ══ FATS ══
+{n:"Avocado",cat:"fat",p:1,c:6,f:15,cal:160,gf:true,sz:"75g",m:"raw"},
+{n:"Avocado Oil",cat:"fat",p:0,c:0,f:14,cal:120,gf:true,sz:"15ml",m:"raw"},
+{n:"Extra Virgin Olive Oil",cat:"fat",p:0,c:0,f:14,cal:120,gf:true,sz:"15ml",m:"raw"},
+{n:"Coconut Oil",cat:"fat",p:0,c:0,f:14,cal:120,gf:true,sz:"15ml",m:"raw"},
+{n:"Ghee (clarified butter)",cat:"fat",p:0,c:0,f:14,cal:120,gf:true,sz:"14g",m:"raw"},
+{n:"Natural Almond Butter",cat:"fat",p:3,c:3,f:9,cal:98,gf:true,sz:"16g",m:"raw"},
+{n:"Natural Peanut Butter",cat:"fat",p:4,c:3,f:8,cal:94,gf:true,sz:"16g",m:"raw"},
+{n:"Cashew Butter",cat:"fat",p:3,c:5,f:8,cal:94,gf:true,sz:"16g",m:"raw"},
+{n:"Almonds",cat:"fat",p:6,c:6,f:14,cal:162,gf:true,sz:"28g",m:"raw"},
+{n:"Walnuts",cat:"fat",p:4,c:4,f:18,cal:185,gf:true,sz:"28g",m:"raw"},
+{n:"Cashews",cat:"fat",p:5,c:9,f:12,cal:157,gf:true,sz:"28g",m:"raw"},
+{n:"Macadamia Nuts",cat:"fat",p:2,c:4,f:21,cal:204,gf:true,sz:"28g",m:"raw"},
+{n:"Pecans",cat:"fat",p:3,c:4,f:20,cal:196,gf:true,sz:"28g",m:"raw"},
+{n:"Pistachios",cat:"fat",p:6,c:8,f:13,cal:159,gf:true,sz:"28g",m:"raw"},
+{n:"Pumpkin Seeds (pepitas)",cat:"fat",p:9,c:4,f:14,cal:170,gf:true,sz:"28g",m:"raw"},
+{n:"Sunflower Seeds",cat:"fat",p:6,c:7,f:14,cal:165,gf:true,sz:"28g",m:"raw"},
+{n:"Chia Seeds",cat:"fat",p:2,c:5,f:4,cal:60,gf:true,sz:"12g",m:"dry"},
+{n:"Flax Seeds Ground",cat:"fat",p:1,c:2,f:3,cal:37,gf:true,sz:"7g",m:"dry"},
+{n:"Hemp Seeds",cat:"fat",p:10,c:1,f:14,cal:166,gf:true,sz:"28g",m:"raw"},
+{n:"MCT Oil",cat:"fat",p:0,c:0,f:14,cal:115,gf:true,sz:"15ml",m:"raw"},
+{n:"Fish Oil (capsules, 2)",cat:"fat",p:0,c:0,f:2,cal:20,gf:true,sz:"2 caps",m:"raw"},
+{n:"Dark Chocolate 85% (1 sq)",cat:"fat",p:1,c:4,f:5,cal:60,gf:true,sz:"14g",m:"raw"},
+// ══ VEGGIES ══
+{n:"Asparagus",cat:"veggie",p:3,c:5,f:0,cal:27,gf:true,sz:"134g",m:"cooked"},
+{n:"Broccoli",cat:"veggie",p:3,c:6,f:0,cal:31,gf:true,sz:"90g",m:"cooked"},
+{n:"Broccoli (steamed)",cat:"veggie",p:4,c:8,f:0,cal:44,gf:true,sz:"155g",m:"cooked"},
+{n:"Spinach (raw)",cat:"veggie",p:2,c:2,f:0,cal:14,gf:true,sz:"60g",m:"raw"},
+{n:"Spinach (cooked)",cat:"veggie",p:5,c:7,f:1,cal:41,gf:true,sz:"180g",m:"cooked"},
+{n:"Kale (raw)",cat:"veggie",p:2,c:6,f:0,cal:33,gf:true,sz:"70g",m:"raw"},
+{n:"Green Beans",cat:"veggie",p:2,c:7,f:0,cal:31,gf:true,sz:"125g",m:"cooked"},
+{n:"Brussels Sprouts",cat:"veggie",p:4,c:12,f:1,cal:56,gf:true,sz:"156g",m:"cooked"},
+{n:"Cucumber",cat:"veggie",p:1,c:4,f:0,cal:16,gf:true,sz:"120g",m:"raw"},
+{n:"Zucchini",cat:"veggie",p:2,c:6,f:0,cal:31,gf:true,sz:"200g",m:"raw"},
+{n:"Bell Pepper (any color)",cat:"veggie",p:1,c:6,f:0,cal:25,gf:true,sz:"120g",m:"raw"},
+{n:"Cauliflower Rice",cat:"veggie",p:2,c:5,f:0,cal:25,gf:true,sz:"107g",m:"raw"},
+{n:"Cauliflower (steamed)",cat:"veggie",p:2,c:5,f:0,cal:29,gf:true,sz:"124g",m:"cooked"},
+{n:"Mixed Greens",cat:"veggie",p:2,c:3,f:0,cal:18,gf:true,sz:"60g",m:"raw"},
+{n:"Mushrooms (white)",cat:"veggie",p:3,c:3,f:0,cal:22,gf:true,sz:"70g",m:"raw"},
+{n:"Tomato",cat:"veggie",p:1,c:5,f:0,cal:22,gf:true,sz:"125g",m:"raw"},
+{n:"Celery",cat:"veggie",p:1,c:3,f:0,cal:14,gf:true,sz:"110g",m:"raw"},
+{n:"Cabbage (shredded)",cat:"veggie",p:1,c:5,f:0,cal:22,gf:true,sz:"90g",m:"raw"},
+{n:"Onion (diced)",cat:"veggie",p:1,c:10,f:0,cal:44,gf:true,sz:"115g",m:"raw"},
+{n:"Carrots (sliced)",cat:"veggie",p:1,c:8,f:0,cal:35,gf:true,sz:"80g",m:"raw"},
+// ══ SUPPLEMENTS ══
+{n:"Creatine Monohydrate",cat:"supplement",p:0,c:0,f:0,cal:0,gf:true,sz:"5g",m:"dry"},
+{n:"L-Glutamine",cat:"supplement",p:5,c:0,f:0,cal:20,gf:true,sz:"5g",m:"dry"},
+{n:"BCAAs (powder)",cat:"supplement",p:0,c:1,f:0,cal:5,gf:true,sz:"1 scoop",m:"dry"},
+{n:"EAAs (powder)",cat:"supplement",p:0,c:1,f:0,cal:5,gf:true,sz:"1 scoop",m:"dry"},
+{n:"Vitamin D3 5000IU",cat:"supplement",p:0,c:0,f:0,cal:0,gf:true,sz:"1 cap",m:"dry"},
+{n:"Omega-3 Fish Oil (2 caps)",cat:"supplement",p:0,c:0,f:2,cal:20,gf:true,sz:"2 caps",m:"raw"},
+{n:"Multivitamin",cat:"supplement",p:0,c:0,f:0,cal:0,gf:true,sz:"1 serving",m:"dry"},
+{n:"Magnesium Glycinate",cat:"supplement",p:0,c:0,f:0,cal:0,gf:true,sz:"400mg",m:"dry"},
+{n:"Zinc (30mg)",cat:"supplement",p:0,c:0,f:0,cal:0,gf:true,sz:"1 cap",m:"dry"},
+{n:"Digestive Enzyme",cat:"supplement",p:0,c:0,f:0,cal:0,gf:true,sz:"1 cap",m:"dry"},
+{n:"Probiotic (50B CFU)",cat:"supplement",p:0,c:0,f:0,cal:0,gf:true,sz:"1 cap",m:"dry"},
+{n:"Electrolyte Mix",cat:"supplement",p:0,c:2,f:0,cal:10,gf:true,sz:"1 packet",m:"dry"},
+{n:"Caffeine (200mg tab)",cat:"supplement",p:0,c:0,f:0,cal:0,gf:true,sz:"1 tab",m:"dry"},
+{n:"Pre-Workout (1 scoop)",cat:"supplement",p:0,c:4,f:0,cal:15,gf:true,sz:"1 scoop",m:"dry"},
+{n:"Psyllium Husk (fiber)",cat:"supplement",p:0,c:4,f:0,cal:15,gf:true,sz:"5g",m:"dry"},
+{n:"Apple Cider Vinegar",cat:"supplement",p:0,c:0,f:0,cal:0,gf:true,sz:"15ml",m:"raw"},
+{n:"Collagen Peptides",cat:"supplement",p:10,c:0,f:0,cal:40,gf:true,sz:"1 scoop",m:"dry"},
+{n:"Ashwagandha (300mg)",cat:"supplement",p:0,c:0,f:0,cal:0,gf:true,sz:"1 cap",m:"dry"},
+{n:"Melatonin (3mg)",cat:"supplement",p:0,c:0,f:0,cal:0,gf:true,sz:"1 tab",m:"dry"}
 ];
+// Dietary tags: df=dairy-free, kf=keto-friendly, vg=vegan, v=vegetarian, lc=low-carb
+// All FOOD_DB items are already gluten-free. These tags let the app auto-filter for client conditions.
+function getCustomFoods(){return LS.get("customFoods",[]);}
+function saveCustomFoods(f){LS.set("customFoods",f);}
+function getAllFoods(){return FOOD_DB.concat(getCustomFoods());}
+function getFoodsForClient(clientId){var foods=getAllFoods();if(!clientId)return foods;var cl=clientById(clientId);if(!cl||!cl.diet)return foods;var diet=cl.diet;return foods.filter(function(fd){if(diet==='df'&&fd.cat==='protein'&&(fd.n.indexOf('Yogurt')>=0||fd.n.indexOf('Cottage')>=0||fd.n.indexOf('Casein')>=0||fd.n.indexOf('Whey Protein Concentrate')>=0))return false;if(diet==='keto'&&fd.cat==='carb'&&fd.c>10)return false;if(diet==='vegan'&&fd.cat==='protein'&&(fd.n.indexOf('Chicken')>=0||fd.n.indexOf('Turkey')>=0||fd.n.indexOf('Beef')>=0||fd.n.indexOf('Steak')>=0||fd.n.indexOf('Salmon')>=0||fd.n.indexOf('Tilapia')>=0||fd.n.indexOf('Cod')>=0||fd.n.indexOf('Shrimp')>=0||fd.n.indexOf('Bison')>=0||fd.n.indexOf('Elk')>=0||fd.n.indexOf('Venison')>=0||fd.n.indexOf('Halibut')>=0||fd.n.indexOf('Tuna')>=0||fd.n.indexOf('Mahi')>=0||fd.n.indexOf('Fish')>=0||fd.n.indexOf('Scallop')>=0||fd.n.indexOf('Egg')>=0||fd.n.indexOf('Yogurt')>=0||fd.n.indexOf('Cottage')>=0||fd.n.indexOf('Casein')>=0||fd.n.indexOf('Whey')>=0))return false;return true;});}
+function getClientDiet(clientId){var cl=clientById(clientId);return cl&&cl.diet?cl.diet:'';}
+function getCustomExercises(){return LS.get("customExercises",[]);}
+function saveCustomExercises(e){LS.set("customExercises",e);}
 
 // ═══════════════════════════════════════════════════════════════════
 // MEAL PLAN BUILDER
@@ -1614,24 +1754,29 @@ function getClientMealPlans(cid){return getMealPlans().filter(function(p){return
 
 function renderMealPlanBuilder(){
 var data=currentView.data||{};var clientId=data.clientId||"";
-var c=clientById(clientId);if(!c){pop();return"";}
+var c=clientById(clientId);
 _currentMealSlot=1;_mealData={1:[],2:[],3:[],4:[]};
 var html='<button class="btn2" onclick="pop()" style="margin-bottom:14px">\u2039 '+t("back")+'</button>';
-html+='<div class="pt">Meal Plan Builder</div>';
-html+='<div style="font-size:11px;color:var(--dm);margin-bottom:16px;font-family:var(--mono)">Client: <span style="color:var(--acc)">'+escHtml(c.name)+'</span></div>';
-html+='<div class="cd" style="padding:18px"><div class="field"><span class="lb">PLAN NAME *</span><input id="mpName" placeholder="e.g. Contest Prep Week 12, Off-Season Bulk"></div>';
-html+='<div class="field"><span class="lb">DAILY TARGET MACROS</span><div class="g3"><div><span class="lb" style="color:var(--success)">PROTEIN (g)</span><input id="mpTargP" type="number" placeholder="180"></div><div><span class="lb" style="color:var(--warn)">CARBS (g)</span><input id="mpTargC" type="number" placeholder="200"></div><div><span class="lb" style="color:#cc88ee">FAT (g)</span><input id="mpTargF" type="number" placeholder="60"></div></div></div>';
-html+='<div class="field"><span class="lb">NUMBER OF MEALS</span><div style="display:flex;gap:4px"><div class="chip on" onclick="setMealCount(4,this)">4</div><div class="chip" onclick="setMealCount(5,this)">5</div><div class="chip" onclick="setMealCount(6,this)">6</div><div class="chip" onclick="setMealCount(7,this)">7</div></div><input type="hidden" id="mpMealCount" value="4"></div>';
-html+='<div class="field"><span class="lb">NOTES</span><textarea id="mpNotes" rows="2" placeholder="Training days vs rest days, carb cycling notes..."></textarea></div></div>';
+html+='<div class="pt">'+t("mealPlanBuilder")+'</div>';
+if(c)html+='<div style="font-size:11px;color:var(--dm);margin-bottom:16px;font-family:var(--mono)">'+t("clients")+': <span style="color:var(--acc)">'+escHtml(c.name)+'</span></div>';
+else html+='<div style="font-size:11px;color:var(--dm);margin-bottom:16px;font-family:var(--mono)"><span style="color:var(--mu)">'+t("general")+' \u2014 '+t("noClient")+'</span></div>';
+html+='<div class="cd" style="padding:18px"><div class="field"><span class="lb">'+t("protocolName")+' *</span><input id="mpName" placeholder="e.g. Contest Prep Week 12, Off-Season Bulk"></div>';
+html+='<div class="field"><span class="lb">'+t("dailyTargets")+'</span><div class="g3"><div><span class="lb" style="color:var(--success)">PROTEIN (g)</span><input id="mpTargP" type="number" placeholder="180"></div><div><span class="lb" style="color:var(--warn)">CARBS (g)</span><input id="mpTargC" type="number" placeholder="200"></div><div><span class="lb" style="color:#cc88ee">FAT (g)</span><input id="mpTargF" type="number" placeholder="60"></div></div></div>';
+html+='<div class="field"><span class="lb">'+t("numberOfMeals")+'</span><div style="display:flex;gap:4px"><div class="chip on" onclick="setMealCount(4,this)">4</div><div class="chip" onclick="setMealCount(5,this)">5</div><div class="chip" onclick="setMealCount(6,this)">6</div><div class="chip" onclick="setMealCount(7,this)">7</div></div><input type="hidden" id="mpMealCount" value="4"></div>';
+html+='<div class="field"><span class="lb">'+t("notes").toUpperCase()+'</span><textarea id="mpNotes" rows="2" placeholder="Training days vs rest days, carb cycling notes..."></textarea></div></div>';
 // Food search & add
-html+='<div class="sl" style="margin-top:18px">BUILD MEALS</div>';
+html+='<div class="sl" style="margin-top:18px">'+t("buildMeals")+'</div>';
 html+='<div style="margin-bottom:10px"><input id="foodSearch" placeholder="Search foods..." oninput="filterFoodDB(this.value)" style="font-size:13px"></div>';
-html+='<div style="display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap"><div class="chip on" onclick="filterFoodCat(\'all\',this)">All</div><div class="chip" onclick="filterFoodCat(\'protein\',this)">Protein</div><div class="chip" onclick="filterFoodCat(\'carb\',this)">Carbs</div><div class="chip" onclick="filterFoodCat(\'fat\',this)">Fats</div><div class="chip" onclick="filterFoodCat(\'veggie\',this)">Veggies</div></div>';
+html+='<div style="display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap"><div class="chip on" onclick="filterFoodCat(\'all\',this)">All</div><div class="chip" onclick="filterFoodCat(\'protein\',this)">Protein</div><div class="chip" onclick="filterFoodCat(\'carb\',this)">Carbs</div><div class="chip" onclick="filterFoodCat(\'fat\',this)">Fats</div><div class="chip" onclick="filterFoodCat(\'veggie\',this)">Veggies</div><div class="chip" onclick="filterFoodCat(\'supplement\',this)">Supps</div><div class="chip" onclick="filterFoodCat(\'custom\',this)">'+t("myCustomFoods")+'</div></div>';
+// Custom food button
+html+='<div style="margin-bottom:10px"><button class="btn2" onclick="showAddCustomFood()" style="width:100%;border:1px dashed var(--accB);color:var(--acc)">'+t("customFood")+'</button></div>';
+var foods=getAllFoods();
 html+='<div id="foodList" style="max-height:240px;overflow-y:auto;margin-bottom:14px">';
-for(var fi=0;fi<FOOD_DB.length;fi++){var fd=FOOD_DB[fi];
-html+='<div class="food-item" data-cat="'+fd.cat+'" style="display:flex;align-items:center;gap:8px;padding:8px 10px;margin-bottom:3px;background:rgba(212,164,74,0.03);border-radius:8px;border:1px solid rgba(212,164,74,0.06);cursor:pointer;transition:all 0.15s" onclick="addFoodToMeal('+fi+')">';
-html+='<div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--wh)">'+fd.n+'</div>';
-html+='<div style="font-size:9px;font-family:var(--mono);margin-top:2px"><span style="color:var(--success)">P'+fd.p+'</span> <span style="color:var(--warn)">C'+fd.c+'</span> <span style="color:#cc88ee">F'+fd.f+'</span> <span style="color:var(--dm)">'+fd.cal+'cal</span></div></div>';
+for(var fi=0;fi<foods.length;fi++){var fd=foods[fi];
+var measLabel=fd.m==="cooked"?"\u{1F525}"+t("cooked"):fd.m==="dry"?"\u{1F33E}"+t("dry"):fd.m==="raw"?t("raw"):"";
+html+='<div class="food-item" data-cat="'+(fd.custom?"custom":fd.cat)+'" style="display:flex;align-items:center;gap:8px;padding:8px 10px;margin-bottom:3px;background:rgba(212,164,74,0.03);border-radius:8px;border:1px solid rgba(212,164,74,0.06);cursor:pointer;transition:all 0.15s" onclick="addFoodToMeal('+fi+')">';
+html+='<div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--wh)">'+escHtml(fd.n)+'</div>';
+html+='<div style="font-size:9px;font-family:var(--mono);margin-top:2px"><span style="color:var(--success)">P'+fd.p+'</span> <span style="color:var(--warn)">C'+fd.c+'</span> <span style="color:#cc88ee">F'+fd.f+'</span> <span style="color:var(--dm)">'+fd.cal+'cal</span> <span style="color:var(--dmL)">'+escHtml(fd.sz||"")+'</span>'+(measLabel?' <span style="color:var(--mu);font-size:8px">'+measLabel+'</span>':'')+'</div></div>';
 html+='<span style="font-size:14px;color:var(--acc)">+</span></div>';}
 html+='</div>';
 // Meal slots
@@ -1650,9 +1795,9 @@ function setMealCount(n,el){el.parentElement.querySelectorAll('.chip').forEach(f
 var sl=$('mealSlots');if(!sl)return;sl.innerHTML='';_mealData={};
 for(var i=1;i<=n;i++){var d=document.createElement('div');d.className='cd';d.id='meal'+i;d.style.padding='14px';d.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span class="sl" style="margin:0">MEAL '+i+'</span><span class="meal-macros" style="font-size:9px;font-family:var(--mono);color:var(--dm)">P0 C0 F0 | 0cal</span></div><div class="meal-items"></div>';sl.appendChild(d);_mealData[i]=[];}_currentMealSlot=1;}
 
-function foodByIdx(idx,name){var fd=FOOD_DB[idx];if(fd&&(!name||fd.n===name))return fd;if(name){for(var i=0;i<FOOD_DB.length;i++){if(FOOD_DB[i].n===name)return FOOD_DB[i];}}return fd;}
+function foodByIdx(idx,name){var foods=getAllFoods();var fd=foods[idx];if(fd&&(!name||fd.n===name))return fd;if(name){for(var i=0;i<foods.length;i++){if(foods[i].n===name)return foods[i];}}return fd;}
 function addFoodToMeal(idx){
-var fd=FOOD_DB[idx];if(!fd)return;
+var foods=getAllFoods();var fd=foods[idx];if(!fd)return;
 if(!_mealData[_currentMealSlot])_mealData[_currentMealSlot]=[];
 _mealData[_currentMealSlot].push({idx:idx,name:fd.n,servings:1});
 renderMealSlotItems(_currentMealSlot);updateMacroTotals();
@@ -1682,13 +1827,25 @@ function updateMealServing(slot,idx,val){if(!_mealData[slot]||!_mealData[slot][i
 function removeMealItem(slot,idx){if(!_mealData[slot])return;_mealData[slot].splice(idx,1);renderMealSlotItems(slot);updateMacroTotals();}
 
 function updateMacroTotals(){
-var tp=0,tc=0,tf=0,tcal=0;
-Object.keys(_mealData).forEach(function(slot){(_mealData[slot]||[]).forEach(function(it){var fd=foodByIdx(it.idx,it.name);if(!fd)return;var s=it.servings;tp+=fd.p*s;tc+=fd.c*s;tf+=fd.f*s;tcal+=fd.cal*s;});});
+var tp=0,tc=0,tf=0,tcal=0;var hasVeg=false,hasFiber=false;
+Object.keys(_mealData).forEach(function(slot){(_mealData[slot]||[]).forEach(function(it){var fd=foodByIdx(it.idx,it.name);if(!fd)return;var s=it.servings;tp+=fd.p*s;tc+=fd.c*s;tf+=fd.f*s;tcal+=fd.cal*s;if(fd.cat==='veggie')hasVeg=true;if(fd.n&&fd.n.toLowerCase().indexOf('fiber')>=0||fd.n&&fd.n.toLowerCase().indexOf('psyllium')>=0)hasFiber=true;});});
 var elP=$('totP'),elC=$('totC'),elF=$('totF'),elCal=$('totCal');
 if(elP)elP.textContent=Math.round(tp)+'g';
 if(elC)elC.textContent=Math.round(tc)+'g';
 if(elF)elF.textContent=Math.round(tf)+'g';
-if(elCal)elCal.textContent=Math.round(tcal);}
+if(elCal)elCal.textContent=Math.round(tcal);
+// Target comparison and guardrails
+var targP=parseInt(v('mpTargP'))||0,targC=parseInt(v('mpTargC'))||0,targF=parseInt(v('mpTargF'))||0;
+var warnings=[];
+if(targP&&Math.round(tp)<targP*0.9)warnings.push('Protein is '+Math.round(targP-tp)+'g below target');
+if(targP&&Math.round(tp)>targP*1.1)warnings.push('Protein is '+Math.round(tp-targP)+'g over target');
+if(targC&&Math.round(tc)<targC*0.9)warnings.push('Carbs are '+Math.round(targC-tc)+'g below target');
+if(targF&&Math.round(tf)<targF*0.85)warnings.push('Fat is '+Math.round(targF-tf)+'g below target');
+if(tcal>0&&!hasVeg)warnings.push('No vegetables added \u2014 consider adding greens for micronutrients');
+if(tcal>0&&tf<15)warnings.push('Fat is very low \u2014 minimum ~20g needed for hormone function');
+if(tcal>0&&tp<50)warnings.push('Protein is very low for a coached client');
+var wEl=$('macroWarnings');if(!wEl){wEl=document.createElement('div');wEl.id='macroWarnings';var totals=$('macroTotals');if(totals)totals.parentElement.appendChild(wEl);}
+if(warnings.length){wEl.innerHTML='<div style="margin-top:10px;padding:10px 14px;background:rgba(232,184,120,0.06);border:1px solid rgba(232,184,120,0.18);border-radius:8px">'+warnings.map(function(w){return'<div style="font-size:10px;color:var(--warn);font-family:var(--mono);line-height:1.8">\u26A0 '+w+'</div>';}).join('')+'</div>';}else{wEl.innerHTML='';}}
 
 function filterFoodDB(q){q=q.toLowerCase();document.querySelectorAll('#foodList .food-item').forEach(function(el){var t=el.textContent.toLowerCase();el.style.display=(!q||t.indexOf(q)>=0)?'flex':'none';});}
 function filterFoodCat(cat,el){el.parentElement.querySelectorAll('.chip').forEach(function(c){c.classList.remove('on');});el.classList.add('on');document.querySelectorAll('#foodList .food-item').forEach(function(item){item.style.display=(cat==='all'||item.dataset.cat===cat)?'flex':'none';});}
@@ -1700,6 +1857,43 @@ for(var i=1;i<=mc;i++)meals[i]=_mealData[i]||[];
 var plan={id:Date.now().toString(),clientId:clientId,name:name,targetP:parseInt(v('mpTargP'))||0,targetC:parseInt(v('mpTargC'))||0,targetF:parseInt(v('mpTargF'))||0,meals:meals,mealCount:mc,notes:v('mpNotes')||'',createdAt:new Date().toISOString()};
 var plans=getMealPlans();plans.push(plan);saveMealPlans(plans);
 _mealData={};toast('\u2713 Meal plan saved: '+name);pop();}
+
+function showAddCustomFood(){
+var sel='<div style="position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);padding:20px;animation:fadeIn 0.3s" id="customFoodModal"><div style="width:100%;max-width:400px;background:linear-gradient(160deg,rgba(22,21,26,0.99),rgba(10,9,12,0.99));border:1px solid var(--accB);border-radius:16px;padding:24px;box-shadow:0 0 60px rgba(212,164,74,0.12)">';
+sel+='<div class="pt" style="font-size:16px;margin-bottom:14px">'+t("addCustomFood")+'</div>';
+sel+='<div class="field"><span class="lb">'+t("foodName")+' *</span><input id="cfName" placeholder="e.g. Turkey Meatballs"></div>';
+sel+='<div class="g2 field"><div><span class="lb">'+t("servingSize")+'</span><input id="cfSize" placeholder="e.g. 170g"></div><div><span class="lb">'+t("measured")+'</span><select id="cfMeas"><option value="cooked">'+t("cooked")+'</option><option value="dry">'+t("dry")+'</option><option value="raw">'+t("raw")+'</option></select></div></div>';
+sel+='<div class="field"><span class="lb">CATEGORY</span><select id="cfCat"><option value="protein">Protein</option><option value="carb">Carbs</option><option value="fat">Fats</option><option value="veggie">Veggies</option></select></div>';
+sel+='<div class="g4 field"><div><span class="lb" style="color:var(--success)">P (g)</span><input id="cfP" type="number" placeholder="0"></div><div><span class="lb" style="color:var(--warn)">C (g)</span><input id="cfC" type="number" placeholder="0"></div><div><span class="lb" style="color:#cc88ee">F (g)</span><input id="cfF" type="number" placeholder="0"></div><div><span class="lb">CAL</span><input id="cfCal" type="number" placeholder="0"></div></div>';
+sel+='<div class="g2" style="margin-top:8px"><button class="btn" onclick="saveCustomFood()">'+t("save")+'</button><button class="btn2" onclick="document.getElementById(\'customFoodModal\').remove()">'+t("cancel")+'</button></div>';
+sel+='</div></div>';
+var el=document.createElement('div');el.innerHTML=sel;document.body.appendChild(el.firstChild);}
+
+function saveCustomFood(){
+var name=v('cfName');if(!name){toast('Name is required');return;}
+var food={n:name,cat:v('cfCat')||'protein',p:parseFloat(v('cfP'))||0,c:parseFloat(v('cfC'))||0,f:parseFloat(v('cfF'))||0,cal:parseFloat(v('cfCal'))||0,gf:true,sz:v('cfSize')||'1 serving',m:v('cfMeas')||'cooked',custom:true};
+var foods=getCustomFoods();foods.push(food);saveCustomFoods(foods);
+var modal=$('customFoodModal');if(modal)modal.remove();
+toast('\u2713 '+name+' added');render();}
+
+function showAddCustomExercise(gender,group){
+var sel='<div style="position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);padding:20px;animation:fadeIn 0.3s" id="customExModal"><div style="width:100%;max-width:400px;background:linear-gradient(160deg,rgba(22,21,26,0.99),rgba(10,9,12,0.99));border:1px solid var(--accB);border-radius:16px;padding:24px;box-shadow:0 0 60px rgba(212,164,74,0.12)">';
+sel+='<div class="pt" style="font-size:16px;margin-bottom:14px">'+t("addCustomExercise")+'</div>';
+sel+='<div class="field"><span class="lb">'+t("exerciseName")+' *</span><input id="ceN" placeholder="e.g. Pendlay Row"></div>';
+sel+='<div class="field"><span class="lb">'+t("setsReps")+'</span><input id="ceS" placeholder="e.g. 4x10-12"></div>';
+sel+='<div class="field"><span class="lb">'+t("notes").toUpperCase()+'</span><input id="ceNote" placeholder="Coaching cues..."></div>';
+sel+='<input type="hidden" id="ceGender" value="'+escHtml(gender||_proGender)+'">';
+sel+='<input type="hidden" id="ceGroup" value="'+escHtml(group||_proMuscle)+'">';
+sel+='<div class="g2" style="margin-top:8px"><button class="btn" onclick="saveCustomExercise()">'+t("save")+'</button><button class="btn2" onclick="document.getElementById(\'customExModal\').remove()">'+t("cancel")+'</button></div>';
+sel+='</div></div>';
+var el=document.createElement('div');el.innerHTML=sel;document.body.appendChild(el.firstChild);}
+
+function saveCustomExercise(){
+var name=v('ceN');if(!name){toast('Name is required');return;}
+var ex={n:name,s:v('ceS')||'3x10-12',note:v('ceNote')||'',gender:v('ceGender')||_proGender,group:v('ceGroup')||_proMuscle,custom:true};
+var exs=getCustomExercises();exs.push(ex);saveCustomExercises(exs);
+var modal=$('customExModal');if(modal)modal.remove();
+toast('\u2713 '+name+' added');render();}
 
 function renderMealPlanDetail(){
 var planId=currentView.data.planId;var plans=getMealPlans();var plan=plans.find(function(p){return p.id===planId;});
@@ -1720,8 +1914,39 @@ dayTP+=mp;dayTC+=mc2;dayTF+=mf;dayCal+=mcal;
 html+='<div style="font-size:9px;font-family:var(--mono);margin-top:6px;color:var(--acc)">P'+Math.round(mp)+' C'+Math.round(mc2)+' F'+Math.round(mf)+' | '+Math.round(mcal)+' cal</div></div>';}
 html+='<div class="cd" style="padding:14px;border:1px solid var(--accB);margin-top:4px"><span class="sl" style="margin:0;margin-bottom:8px">DAILY TOTALS</span><div class="g4"><div class="stat" style="padding:8px"><b style="color:var(--success);font-size:16px">'+Math.round(dayTP)+'g</b><small>PROTEIN</small></div><div class="stat" style="padding:8px"><b style="color:var(--warn);font-size:16px">'+Math.round(dayTC)+'g</b><small>CARBS</small></div><div class="stat" style="padding:8px"><b style="color:#cc88ee;font-size:16px">'+Math.round(dayTF)+'g</b><small>FAT</small></div><div class="stat" style="padding:8px"><b style="color:var(--accVib);font-size:16px">'+Math.round(dayCal)+'</b><small>CALORIES</small></div></div></div>';
 if(plan.notes)html+='<div class="cd" style="margin-top:8px;border-left:3px solid var(--acc);padding:12px"><div style="font-size:12px;color:var(--mu);line-height:1.7">'+escHtml(plan.notes)+'</div></div>';
-html+='<button class="btn-danger" style="margin-top:16px" onclick="deleteMealPlan(\''+escJs(plan.id)+'\')">DELETE MEAL PLAN</button>';
+html+='<button class="btn" style="margin-top:16px" onclick="generateMealPlanPDF(\''+escJs(plan.id)+'\')">\u2193 EXPORT MEAL PLAN PDF</button>';
+html+='<button class="btn-danger" style="margin-top:10px" onclick="deleteMealPlan(\''+escJs(plan.id)+'\')">DELETE MEAL PLAN</button>';
 return html;}
+
+function generateMealPlanPDF(planId){
+var plans=getMealPlans();var plan=plans.find(function(p){return p.id===planId;});
+if(!plan){toast('Plan not found');return;}
+if(!window.jspdf||!window.jspdf.jsPDF){toast("Loading PDF...");ensureJsPDF().then(function(){generateMealPlanPDF(planId);}).catch(function(){toast("Could not load PDF library");});return;}
+var c=clientById(plan.clientId);var doc=new window.jspdf.jsPDF({unit:"pt",format:"letter"});
+var W=612,H=792,gold=[212,164,74],dark=[30,30,34],dimmed=[148,138,122];
+_pdfDecor(doc,W,H,gold,dimmed);
+doc.setFillColor(dark[0],dark[1],dark[2]);doc.rect(0,0,W,H,"F");_pdfDecor(doc,W,H,gold,dimmed);
+doc.setFontSize(28);doc.setTextColor(gold[0],gold[1],gold[2]);doc.text("REGI",W/2,50,{align:"center"});
+doc.setFontSize(8);doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);doc.text("COACHING STUDIO",W/2,62,{align:"center"});
+doc.setDrawColor(gold[0],gold[1],gold[2]);doc.setLineWidth(0.5);doc.line(200,72,W-200,72);
+doc.setFontSize(18);doc.setTextColor(240,204,112);doc.text(plan.name,W/2,98,{align:"center"});
+if(c){doc.setFontSize(10);doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);doc.text("Client: "+c.name,W/2,114,{align:"center"});}
+var y=c?132:118;
+if(plan.targetP||plan.targetC||plan.targetF){doc.setFontSize(10);doc.setTextColor(gold[0],gold[1],gold[2]);doc.text("DAILY TARGETS: P "+plan.targetP+"g | C "+plan.targetC+"g | F "+plan.targetF+"g",W/2,y,{align:"center"});y+=20;}
+for(var mi=1;mi<=plan.mealCount;mi++){var items=plan.meals[mi]||[];if(!items.length)continue;
+if(y>H-120){doc.addPage();doc.setFillColor(dark[0],dark[1],dark[2]);doc.rect(0,0,W,H,"F");_pdfDecor(doc,W,H,gold,dimmed);y=50;}
+doc.setFontSize(11);doc.setTextColor(gold[0],gold[1],gold[2]);doc.text("MEAL "+mi,50,y);y+=14;
+var mp=0,mc2=0,mf=0,mcal=0;
+for(var ii=0;ii<items.length;ii++){var it=items[ii];var fd=foodByIdx(it.idx,it.name);if(!fd)continue;
+var s=it.servings;mp+=fd.p*s;mc2+=fd.c*s;mf+=fd.f*s;mcal+=fd.cal*s;
+doc.setFontSize(9);doc.setTextColor(240,236,228);doc.text((s!==1?s+"x ":"")+fd.n+(fd.sz?" ("+fd.sz+(fd.m==="cooked"?" cooked":fd.m==="dry"?" dry":"")+")":""),60,y);
+doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);doc.text("P"+Math.round(fd.p*s)+" C"+Math.round(fd.c*s)+" F"+Math.round(fd.f*s)+" | "+Math.round(fd.cal*s)+"cal",W-50,y,{align:"right"});y+=13;}
+doc.setFontSize(8);doc.setTextColor(gold[0],gold[1],gold[2]);doc.text("Subtotal: P"+Math.round(mp)+"g C"+Math.round(mc2)+"g F"+Math.round(mf)+"g | "+Math.round(mcal)+" cal",60,y);y+=18;}
+if(plan.notes){if(y>H-80){doc.addPage();doc.setFillColor(dark[0],dark[1],dark[2]);doc.rect(0,0,W,H,"F");y=50;}
+doc.setFontSize(9);doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);doc.text("Notes: "+plan.notes.substring(0,120),50,y);y+=16;}
+doc.setFontSize(7);doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);doc.text("Generated by REGI Coaching Studio v"+VERSION+" | regi.fitness",W/2,H-30,{align:"center"});
+var fname="REGI_MealPlan_"+(c?c.name.replace(/[^a-zA-Z0-9]/g,"_")+"_":"")+plan.name.replace(/[^a-zA-Z0-9]/g,"_")+".pdf";
+safePDFSave(doc,fname);}
 
 function deleteMealPlan(id){if(!confirm('Delete this meal plan?'))return;var plans=getMealPlans().filter(function(p){return p.id!==id;});saveMealPlans(plans);toast('\u2713 Deleted');pop();}
 
@@ -1891,14 +2116,15 @@ function renderCardioBuilder(){
 var data=currentView.data||{};var clientId=data.clientId||"";
 var c=clientById(clientId);
 var html='<button class="btn2" onclick="pop()" style="margin-bottom:14px">\u2039 '+t("back")+'</button>';
-html+='<div class="pt">Cardio Protocol Builder</div>';
+html+='<div class="pt">'+t("cardioBuilder")+'</div>';
 if(c)html+='<div style="font-size:11px;color:var(--dm);margin-bottom:16px;font-family:var(--mono)">Client: <span style="color:var(--acc)">'+escHtml(c.name)+'</span></div>';
 html+='<div class="cd" style="padding:18px"><div class="field"><span class="lb">PROTOCOL NAME *</span><input id="cardioName" placeholder="e.g. Prep Week 8 Cardio, Off-Season"></div>';
 html+='<div class="field"><span class="lb">PHASE</span><div style="display:flex;gap:4px;flex-wrap:wrap"><div class="chip on" data-value="Off-Season" onclick="pickChip(this,\'cardioPhase\')">Off-Season</div><div class="chip" data-value="Pre-Contest" onclick="pickChip(this,\'cardioPhase\')">Pre-Contest</div><div class="chip" data-value="Peak Week" onclick="pickChip(this,\'cardioPhase\')">Peak Week</div><div class="chip" data-value="Maintenance" onclick="pickChip(this,\'cardioPhase\')">Maintenance</div></div><input type="hidden" id="cardioPhase" value="Off-Season"></div>';
 html+='<div class="field"><span class="lb">WEEKLY FREQUENCY</span><div style="display:flex;gap:4px"><div class="chip" onclick="pickChip(this,\'cardioFreq\')" data-value="3">3x</div><div class="chip on" onclick="pickChip(this,\'cardioFreq\')" data-value="4">4x</div><div class="chip" onclick="pickChip(this,\'cardioFreq\')" data-value="5">5x</div><div class="chip" onclick="pickChip(this,\'cardioFreq\')" data-value="6">6x</div><div class="chip" onclick="pickChip(this,\'cardioFreq\')" data-value="7">7x</div></div><input type="hidden" id="cardioFreq" value="4"></div>';
 html+='<div class="field"><span class="lb">TIMING</span><div style="display:flex;gap:4px;flex-wrap:wrap"><div class="chip on" data-value="Post-Training" onclick="pickChip(this,\'cardioTiming\')">Post-Training</div><div class="chip" data-value="Fasted AM" onclick="pickChip(this,\'cardioTiming\')">Fasted AM</div><div class="chip" data-value="Separate Session" onclick="pickChip(this,\'cardioTiming\')">Separate Session</div></div><input type="hidden" id="cardioTiming" value="Post-Training"></div>';
-html+='<div class="field"><span class="lb">NOTES</span><textarea id="cardioNotes" rows="2" placeholder="Heart rate zone, client-specific notes..."></textarea></div></div>';
-html+='<div class="sl" style="margin-top:18px">SELECT CARDIO EQUIPMENT</div>';
+html+='<div class="g2 field"><div><span class="lb">'+t("targetBPM")+'</span><input id="cardioBPM" type="number" placeholder="130-150" min="60" max="200"></div><div><span class="lb">'+t("customTime")+' ('+t("notes").toLowerCase()+')</span><input id="cardioCustomMin" type="number" placeholder="e.g. 35" min="5" max="120"></div></div>';
+html+='<div class="field"><span class="lb">'+t("notes").toUpperCase()+'</span><textarea id="cardioNotes" rows="2" placeholder="Heart rate zone, client-specific notes..."></textarea></div></div>';
+html+='<div class="sl" style="margin-top:18px">'+t("selectEquipment")+'</div>';
 html+='<div id="cardioSelections">';
 for(var ci=0;ci<CARDIO_OPTIONS.length;ci++){var co=CARDIO_OPTIONS[ci];
 html+='<div class="cd" style="padding:14px"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div style="flex:1"><div style="font-size:14px;font-weight:700;color:var(--wh)">'+co.n+'</div><div style="font-size:10px;color:var(--mu);margin-top:3px;line-height:1.5">'+co.desc+'</div><div style="font-size:9px;color:var(--acc);font-family:var(--mono);margin-top:4px">'+co.intensity+'</div></div>';
@@ -1921,7 +2147,7 @@ var name=v('cardioName');if(!name){toast('Name is required');return;}
 var selections=[];
 for(var i=0;i<CARDIO_OPTIONS.length;i++){var chk=$('cardioChk'+i);if(chk&&chk.checked){selections.push({equipment:CARDIO_OPTIONS[i].n,mode:v('cardioMode'+i)||CARDIO_OPTIONS[i].modes[0],duration:parseInt(v('cardioDur'+i))||CARDIO_OPTIONS[i].defDur});}}
 if(!selections.length){toast('Select at least one cardio type');return;}
-var plan={id:Date.now().toString(),clientId:clientId,name:name,phase:v('cardioPhase')||'Off-Season',frequency:v('cardioFreq')||'4',timing:v('cardioTiming')||'Post-Training',selections:selections,notes:v('cardioNotes')||'',createdAt:new Date().toISOString()};
+var plan={id:Date.now().toString(),clientId:clientId,name:name,phase:v('cardioPhase')||'Off-Season',frequency:v('cardioFreq')||'4',timing:v('cardioTiming')||'Post-Training',targetBPM:v('cardioBPM')||'',selections:selections,notes:v('cardioNotes')||'',createdAt:new Date().toISOString()};
 var plans=getCardioPlans();plans.push(plan);saveCardioPlans(plans);
 toast('\u2713 Cardio protocol saved');pop();}
 
@@ -1930,7 +2156,7 @@ var planId=currentView.data.planId;var plans=getCardioPlans();var plan=plans.fin
 if(!plan){pop();return'';}var c=clientById(plan.clientId);
 var html='<button class="btn2" onclick="pop()" style="margin-bottom:14px">\u2039 '+t("back")+'</button>';
 html+='<div class="pt">'+escHtml(plan.name)+'</div>';
-html+='<div style="font-size:10px;color:var(--acc);font-family:var(--mono);margin-bottom:14px">'+(c?escHtml(c.name)+' \u00B7 ':'')+plan.phase+' \u00B7 '+plan.frequency+'x/week \u00B7 '+plan.timing+'</div>';
+html+='<div style="font-size:10px;color:var(--acc);font-family:var(--mono);margin-bottom:14px">'+(c?escHtml(c.name)+' \u00B7 ':'')+plan.phase+' \u00B7 '+plan.frequency+'x/week \u00B7 '+plan.timing+(plan.targetBPM?' \u00B7 '+plan.targetBPM+' BPM':'')+'</div>';
 var totalMin=0;
 for(var i=0;i<plan.selections.length;i++){var sel=plan.selections[i];totalMin+=sel.duration;
 html+='<div class="cd" style="padding:14px;border-left:3px solid var(--acc)"><div style="font-size:14px;font-weight:700;color:var(--wh)">'+escHtml(sel.equipment)+'</div><div style="font-size:11px;color:var(--mu);margin-top:4px">'+escHtml(sel.mode)+' \u00B7 '+sel.duration+' minutes</div></div>';}
@@ -1957,10 +2183,15 @@ for(var gi=0;gi<groups.length;gi++){var g=groups[gi];html+='<div class="chip'+(_
 html+='</div>';
 if(_proMuscle&&PRO_EXERCISES[_proGender][_proMuscle]){
 var exs=PRO_EXERCISES[_proGender][_proMuscle];
-for(var i=0;i<exs.length;i++){var ex=exs[i];
-html+='<div class="cd" style="padding:14px"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div style="flex:1"><div style="font-size:14px;font-weight:700;color:var(--wh)">'+escHtml(ex.n)+'</div><div style="font-size:11px;color:var(--acc);font-family:var(--mono);margin-top:4px">'+escHtml(ex.s)+'</div><div style="font-size:11px;color:var(--mu);margin-top:6px;line-height:1.6">'+escHtml(ex.note)+'</div>';
+// Merge custom exercises for this gender/group
+var customExs=getCustomExercises().filter(function(e){return e.gender===_proGender&&e.group===_proMuscle;});
+var allExs=exs.concat(customExs);
+for(var i=0;i<allExs.length;i++){var ex=allExs[i];
+html+='<div class="cd" style="padding:14px'+(ex.custom?';border-left:3px solid var(--acc)':'')+'"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div style="flex:1"><div style="font-size:14px;font-weight:700;color:var(--wh)">'+escHtml(ex.n)+(ex.custom?' <span style="font-size:8px;color:var(--acc);background:var(--accS);border:1px solid var(--accB);padding:1px 5px;border-radius:3px;font-family:var(--mono)">CUSTOM</span>':'')+'</div><div style="font-size:11px;color:var(--acc);font-family:var(--mono);margin-top:4px">'+escHtml(ex.s)+'</div><div style="font-size:11px;color:var(--mu);margin-top:6px;line-height:1.6">'+escHtml(ex.note)+'</div>';
 if(ex.tech)html+='<div style="font-size:9px;color:var(--accVib);font-family:var(--mono);margin-top:6px;padding:4px 8px;background:rgba(212,164,74,0.08);border-radius:4px;display:inline-block;border:1px solid rgba(212,164,74,0.15)">'+escHtml(ex.tech)+'</div>';
 html+='</div><button class="btn2" onclick="addProExToSession(\''+escJs(ex.n)+'\',\''+escJs(ex.s)+'\')" style="padding:4px 10px;font-size:8px;flex-shrink:0;margin-left:8px">+ ADD</button></div></div>';}
+// Add custom exercise button
+html+='<button class="btn2" onclick="showAddCustomExercise(\''+escJs(_proGender)+'\',\''+escJs(_proMuscle)+'\')" style="width:100%;margin-top:8px;border:1px dashed var(--accB);color:var(--acc)">'+t("customExercise")+'</button>';
 }else{html+='<div class="cd" style="text-align:center;padding:24px;border:1px dashed var(--border);color:var(--dm)">Select a muscle group above to view exercises</div>';}
 return html;}
 
@@ -1996,7 +2227,7 @@ html+='<div class="g2" style="margin-bottom:14px">';
 // Exercise DB
 html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="push(\'proExercises\')"><div style="font-size:28px;margin-bottom:8px">\uD83C\uDFCB</div><div style="font-size:13px;font-weight:700;color:var(--wh)">FST-7 Exercises</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">HANY RAMBOD METHOD</div></div>';
 // Food Database
-html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="push(\'foodBrowser\')"><div style="font-size:28px;margin-bottom:8px">\uD83E\uDD66</div><div style="font-size:13px;font-weight:700;color:var(--wh)">Food Database</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">'+FOOD_DB.length+' GF FOODS</div></div>';
+html+='<div class="cd cd-link" style="padding:20px;text-align:center" onclick="push(\'foodBrowser\')"><div style="font-size:28px;margin-bottom:8px">\uD83E\uDD66</div><div style="font-size:13px;font-weight:700;color:var(--wh)">'+t("foodDatabase")+'</div><div style="font-size:9px;color:var(--dm);margin-top:4px;font-family:var(--mono)">'+getAllFoods().length+' GF FOODS</div></div>';
 html+='</div>';
 
 // Saved meal plans
@@ -2034,17 +2265,21 @@ sel+='<button class="btn2" onclick="document.getElementById(\'clientPicker2\').r
 var el=document.createElement('div');el.innerHTML=sel;document.body.appendChild(el.firstChild);}
 
 function renderFoodBrowser(){
+var foods=getAllFoods();
 var html='<button class="btn2" onclick="pop()" style="margin-bottom:14px">\u2039 '+t("back")+'</button>';
-html+='<div class="pt">Gluten-Free Food Database</div>';
-html+='<div style="font-size:11px;color:var(--mu);margin-bottom:14px;line-height:1.6">'+FOOD_DB.length+' competition-ready foods. All gluten-free. Macros per standard serving.</div>';
+html+='<div class="pt">'+t("foodDatabase")+'</div>';
+html+='<div style="font-size:11px;color:var(--mu);margin-bottom:14px;line-height:1.6">'+foods.length+' competition-ready foods. All gluten-free. Macros per standard serving. Meats measured cooked. Rice/quinoa measured cooked. Oats measured dry.</div>';
+html+='<div style="margin-bottom:10px"><button class="btn2" onclick="showAddCustomFood()" style="width:100%;border:1px dashed var(--accB);color:var(--acc)">'+t("customFood")+'</button></div>';
 html+='<input id="foodBrowseSearch" placeholder="Search foods..." oninput="filterFoodBrowse(this.value)" style="margin-bottom:10px;font-size:13px">';
-html+='<div style="display:flex;gap:4px;margin-bottom:14px;flex-wrap:wrap"><div class="chip on" onclick="filterFoodBrowseCat(\'all\',this)">All ('+FOOD_DB.length+')</div><div class="chip" onclick="filterFoodBrowseCat(\'protein\',this)">Protein</div><div class="chip" onclick="filterFoodBrowseCat(\'carb\',this)">Carbs</div><div class="chip" onclick="filterFoodBrowseCat(\'fat\',this)">Fats</div><div class="chip" onclick="filterFoodBrowseCat(\'veggie\',this)">Veggies</div></div>';
+html+='<div style="display:flex;gap:4px;margin-bottom:14px;flex-wrap:wrap"><div class="chip on" onclick="filterFoodBrowseCat(\'all\',this)">All ('+foods.length+')</div><div class="chip" onclick="filterFoodBrowseCat(\'protein\',this)">Protein</div><div class="chip" onclick="filterFoodBrowseCat(\'carb\',this)">Carbs</div><div class="chip" onclick="filterFoodBrowseCat(\'fat\',this)">Fats</div><div class="chip" onclick="filterFoodBrowseCat(\'veggie\',this)">Veggies</div><div class="chip" onclick="filterFoodBrowseCat(\'supplement\',this)">Supps</div></div>';
 html+='<div class="cd" style="padding:0;overflow:hidden">';
-html+='<div style="display:grid;grid-template-columns:1fr 45px 45px 45px 50px;padding:8px 12px;background:rgba(212,164,74,0.08);font-size:8px;font-weight:700;color:var(--acc);font-family:var(--mono)"><span>FOOD</span><span style="text-align:center">P</span><span style="text-align:center">C</span><span style="text-align:center">F</span><span style="text-align:right">CAL</span></div>';
+html+='<div style="display:grid;grid-template-columns:1fr 55px 35px 35px 35px 40px;padding:8px 12px;background:rgba(212,164,74,0.08);font-size:8px;font-weight:700;color:var(--acc);font-family:var(--mono)"><span>FOOD</span><span style="text-align:center">SIZE</span><span style="text-align:center">P</span><span style="text-align:center">C</span><span style="text-align:center">F</span><span style="text-align:right">CAL</span></div>';
 html+='<div id="foodBrowseList">';
-for(var i=0;i<FOOD_DB.length;i++){var fd=FOOD_DB[i];
-html+='<div class="food-browse-item" data-cat="'+fd.cat+'" style="display:grid;grid-template-columns:1fr 45px 45px 45px 50px;padding:8px 12px;border-bottom:1px solid var(--borderS);font-size:11px;align-items:center">';
-html+='<span style="color:var(--wh);font-weight:500">'+fd.n+'</span>';
+for(var i=0;i<foods.length;i++){var fd=foods[i];
+var measTag=fd.m==="cooked"?"\u{1F525}":fd.m==="dry"?"\u{1F33E}":"";
+html+='<div class="food-browse-item" data-cat="'+(fd.custom?"custom":fd.cat)+'" style="display:grid;grid-template-columns:1fr 55px 35px 35px 35px 40px;padding:8px 12px;border-bottom:1px solid var(--borderS);font-size:11px;align-items:center">';
+html+='<span style="color:var(--wh);font-weight:500">'+escHtml(fd.n)+(fd.custom?' <span style="font-size:7px;color:var(--acc)">C</span>':'')+'</span>';
+html+='<span style="text-align:center;color:var(--dmL);font-family:var(--mono);font-size:8px">'+measTag+(fd.sz||'')+'</span>';
 html+='<span style="text-align:center;color:var(--success);font-family:var(--mono);font-size:10px">'+fd.p+'</span>';
 html+='<span style="text-align:center;color:var(--warn);font-family:var(--mono);font-size:10px">'+fd.c+'</span>';
 html+='<span style="text-align:center;color:#cc88ee;font-family:var(--mono);font-size:10px">'+fd.f+'</span>';
