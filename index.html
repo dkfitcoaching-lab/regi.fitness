@@ -189,6 +189,7 @@ complete:"Complete",cancelled:"Cancelled",lateCancel:"Late Cancel",noShow:"No-Sh
 noCharge:"NO CHARGE",charged:"CHARGED",
 reminder:"Upcoming Session",reminderBody:"{name} at {time} ({type})",
 export:"EXPORT",import:"IMPORT",backup:"BACKUP",restore:"RESTORE",
+generateClientPDF:"GENERATE CLIENT PDF",chooseWhatInclude:"Choose what to include",quickReport:"QUICK REPORT",
 pin:"PIN Lock",changePIN:"CHANGE PIN",lockNow:"LOCK NOW",
 incorrectPIN:"Incorrect PIN",unlock:"UNLOCK",
 signIn:"SIGN IN",signUp:"CREATE ACCOUNT",signOut:"SIGN OUT",
@@ -250,6 +251,8 @@ rate:"RATE ($/HR)",
 sessionType:"SESSION TYPE",
 experience:"EXPERIENCE",
 healthHistory:"HEALTH & HISTORY",
+dietaryNeeds:"DIETARY NEEDS",
+noRestrictions:"No Restrictions",
 goals:"GOALS",
 injuries:"INJURIES / LIMITATIONS",
 medical:"MEDICAL",
@@ -493,7 +496,7 @@ savedSupplements:"SAVED SUPPLEMENT PROTOCOLS",
 noProtocolsSaved:"No protocols saved yet",
 food:"FOOD",
 size:"SIZE",
-mealPlan:"Meal Plan",
+mealPlan:"Meal Plan",mealPlans:"MEAL PLANS",cardioProtocols:"CARDIO PROTOCOLS",
 passwordMin:"Password must be at least 6 characters",
 carbs:"CARBS",
 fat:"FAT",
@@ -526,6 +529,7 @@ complete:"Befejezve",cancelled:"Lemondva",lateCancel:"K\u00e9s\u0151i lemond\u00
 noCharge:"NEM SZ\u00c1ML\u00c1ZVA",charged:"SZ\u00c1ML\u00c1ZVA",
 reminder:"K\u00f6zelg\u0151 edz\u00e9s",reminderBody:"{name} - {time} ({type})",
 export:"EXPORT\u00c1L\u00c1S",import:"IMPORT\u00c1L\u00c1S",backup:"BIZTONS\u00c1GI MENT\u00c9S",restore:"VISSZA\u00c1LL\u00cdT\u00c1S",
+generateClientPDF:"\u00dcGYF\u00c9L PDF GENER\u00c1L\u00c1S",chooseWhatInclude:"V\u00e1laszd ki mit tartalmaz",quickReport:"GYORS JELENT\u00c9S",
 pin:"PIN z\u00e1r",changePIN:"PIN M\u00d3DOS\u00cdT\u00c1S",lockNow:"Z\u00c1ROL\u00c1S",
 incorrectPIN:"Helytelen PIN",unlock:"FELOLD\u00c1S",
 signIn:"BEJELENTKEZ\u00c9S",signUp:"REGISZTR\u00c1CI\u00d3",signOut:"KIJELENTKEZ\u00c9S",
@@ -587,6 +591,8 @@ rate:"\u00c1R ($/\u00d3RA)",
 sessionType:"EDZ\u00c9S T\u00cdPUSA",
 experience:"TAPASZTALAT",
 healthHistory:"EG\u00c9SZS\u00c9G \u00c9S EL\u0150ZM\u00c9NYEK",
+dietaryNeeds:"\u00c9TREND",
+noRestrictions:"Nincs korl\u00e1toz\u00e1s",
 goals:"C\u00c9LOK",
 injuries:"S\u00c9R\u00dcL\u00c9SEK / KORL\u00c1TOZ\u00c1SOK",
 medical:"ORVOSI",
@@ -830,7 +836,7 @@ savedSupplements:"MENTETT KIEG\u00c9SZ\u00cdT\u0150 PROTOKOLLOK",
 noProtocolsSaved:"M\u00e9g nincs mentett protokoll",
 food:"\u00c9TEL",
 size:"M\u00c9RET",
-mealPlan:"\u00c9trend Terv",
+mealPlan:"\u00c9trend Terv",mealPlans:"\u00c9TREND TERVEK",cardioProtocols:"CARDIO PROTOKOLLOK",
 passwordMin:"A jelsz\u00f3nak legal\u00e1bb 6 karakternek kell lennie",
 carbs:"SZ\u00c9NHIDR\u00c1T",
 fat:"ZS\u00cdR",
@@ -1252,7 +1258,7 @@ function formatPhone(el){var v=el.value.replace(/\D/g,"");if(v.length>10)v=v.sli
 function clientFormFields(c){c=c||{};var defRate=LS.get("defaultRate","70");var types=["Training","Mobility","Training + Mobility"];var typeLabels=[t("training"),t("mobility"),t("trainingMobility")];var levels=["Beginner","Some Experience","Intermediate","Advanced"];var levelLabels=[t("beginner"),t("someExp"),t("intermediate"),t("advanced")];
 var hasHealth=c.goals||c.injuries||c.medical||c.activity||c.notes;
 var html='<div class="cd" style="padding:20px"><div class="field"><span class="lb">'+t("name")+' *</span><input id="cN" placeholder="Client\u2019s full name" value="'+escHtml(c.name||"")+'"></div><div class="g2 field"><div><span class="lb">'+t("phone")+'</span><input id="cP" type="tel" placeholder="(555) 123-4567" value="'+escHtml(c.phone||"")+'" oninput="formatPhone(this)"></div><div><span class="lb">'+t("email")+'</span><input id="cE" type="email" placeholder="client@email.com" value="'+escHtml(c.email||"")+'"></div></div><div class="g2 field"><div><span class="lb">'+t("age")+'</span><input id="cA" type="number" min="13" max="99" placeholder="e.g. 32" value="'+(c.age||"")+'"></div><div><span class="lb">'+t("rate")+'</span><input id="cR" type="number" min="0" placeholder="'+defRate+'" value="'+(c.rate||"")+'"></div></div><div class="field"><span class="lb">'+t("sessionType")+'</span><div style="display:flex;flex-wrap:wrap;gap:4px">';for(var i=0;i<types.length;i++)html+='<div class="chip'+((c.type||"Training")===types[i]?" on":"")+'" data-value="'+types[i]+'" onclick="pickChip(this,\'cTv\')">'+typeLabels[i]+'</div>';html+='</div><input type="hidden" id="cTv" value="'+(c.type||"Training")+'"></div><div class="field"><span class="lb">'+t("experience")+'</span><div style="display:flex;flex-wrap:wrap;gap:4px">';for(var i=0;i<levels.length;i++)html+='<div class="chip'+((c.level||"Beginner")===levels[i]?" on":"")+'" data-value="'+levels[i]+'" onclick="pickChip(this,\'cLv\')">'+levelLabels[i]+'</div>';html+='</div><input type="hidden" id="cLv" value="'+(c.level||"Beginner")+'"></div><div style="margin-top:8px;padding-top:14px;border-top:1px solid var(--borderS)"><div onclick="var s=document.getElementById(\'healthSection\');s.style.display=s.style.display===\'none\'?\'block\':\'none\';this.querySelector(\'span\').style.transform=s.style.display===\'none\'?\'rotate(0)\':\' rotate(180deg)\'" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;padding:4px 0"><span class="lb" style="margin:0;cursor:pointer">'+t("healthHistory")+'</span><span style="color:var(--dm);font-size:10px;transition:transform 0.2s;display:inline-block'+(hasHealth?';transform:rotate(180deg)':'')+'">\u25BC</span></div><div id="healthSection" style="display:'+(hasHealth?'block':'none')+';margin-top:14px"><div class="field"><span class="lb">'+t("goals")+'</span><textarea id="cG" rows="2" placeholder="What do they want to achieve?">'+escHtml(c.goals||"")+'</textarea></div><div class="field"><span class="lb">'+t("injuries")+'</span><textarea id="cI" rows="2" placeholder="Surgeries, joint issues, chronic pain...">'+escHtml(c.injuries||"")+'</textarea></div><div class="field"><span class="lb">'+t("medical")+'</span><textarea id="cM" rows="1" placeholder="Conditions, medications...">'+escHtml(c.medical||"")+'</textarea></div><div class="field"><span class="lb">'+t("currentActivity")+'</span><textarea id="cAc" rows="1" placeholder="Sedentary, light gym, active...">'+escHtml(c.activity||"")+'</textarea></div><div><span class="lb">'+t("notes")+'</span><textarea id="cO" rows="2" placeholder="Personality, preferences, anything...">'+escHtml(c.notes||"")+'</textarea></div></div></div></div>';
-html+='<div class="field" style="margin-top:14px"><span class="lb">DIETARY NEEDS</span><div style="display:flex;flex-wrap:wrap;gap:4px"><div class="chip'+(!c.diet||c.diet==="none"?" on":"")+'" data-value="none" onclick="pickChip(this,\'cDiet\')">No Restrictions</div><div class="chip'+(c.diet==="df"?" on":"")+'" data-value="df" onclick="pickChip(this,\'cDiet\')">Dairy-Free</div><div class="chip'+(c.diet==="keto"?" on":"")+'" data-value="keto" onclick="pickChip(this,\'cDiet\')">Keto</div><div class="chip'+(c.diet==="vegan"?" on":"")+'" data-value="vegan" onclick="pickChip(this,\'cDiet\')">Vegan</div><div class="chip'+(c.diet==="lc"?" on":"")+'" data-value="lc" onclick="pickChip(this,\'cDiet\')">Low-Carb</div></div><input type="hidden" id="cDiet" value="'+(c.diet||"none")+'"></div>';
+html+='<div class="field" style="margin-top:14px"><span class="lb">'+t("dietaryNeeds")+'</span><div style="display:flex;flex-wrap:wrap;gap:4px"><div class="chip'+(!c.diet||c.diet==="none"?" on":"")+'" data-value="none" onclick="pickChip(this,\'cDiet\')">'+t("noRestrictions")+'</div><div class="chip'+(c.diet==="df"?" on":"")+'" data-value="df" onclick="pickChip(this,\'cDiet\')">Dairy-Free</div><div class="chip'+(c.diet==="gf"?" on":"")+'" data-value="gf" onclick="pickChip(this,\'cDiet\')">Gluten-Free</div><div class="chip'+(c.diet==="keto"?" on":"")+'" data-value="keto" onclick="pickChip(this,\'cDiet\')">Keto</div><div class="chip'+(c.diet==="vegan"?" on":"")+'" data-value="vegan" onclick="pickChip(this,\'cDiet\')">Vegan</div><div class="chip'+(c.diet==="vegetarian"?" on":"")+'" data-value="vegetarian" onclick="pickChip(this,\'cDiet\')">Vegetarian</div><div class="chip'+(c.diet==="lc"?" on":"")+'" data-value="lc" onclick="pickChip(this,\'cDiet\')">Low-Carb</div><div class="chip'+(c.diet==="paleo"?" on":"")+'" data-value="paleo" onclick="pickChip(this,\'cDiet\')">Paleo</div><div class="chip'+(c.diet==="hp"?" on":"")+'" data-value="hp" onclick="pickChip(this,\'cDiet\')">High-Protein</div><div class="chip'+(c.diet==="halal"?" on":"")+'" data-value="halal" onclick="pickChip(this,\'cDiet\')">Halal</div></div><input type="hidden" id="cDiet" value="'+(c.diet||"none")+'"></div>';
 html+='<input type="hidden" id="cRm" value="'+escHtml(c.reminderMsg||"")+'">';
 return html;
 }
@@ -1278,27 +1284,27 @@ else html+='<div class="cd" style="text-align:center;padding:18px;border:1px das
 
 // Meal plans section
 var cMeals=getClientMealPlans(c.id);
-html+='<div class="sl" style="margin-top:20px;display:flex;justify-content:space-between;align-items:center"><span>'+t("mealPlan").toUpperCase()+'S <span style="font-size:9px;color:var(--dm)">'+cMeals.length+'</span></span><button class="btn2" onclick="navStack=[];currentView={tab:\'tools\',view:\'main\',data:{}};push(\'mealPlanBuilder\',{clientId:\''+escJs(c.id)+'\'})" style="padding:4px 10px;font-size:8px;margin-top:-4px">+ '+t("newProgram").split(" ")[0]+' '+t("mealPlan")+'</button></div>';
+html+='<div class="sl" style="margin-top:20px;display:flex;justify-content:space-between;align-items:center"><span>'+t("mealPlans")+' <span style="font-size:9px;color:var(--dm)">'+cMeals.length+'</span></span><button class="btn2" onclick="navStack=[];currentView={tab:\'tools\',view:\'main\',data:{}};push(\'mealPlanBuilder\',{clientId:\''+escJs(c.id)+'\'})" style="padding:4px 10px;font-size:8px;margin-top:-4px">+ NEW</button></div>';
 if(cMeals.length){for(var mi2=0;mi2<cMeals.length;mi2++){var mp=cMeals[mi2];html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="navStack=[];currentView={tab:\'tools\',view:\'main\',data:{}};push(\'mealPlanDetail\',{planId:\''+escJs(mp.id)+'\'})"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(212,164,74,0.18),rgba(212,164,74,0.06));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--acc)">'+IC.meal+'</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(mp.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+mp.mealCount+' '+t("meals")+' \u00B7 P'+mp.targetP+'/C'+mp.targetC+'/F'+mp.targetF+' \u00B7 '+(mp.targetP*4+mp.targetC*4+mp.targetF*9)+' cal</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}}
 else html+='<div class="cd" style="text-align:center;padding:18px;border:1px dashed var(--border);color:var(--dm);font-size:11px">'+t("noMealPlans")+'</div>';
 
 // Cardio plans section
 var cCardio=(typeof getCardioPlans==="function")?getCardioPlans().filter(function(p){return p.clientId===c.id;}):[];
-html+='<div class="sl" style="margin-top:20px;display:flex;justify-content:space-between;align-items:center"><span>'+t("cardioBuilder").toUpperCase()+' <span style="font-size:9px;color:var(--dm)">'+cCardio.length+'</span></span><button class="btn2" onclick="navStack=[];currentView={tab:\'tools\',view:\'main\',data:{}};push(\'cardioBuilder\',{clientId:\''+escJs(c.id)+'\'})" style="padding:4px 10px;font-size:8px;margin-top:-4px">+ '+t("newProgram").split(" ")[0]+' '+t("cardioBuilder")+'</button></div>';
+html+='<div class="sl" style="margin-top:20px;display:flex;justify-content:space-between;align-items:center"><span>'+t("cardioProtocols")+' <span style="font-size:9px;color:var(--dm)">'+cCardio.length+'</span></span><button class="btn2" onclick="navStack=[];currentView={tab:\'tools\',view:\'main\',data:{}};push(\'cardioBuilder\',{clientId:\''+escJs(c.id)+'\'})" style="padding:4px 10px;font-size:8px;margin-top:-4px">+ NEW</button></div>';
 if(cCardio.length){for(var ci2=0;ci2<cCardio.length;ci2++){var cp=cCardio[ci2];html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="navStack=[];currentView={tab:\'tools\',view:\'main\',data:{}};push(\'cardioDetail\',{planId:\''+escJs(cp.id)+'\'})"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(201,168,76,0.18),rgba(201,168,76,0.06));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--acc)">'+IC.cardio+'</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(cp.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+escHtml(cp.phase)+' \u00B7 '+cp.frequency+'x/wk \u00B7 '+cp.duration+'min</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}}
 else html+='<div class="cd" style="text-align:center;padding:18px;border:1px dashed var(--border);color:var(--dm);font-size:11px">'+t("noProtocolsSaved")+'</div>';
 
 // Supplement protocols section
 var cSupps=getClientSuppPlans(c.id);
-html+='<div class="sl" style="margin-top:20px;display:flex;justify-content:space-between;align-items:center"><span>'+t("supplementBuilder").toUpperCase()+' <span style="font-size:9px;color:var(--dm)">'+cSupps.length+'</span></span><button class="btn2" onclick="navStack=[];currentView={tab:\'tools\',view:\'main\',data:{}};push(\'supplementBuilder\',{clientId:\''+escJs(c.id)+'\'})" style="padding:4px 10px;font-size:8px;margin-top:-4px">+ '+t("newProgram").split(" ")[0]+' SUPP</button></div>';
+html+='<div class="sl" style="margin-top:20px;display:flex;justify-content:space-between;align-items:center"><span>'+t("supplementBuilder").toUpperCase()+' <span style="font-size:9px;color:var(--dm)">'+cSupps.length+'</span></span><button class="btn2" onclick="navStack=[];currentView={tab:\'tools\',view:\'main\',data:{}};push(\'supplementBuilder\',{clientId:\''+escJs(c.id)+'\'})" style="padding:4px 10px;font-size:8px;margin-top:-4px">+ NEW</button></div>';
 if(cSupps.length){for(var si2=0;si2<cSupps.length;si2++){var sp3=cSupps[si2];html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="navStack=[];currentView={tab:\'tools\',view:\'main\',data:{}};push(\'supplementDetail\',{planId:\''+escJs(sp3.id)+'\'})"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(212,164,74,0.18),rgba(212,164,74,0.06));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--acc)">'+IC.supp+'</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(sp3.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+escHtml(sp3.goal)+' \u00B7 '+sp3.supplements.length+' supps</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}}
 else html+='<div class="cd" style="text-align:center;padding:18px;border:1px dashed var(--border);color:var(--dm);font-size:11px">'+t("noSuppProtocols")+'</div>';
 
 html+='<div style="display:flex;gap:8px;margin-top:16px"><button class="btn" style="flex:1" onclick="navToLogFromClient(\''+escJs(c.id)+'\',\''+escJs(c.rate)+'\',\''+escJs(c.type)+'\')">'+t("logSession")+'</button><button class="btn2" style="flex:1" onclick="navToScheduleFromClient(\''+escJs(c.id)+'\')">'+t("schedule").toUpperCase()+'</button></div>';
-html+='<div class="sl" style="margin-top:20px">\u2193 EXPORT</div>';
-html+='<button class="btn" style="margin-bottom:8px" onclick="showClientPDFPicker('+idx+')">\u2193 GENERATE CLIENT PDF</button>';
-html+='<div style="font-size:9px;color:var(--dm);font-family:var(--mono);text-align:center;margin-bottom:10px">Choose what to include</div>';
-html+='<div class="g2"><button class="btn2" onclick="sendReminderToClient(\''+escJs(c.id)+'\')" style="width:100%">\u2709 '+t("sendReminder")+'</button><button class="btn2" onclick="generateClientPDF('+idx+')" style="width:100%">\u2193 QUICK REPORT</button></div><div style="margin-top:24px;text-align:center"><span onclick="deleteClient('+idx+')" style="cursor:pointer;font-size:9px;color:var(--dm);font-family:var(--mono);letter-spacing:0.06em">'+t("removeClient")+'</span></div>';
+html+='<div class="sl" style="margin-top:20px">\u2193 '+t("export")+'</div>';
+html+='<button class="btn" style="margin-bottom:8px" onclick="showClientPDFPicker('+idx+')">\u2193 '+t("generateClientPDF")+'</button>';
+html+='<div style="font-size:9px;color:var(--dm);font-family:var(--mono);text-align:center;margin-bottom:10px">'+t("chooseWhatInclude")+'</div>';
+html+='<div class="g2"><button class="btn2" onclick="sendReminderToClient(\''+escJs(c.id)+'\')" style="width:100%">\u2709 '+t("sendReminder")+'</button><button class="btn2" onclick="generateClientPDF('+idx+')" style="width:100%">\u2193 '+t("quickReport")+'</button></div><div style="margin-top:24px;text-align:center"><span onclick="deleteClient('+idx+')" style="cursor:pointer;font-size:9px;color:var(--dm);font-family:var(--mono);letter-spacing:0.06em">'+t("removeClient")+'</span></div>';
 return html;
 }
 function deleteClient(idx){if(!clients[idx])return;showConfirm("Remove "+clients[idx].name+"?<br><br><span style='font-size:12px;color:var(--mu)'>Their session history will be preserved.</span>",function(){var id=clients[idx].id;var name=clients[idx].name;clients.splice(idx,1);sessions.forEach(function(s){if(s.clientId===id)s.clientName=name;});schedule.forEach(function(s){if(s.clientId===id){s.clientName=name;s.clientId="";}});save();cloudDelete("clients",id);toast("\u2713 "+name+" removed");pop();},{danger:true,title:'REMOVE CLIENT',yesText:'REMOVE'});}
@@ -3351,7 +3357,7 @@ html+=_savedPlanCard(IC.meal,mp.name,(c?escHtml(c.name)+' \u00B7 ':'')+mp.mealCo
 for(var i=allCardioPlan.length-1;i>=Math.max(0,allCardioPlan.length-3);i--){var cp=allCardioPlan[i];var c=clientById(cp.clientId);
 html+=_savedPlanCard(IC.cardio,cp.name,(c?escHtml(c.name)+' \u00B7 ':'')+cp.phase+' \u00B7 '+cp.frequency+'x/wk',"push('cardioDetail',{planId:'"+escJs(cp.id)+"'})");}
 for(var i=allSuppPlans.length-1;i>=Math.max(0,allSuppPlans.length-3);i--){var sp2=allSuppPlans[i];var c2=clientById(sp2.clientId);
-html+=_savedPlanCard(IC.supp,sp2.name,(c2?escHtml(c2.name)+' \u00B7 ':'')+sp2.goal+' \u00B7 '+sp2.supplements.length+' supps',"push('supplementDetail',{planId:'"+escJs(sp2.id)+"'})");}
+html+=_savedPlanCard(IC.supp,sp2.name,(c2?escHtml(c2.name)+' \u00B7 ':'')+sp2.goal+' \u00B7 '+sp2.supplements.length+' supplements',"push('supplementDetail',{planId:'"+escJs(sp2.id)+"'})");}
 }
 
 return html;}
