@@ -2728,23 +2728,30 @@ function deleteMealPlan(id){showConfirm(t("deleteMealPlan")+'?',function(){var p
 // ═══════════════════════════════════════════════════════════════════
 var PRO_EXERCISES={
 women:{
-"Glutes & Hamstrings":[
-{n:"Lying Leg Curl",s:"4x10-12",note:"Pre-exhaust hamstrings before compounds. Squeeze 2s at top.",tech:"Finisher option"},
-{n:"Stiff-Leg Deadlift",s:"4x10-12",note:"Hinge at hips, slight knee bend. Feel the stretch in hamstrings."},
-{n:"Hip Thrust (Barbell)",s:"4x12-15",note:"Pause and squeeze at top. Drive through heels."},
-{n:"Walking Lunges (Dumbbell)",s:"3x12 each",note:"Long stride to emphasize glutes. Upright torso."},
-{n:"Bulgarian Split Squat",s:"3x10-12 each",note:"Rear foot elevated. Deep stretch at bottom."},
-{n:"Cable Kickback",s:"3x15 each",note:"Slight forward lean. Full squeeze at contraction."},
-{n:"Glute-Ham Raise",s:"3x10-12",note:"Control the negative. Strong hamstring contraction."},
-{n:"Leg Press (High & Wide)",s:"4x12-15",note:"Feet high on platform. Deep ROM. Glute focused.",tech:"7x10-12 finisher"},
-{n:"Seated Leg Curl",s:"4x12",note:"Slow eccentric 3s. Squeeze at contraction.",tech:"Finisher option"},
-{n:"Sumo Squat (Dumbbell)",s:"3x15",note:"Wide stance, toes out. Squeeze inner thighs and glutes."},
-{n:"Reverse Hack Squat (Glute Focus)",s:"3x12",note:"Face the pad. Wide stance. Deep stretch on glutes."},
+"Glutes":[
+{n:"Hip Thrust (Barbell)",s:"4x12-15",note:"Pause and squeeze at top. Drive through heels. King of glute exercises."},
 {n:"B-Stance Hip Thrust",s:"3x12 each",note:"Unilateral glute emphasis. One foot forward. Squeeze at top."},
-{n:"Pull-Through (Cable)",s:"3x15",note:"Hinge at hips. Squeeze glutes at lockout. Great glute-ham connection."}
+{n:"Cable Kickback",s:"3x15 each",note:"Slight forward lean. Full squeeze at contraction."},
+{n:"Sumo Squat (Dumbbell)",s:"3x15",note:"Wide stance, toes out. Squeeze inner thighs and glutes."},
+{n:"Walking Lunges (Dumbbell)",s:"3x12 each",note:"Long stride to emphasize glutes. Upright torso."},
+{n:"Bulgarian Split Squat",s:"3x10-12 each",note:"Rear foot elevated. Deep stretch at bottom. Glute dominant."},
+{n:"Reverse Hack Squat (Glute Focus)",s:"3x12",note:"Face the pad. Wide stance. Deep stretch on glutes."},
+{n:"Leg Press (High & Wide)",s:"4x12-15",note:"Feet high on platform. Deep ROM. Glute focused.",tech:"7x10-12 finisher"},
+{n:"Pull-Through (Cable)",s:"3x15",note:"Hinge at hips. Squeeze glutes at lockout. Great mind-muscle tool."},
+{n:"Abductor Machine",s:"3x15-20",note:"Lean forward slightly. Squeeze at full abduction. Upper glute emphasis.",tech:"Finisher option"},
+{n:"Frog Pump",s:"3x20",note:"Soles together, knees out. Squeeze glutes at top. Activation finisher.",tech:"Finisher option"}
 ],
-"Shoulders (Capped Delts)":[
-{n:"Seated Dumbbell Press",s:"4x10-12",note:"Control the negative. Don't lock out at top."},
+"Hamstrings":[
+{n:"Lying Leg Curl",s:"4x10-12",note:"Full stretch at bottom. Squeeze 2s at top. Control the negative.",tech:"7x10-12 finisher"},
+{n:"Stiff-Leg Deadlift",s:"4x10-12",note:"Hinge at hips, slight knee bend. Feel the deep stretch in hamstrings."},
+{n:"Seated Leg Curl",s:"4x12",note:"Different angle than lying. Slow eccentric 3s. Squeeze at contraction.",tech:"Finisher option"},
+{n:"Glute-Ham Raise",s:"3x10-12",note:"Control the negative. Strong hamstring contraction. Bodyweight or weighted."},
+{n:"Single-Leg Romanian Deadlift (DB)",s:"3x10-12 each",note:"Balance and hamstring stretch. Hinge at hip. Keep back neutral."},
+{n:"Cable Pull-Through",s:"3x15",note:"Hinge pattern. Great for hamstring-glute connection without spinal load."},
+{n:"Nordic Hamstring Curl",s:"3x6-8",note:"Advanced. Eccentric-focused. Gold standard for hamstring injury prevention."}
+],
+"Shoulders":[
+{n:"Seated Dumbbell Press",s:"4x10-12",note:"Control the negative. Don't lock out at top. Build capped delts."},
 {n:"Lateral Raise (Dumbbell)",s:"4x12-15",note:"Slight forward lean. Lead with elbows. Don't go above parallel.",tech:"7x10-12 finisher"},
 {n:"Cable Lateral Raise",s:"3x12-15 each",note:"Behind the body for rear emphasis. Constant tension."},
 {n:"Reverse Pec Deck",s:"4x12-15",note:"Squeeze rear delts hard. Slight pause at contraction."},
@@ -2774,15 +2781,39 @@ women:{
 {n:"Sissy Squat",s:"3x12-15",note:"Lean back, knees forward. Excellent quad isolation."},
 {n:"Front Squat (Goblet or Barbell)",s:"3x10",note:"Upright torso. Deep stretch. Quad dominant."}
 ],
-"Arms":[
+"Arms (Biceps)":[
 {n:"EZ Bar Curl",s:"3x10-12",note:"Strict form. No swinging. Full range of motion."},
-{n:"Rope Pushdown",s:"3x12-15",note:"Spread the rope at bottom. Squeeze triceps hard."},
 {n:"Hammer Curl (Dumbbell)",s:"3x10-12 each",note:"Controlled tempo. Builds brachialis for arm shape."},
-{n:"Overhead Tricep Extension (Rope)",s:"3x12",note:"Full stretch behind head. Squeeze at lockout."},
 {n:"Concentration Curl",s:"3x12 each",note:"Peak contraction work. Squeeze at top.",tech:"Finisher option"},
-{n:"Dip Machine (Tricep)",s:"3x12",note:"Lean slightly forward. Control full range."},
-{n:"Spider Curl (Incline Bench)",s:"3x12",note:"Lie face down on incline. Pure isolation, no momentum. Peak contraction.",tech:"Finisher option"},
-{n:"Drag Curl (Barbell)",s:"3x10-12",note:"Pull elbows back as you curl. Emphasizes long head of bicep."}
+{n:"Spider Curl (Incline Bench)",s:"3x12",note:"Lie face down on incline. Pure isolation, no momentum.",tech:"Finisher option"},
+{n:"Cable Curl (Straight Bar)",s:"3x12-15",note:"Constant tension. Great for pump sets."},
+{n:"Incline Dumbbell Curl",s:"3x10-12",note:"Arms behind torso for long head stretch. Slow negative."},
+{n:"Drag Curl (Barbell)",s:"3x10-12",note:"Pull elbows back as you curl. Emphasizes long head."}
+],
+"Arms (Triceps)":[
+{n:"Rope Pushdown",s:"3x12-15",note:"Spread the rope at bottom. Squeeze triceps hard."},
+{n:"Overhead Tricep Extension (Rope)",s:"3x12",note:"Full stretch behind head. Squeeze at lockout."},
+{n:"Dip Machine (Tricep)",s:"3x12",note:"Upright torso for tricep emphasis. Control full range."},
+{n:"Single-Arm Cable Pushdown",s:"3x12 each",note:"Supinate at bottom for extra squeeze. Constant tension."},
+{n:"Skull Crushers (EZ Bar)",s:"3x10-12",note:"Lower to forehead. Elbows fixed. Full extension."},
+{n:"Close-Grip Push-Up",s:"3x12-15",note:"Hands close together. Elbows track along body. Bodyweight finisher.",tech:"Finisher option"},
+{n:"Kickback (Cable or DB)",s:"3x12-15 each",note:"Lean forward. Full lockout at top. Squeeze tricep hard.",tech:"Finisher option"}
+],
+"Chest":[
+{n:"Incline Dumbbell Press",s:"4x10-12",note:"30-degree incline. Full stretch at bottom. Builds upper chest fullness."},
+{n:"Machine Chest Press",s:"4x10-12",note:"Controlled tempo. Squeeze at contraction. Safe and effective.",tech:"7x10-12 finisher"},
+{n:"Cable Flye (Mid)",s:"3x12-15",note:"Slight bend in elbows. Squeeze at center. Constant tension."},
+{n:"Incline Cable Flye",s:"3x12-15",note:"Upper chest emphasis. Cross hands at peak for deeper contraction."},
+{n:"Flat Dumbbell Press",s:"3x10-12",note:"Full range of motion. Controlled negative. Don't lock out."},
+{n:"Pec Deck",s:"3x12-15",note:"Squeeze and hold at contraction. Great isolation.",tech:"Finisher option"},
+{n:"Push-Up (Weighted or Banded)",s:"3x12-15",note:"Full range of motion. Core engaged. Add band or plate for resistance."},
+{n:"Dip (Chest Emphasis)",s:"3x10-12",note:"Lean forward. Controlled descent. Deep stretch at bottom."}
+],
+"Calves":[
+{n:"Standing Calf Raise",s:"4x12-15",note:"Full stretch at bottom. 2-3s squeeze at top. Control the tempo."},
+{n:"Seated Calf Raise",s:"4x15-20",note:"Targets soleus. Full stretch. Slow tempo."},
+{n:"Leg Press Calf Raise",s:"3x15-20",note:"Feet at bottom edge. Full range. Squeeze at top.",tech:"Finisher option"},
+{n:"Single-Leg Calf Raise (Dumbbell)",s:"3x15 each",note:"Address imbalances. Pause at stretch and contraction."}
 ],
 "Abs & Core":[
 {n:"Hanging Leg Raise",s:"3x15",note:"Control the swing. Curl pelvis up at top."},
@@ -2863,14 +2894,30 @@ men:{
 {n:"Pendulum Squat",s:"4x10-12",note:"Machine squat with arc path. Deep stretch. Quad dominant.",tech:"Finisher option"},
 {n:"Belt Squat",s:"3x10-12",note:"Zero spinal loading. Pure leg drive. Joint-friendly quad work."}
 ],
-"Legs (Hamstrings & Calves)":[
-{n:"Lying Leg Curl",s:"4x10-12",note:"Full stretch at bottom. Squeeze and hold at top."},
+"Legs (Hamstrings)":[
+{n:"Lying Leg Curl",s:"4x10-12",note:"Full stretch at bottom. Squeeze and hold at top.",tech:"7x10-12 finisher"},
 {n:"Stiff-Leg Deadlift (Barbell)",s:"4x8-10",note:"Slow negative. Feel the stretch. Don't round back."},
 {n:"Seated Leg Curl",s:"3x10-12",note:"Different angle than lying. Squeeze hard at contraction.",tech:"7x10-12 finisher"},
+{n:"Romanian Deadlift (Dumbbell)",s:"3x10-12",note:"Hinge at hips. Dumbbells allow more ROM. Deep hamstring stretch."},
 {n:"Glute-Ham Raise",s:"3x10",note:"Control the negative. Strong hamstring contraction."},
+{n:"Nordic Hamstring Curl",s:"3x6-8",note:"Advanced eccentric. Injury prevention. Gold standard movement."},
+{n:"Single-Leg Curl (Machine)",s:"3x10-12 each",note:"Address imbalances. Full squeeze at contraction."}
+],
+"Calves":[
 {n:"Standing Calf Raise",s:"5x10-15",note:"Full stretch at bottom. 2-3s squeeze at top. Heavy."},
-{n:"Seated Calf Raise",s:"4x12-15",note:"Targets soleus. Full stretch. Heavy weight."},
-{n:"Leg Press Calf Raise",s:"3x15-20",note:"Feet at bottom edge. Full range. Squeeze at top.",tech:"7x12-15 finisher"}
+{n:"Seated Calf Raise",s:"4x12-15",note:"Targets soleus. Full stretch. Heavy weight. Slow tempo."},
+{n:"Leg Press Calf Raise",s:"3x15-20",note:"Feet at bottom edge. Full range. Squeeze at top.",tech:"7x12-15 finisher"},
+{n:"Donkey Calf Raise",s:"3x12-15",note:"Bent-over position for deeper stretch. Old school mass builder."},
+{n:"Single-Leg Calf Raise (Dumbbell)",s:"3x15 each",note:"Address imbalances. Pause at stretch and contraction."}
+],
+"Traps":[
+{n:"Barbell Shrug",s:"4x10-12",note:"Heavy weight. Squeeze and hold at top 2s. Don't roll shoulders."},
+{n:"Dumbbell Shrug",s:"4x12-15",note:"Slight lean forward for mid-trap. Squeeze hard at top."},
+{n:"Smith Machine Shrug (Behind Back)",s:"3x12",note:"Behind back targets mid/lower traps. Great for thickness."},
+{n:"Face Pull (High Cable)",s:"3x15",note:"Pull to face with external rotation. Hits mid/lower traps and rear delts."},
+{n:"Cable Shrug",s:"3x15",note:"Constant tension. Great for pump sets and finishers.",tech:"Finisher option"},
+{n:"Rack Pull (Above Knee)",s:"3x6-8",note:"Heavy partial deadlift. Massive trap overload. Upper back thickness."},
+{n:"Farmer's Walk",s:"3x40-60s",note:"Heavy dumbbells. Walk with purpose. Builds functional trap strength."}
 ],
 "Abs":[
 {n:"Hanging Leg Raise",s:"4x15",note:"Control swing. Curl pelvis up at top."},
