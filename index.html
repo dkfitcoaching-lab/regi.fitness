@@ -150,7 +150,7 @@ html{scroll-behavior:smooth}
 
 var SUPA_URL="https://pwopwvvgjflunjxwkkql.supabase.co";
 var SUPA_KEY="sb_publishable_6slliEpPsWV9JXIDvz8pyw_FNPrPMhv";
-var VERSION="7.0";
+var VERSION="7.2";
 // ═══ GOLDEN SVG ICON SYSTEM ═══
 var IC={
 meal:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 6h18M6 6v-1a2 2 0 012-2h8a2 2 0 012 2v1M5 6c0 6 2 10 7 10s7-4 7-10M12 16v4M8 20h8"/></svg>',
@@ -878,6 +878,68 @@ function $(id){return document.getElementById(id);}
 function v(id){var el=$(id);return el?el.value.trim():"";}
 function haptic(ms){if(navigator.vibrate)navigator.vibrate(ms||10);}
 function toast(m,dur){document.querySelectorAll(".toast").forEach(function(t){t.remove();});var d=document.createElement("div");d.className="toast";d.textContent=m;document.body.appendChild(d);haptic(15);setTimeout(function(){d.remove();},dur||2400);}
+
+// ═══ CUSTOM MODAL SYSTEM ═══
+function _modalOverlay(){
+var o=document.createElement("div");
+o.className="modal-overlay";
+o.style.cssText="position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,0.75);backdrop-filter:blur(12px);animation:fadeIn 0.15s ease";
+return o;
+}
+function _modalBox(opts){
+var danger=opts&&opts.danger;
+var accentColor=danger?'var(--danger)':'var(--acc)';
+var accentGlow=danger?'rgba(224,88,88,0.15)':'rgba(212,164,74,0.08)';
+var box=document.createElement("div");
+box.style.cssText="background:linear-gradient(170deg,rgba(14,14,20,0.99) 0%,rgba(8,8,12,0.99) 50%,rgba(4,4,8,0.99) 100%);border:1px solid "+(danger?'rgba(224,88,88,0.2)':'rgba(212,164,74,0.15)')+";border-radius:16px;padding:28px 24px;max-width:360px;width:100%;box-shadow:0 24px 80px rgba(0,0,0,0.8),0 0 40px "+accentGlow+",inset 0 1px 0 rgba(255,255,255,0.03);animation:slideUp 0.2s ease";
+return box;
+}
+function showConfirm(message,onYes,opts){
+opts=opts||{};
+var o=_modalOverlay();
+var box=_modalBox(opts);
+var danger=opts.danger;
+var title=opts.title||(!danger?'CONFIRM':'WARNING');
+var yesText=opts.yesText||(danger?'DELETE':'CONFIRM');
+var noText=opts.noText||'CANCEL';
+box.innerHTML='<div style="font-size:9px;font-weight:700;letter-spacing:0.2em;font-family:var(--mono);color:'+(danger?'var(--danger)':'var(--acc)')+';margin-bottom:14px">'+title+'</div><div style="font-size:14px;color:var(--wh);line-height:1.6;margin-bottom:24px;font-family:var(--body)">'+message+'</div><div style="display:flex;gap:10px"><button id="_mcNo" class="btn2" style="flex:1;padding:14px">'+noText+'</button><button id="_mcYes" class="'+(danger?'btn-danger':'btn')+'" style="flex:1;padding:14px;font-size:11px">'+yesText+'</button></div>';
+o.appendChild(box);
+document.body.appendChild(o);
+haptic(15);
+var close=function(){o.remove();};
+box.querySelector("#_mcNo").onclick=function(){close();if(opts.onNo)opts.onNo();};
+box.querySelector("#_mcYes").onclick=function(){close();onYes();};
+o.addEventListener("click",function(e){if(e.target===o)close();});
+setTimeout(function(){box.querySelector("#_mcYes").focus();},50);
+}
+function showDoubleConfirm(msg1,msg2,onYes,opts){
+opts=opts||{};
+showConfirm(msg1,function(){
+showConfirm(msg2,onYes,Object.assign({},opts,{title:'ARE YOU SURE?'}));
+},opts);
+}
+function showPrompt(message,onSubmit,opts){
+opts=opts||{};
+var o=_modalOverlay();
+var box=_modalBox(opts);
+var title=opts.title||'INPUT';
+var placeholder=opts.placeholder||'';
+var inputType=opts.inputType||'text';
+var inputMode=opts.inputMode||'';
+var maxLen=opts.maxLength||'';
+box.innerHTML='<div style="font-size:9px;font-weight:700;letter-spacing:0.2em;font-family:var(--mono);color:var(--acc);margin-bottom:14px">'+title+'</div><div style="font-size:14px;color:var(--wh);line-height:1.6;margin-bottom:16px;font-family:var(--body)">'+message+'</div><input id="_mpInput" type="'+inputType+'" placeholder="'+placeholder+'"'+(inputMode?' inputmode="'+inputMode+'"':'')+(maxLen?' maxlength="'+maxLen+'"':'')+' style="margin-bottom:20px"><div style="display:flex;gap:10px"><button id="_mpNo" class="btn2" style="flex:1;padding:14px">CANCEL</button><button id="_mpYes" class="btn" style="flex:1;padding:14px;font-size:11px">OK</button></div>';
+o.appendChild(box);
+document.body.appendChild(o);
+haptic(15);
+var close=function(){o.remove();};
+var inp=box.querySelector("#_mpInput");
+box.querySelector("#_mpNo").onclick=close;
+box.querySelector("#_mpYes").onclick=function(){var val=inp.value.trim();close();onSubmit(val);};
+inp.addEventListener("keydown",function(e){if(e.key==="Enter"){var val=inp.value.trim();close();onSubmit(val);}});
+o.addEventListener("click",function(e){if(e.target===o)close();});
+setTimeout(function(){inp.focus();},50);
+}
+
 function fmtTime(s){var m=Math.floor(s/60),ss=s%60;return(m<10?"0"+m:m)+":"+(ss<10?"0"+ss:ss);}
 function fmtDate(iso){if(!iso)return"\u2014";var d=new Date(iso+"T12:00:00");return(d.getMonth()+1)+"/"+d.getDate()+"/"+d.getFullYear();}
 function is24Hr(){return LS.get("timeFormat","12")==="24";}
@@ -976,9 +1038,10 @@ var prog={id:Date.now().toString(),clientId:clientId,name:name,type:v("progType"
 var progs=getPrograms();progs.push(prog);savePrograms(progs);
 toast("\u2713 Program saved: "+name);pop();}
 function deleteProgram(progId){
-if(!confirm(t("deleteProgram")))return;
+showConfirm(t("deleteProgram"),function(){
 var progs=getPrograms().filter(function(p){return p.id!==progId;});
-savePrograms(progs);toast("\u2713 Program deleted");pop();}
+savePrograms(progs);toast("\u2713 Program deleted");pop();
+},{danger:true,title:'DELETE PROGRAM',yesText:'DELETE'});}
 function renderProgramBuilder(){
 var clientIdx=currentView.data.clientIdx;var c=clients[clientIdx];if(!c){pop();return"";}
 _exCount=0;
@@ -1238,7 +1301,7 @@ html+='<div style="font-size:9px;color:var(--dm);font-family:var(--mono);text-al
 html+='<div class="g2"><button class="btn2" onclick="sendReminderToClient(\''+escJs(c.id)+'\')" style="width:100%">\u2709 '+t("sendReminder")+'</button><button class="btn2" onclick="generateClientPDF('+idx+')" style="width:100%">\u2193 QUICK REPORT</button></div><div style="margin-top:24px;text-align:center"><span onclick="deleteClient('+idx+')" style="cursor:pointer;font-size:9px;color:var(--dm);font-family:var(--mono);letter-spacing:0.06em">'+t("removeClient")+'</span></div>';
 return html;
 }
-function deleteClient(idx){if(!clients[idx])return;if(!confirm("Remove "+clients[idx].name+"?\n\nTheir session history will be preserved."))return;var id=clients[idx].id;var name=clients[idx].name;clients.splice(idx,1);sessions.forEach(function(s){if(s.clientId===id)s.clientName=name;});schedule.forEach(function(s){if(s.clientId===id){s.clientName=name;s.clientId="";}});save();cloudDelete("clients",id);toast("\u2713 "+name+" removed");pop();}
+function deleteClient(idx){if(!clients[idx])return;showConfirm("Remove "+clients[idx].name+"?<br><br><span style='font-size:12px;color:var(--mu)'>Their session history will be preserved.</span>",function(){var id=clients[idx].id;var name=clients[idx].name;clients.splice(idx,1);sessions.forEach(function(s){if(s.clientId===id)s.clientName=name;});schedule.forEach(function(s){if(s.clientId===id){s.clientName=name;s.clientId="";}});save();cloudDelete("clients",id);toast("\u2713 "+name+" removed");pop();},{danger:true,title:'REMOVE CLIENT',yesText:'REMOVE'});}
 function navToLogFromClient(cid,rate,type){navStack=[];currentView={tab:"sessions",view:"main",data:{}};push("new",{prefillClientId:cid,prefillRate:rate,prefillType:type});}
 function navToScheduleFromClient(cid){navStack=[];currentView={tab:"schedule",view:"main",data:{prefillClientId:cid}};render();requestAnimationFrame(function(){setTimeout(function(){var el=$("schC");if(el&&cid){el.value=cid;onScheduleClientSelect();}var f=$("schForm");if(f){f.style.display="block";f.scrollIntoView({behavior:"smooth"});}},0);});}
 function navToSession(sid){navStack=[];currentView={tab:'sessions',view:'main',data:{}};push('detail',{sessionId:sid});}
@@ -1375,7 +1438,7 @@ if(d.rating)setRating(d.rating);
 if(d.exercises&&d.exercises.length){currentView.data.prefillExercises=d.exercises;prefillExercises();}
 toast("\u2713 Draft restored");clearDraft();}
 function promptSaveTemplate(){var exercises=collectExercises();if(!exercises.length){toast(t("noExercisesToSave"));return;}
-var name=prompt(t("templateName"));if(!name||!name.trim())return;saveTemplate(name.trim(),exercises);}
+showPrompt(t("templateName"),function(name){if(!name)return;saveTemplate(name,exercises);},{title:'SAVE TEMPLATE',placeholder:'e.g. Upper Body A'});}
 function doSaveSession(quick){var cId=v("sC");if(!cId){toast(t("selectAClient"));return;}var cl=clientById(cId);var statusRaw=v("sSt")||"Complete";var status=statusRaw==="Late Cancel"?"latecancel":statusRaw==="Cancelled"?"cancelled":statusRaw==="No-Show"?"noshow":"complete";var exercises=quick?[]:collectExercises();
 // PR Detection
 if(exercises.length&&status==="complete"){var prs=checkForPRs(exercises,cId);if(prs.length)setTimeout(function(){toast("\u2605 NEW PR! "+prs.join(", "));},600);}
@@ -1389,7 +1452,7 @@ if(ex.rest)h+='<div style="font-size:9px;color:var(--dm);font-family:var(--mono)
 h+='</div>';return h;
 }
 function repeatSession(id){var s=sessions.find(function(x){return x.id===id;});if(!s)return;navStack=[];currentView={tab:"sessions",view:"main",data:{}};push("new",{prefillClientId:s.clientId,prefillRate:s.rate,prefillType:s.type,prefillExercises:s.exercises||[]});}
-function deleteSession(id){if(!confirm(t("deleteSession")))return;sessions=sessions.filter(function(x){return x.id!==id;});save();cloudDelete("sessions",id);toast("Deleted");pop();}
+function deleteSession(id){showConfirm(t("deleteSession"),function(){sessions=sessions.filter(function(x){return x.id!==id;});save();cloudDelete("sessions",id);toast("Deleted");pop();},{danger:true,title:'DELETE SESSION',yesText:'DELETE'});}
 function renderSessionDetail(){
 var s=sessions.find(function(x){return x.id===currentView.data.sessionId;});if(!s){pop();return"";}var client=clientById(s.clientId);
 var sc=s.status==="cancelled"?'<span class="status-chip status-cancelled">'+t("noCharge")+'</span>':s.status==="latecancel"?'<span class="status-chip status-latecancel">'+t("lateCancel")+'</span>':s.status==="noshow"?'<span class="status-chip status-noshow">'+t("noShow")+'</span>':'<span class="status-chip status-complete">'+t("complete")+'</span>';
@@ -1436,7 +1499,7 @@ function toggleRecurUI(){var f=$("schRec"),d=$("recurDuration");if(f&&d)d.style.
 function onScheduleClientSelect(){var cId=v("schC"),c=clientById(cId);if(c){var r=$("schR");if(r)r.value=c.rate||"70";var sel=$("schTy");if(sel&&c.type)for(var i=0;i<sel.options.length;i++)if(sel.options[i].text===c.type){sel.selectedIndex=i;break;}}}
 function addToSchedule(){var cId=v("schC");if(!cId){toast(t("selectAClient"));return;}var cl=clientById(cId);var defR=LS.get("defaultRate","70");var rec=v("schRec")||"One-Time";var baseDate=new Date((v("schD")||todayISO())+"T12:00:00");var totalWeeks=1,interval=1;if(rec==="Weekly"){totalWeeks=parseInt(v("schRecWeeks")||"4");interval=1;}else if(rec==="Biweekly"){totalWeeks=parseInt(v("schRecWeeks")||"8");interval=2;}var count=0;for(var w=0;w<totalWeeks;w+=interval){var dd=new Date(baseDate);dd.setDate(dd.getDate()+(w*7));var iso=toLocalISO(dd);schedule.push({id:(Date.now()+w).toString(),clientId:cId,clientName:cl?cl.name:"",date:iso,time:v("schT")||"10:00",type:v("schTy")||"Training",rate:v("schR")||(cl?cl.rate:defR),status:"",created_at:new Date().toISOString()});count++;}save();toast("\u2713 "+count+" session"+(count>1?"s":"")+" scheduled");render();}
 function updateScheduled(id){var sched=schedule.find(function(s){return s.id===id;});if(!sched)return;var cId=v("schC"),c=clientById(cId);sched.clientId=cId;sched.clientName=c?c.name:sched.clientName;sched.date=v("schD")||sched.date;sched.time=v("schT")||sched.time;sched.type=v("schTy")||sched.type;sched.rate=v("schR")||sched.rate;save();toast("\u2713 Updated");pop();}
-function deleteScheduled(id){if(!confirm(t("removeThis")))return;schedule=schedule.filter(function(x){return x.id!==id;});save();cloudDelete("schedule",id);toast("Removed");render();}
+function deleteScheduled(id){showConfirm(t("removeThis"),function(){schedule=schedule.filter(function(x){return x.id!==id;});save();cloudDelete("schedule",id);toast("Removed");render();},{danger:true,title:'REMOVE',yesText:'REMOVE'});}
 function cancelScheduled(id){var sched=schedule.find(function(s){return s.id===id;});if(!sched)return;sched.status="cancelled";save();toast("Cancelled");pop();}
 
 // AUTOMATION - Session reminders & notifications
@@ -2658,7 +2721,7 @@ _pdfFooter(doc,W,H,M,gold,dimmed);
 var fname="REGI_MealPlan_"+(c?c.name.replace(/[^a-zA-Z0-9]/g,"_")+"_":"")+plan.name.replace(/[^a-zA-Z0-9]/g,"_")+".pdf";
 safePDFSave(doc,fname);}
 
-function deleteMealPlan(id){if(!confirm(t("deleteMealPlan")+'?'))return;var plans=getMealPlans().filter(function(p){return p.id!==id;});saveMealPlans(plans);toast('\u2713 Deleted');pop();}
+function deleteMealPlan(id){showConfirm(t("deleteMealPlan")+'?',function(){var plans=getMealPlans().filter(function(p){return p.id!==id;});saveMealPlans(plans);toast('\u2713 Deleted');pop();},{danger:true,title:'DELETE MEAL PLAN',yesText:'DELETE'});}
 
 // ═══════════════════════════════════════════════════════════════════
 // EXERCISE DATABASE
@@ -2889,7 +2952,7 @@ if(plan.notes)html+='<div class="cd" style="margin-top:10px;border-left:3px soli
 html+='<button class="btn-danger" style="margin-top:16px" onclick="deleteCardioProtocol(\''+escJs(plan.id)+'\')">'+t("deleteProtocol")+'</button>';
 return html;}
 
-function deleteCardioProtocol(id){if(!confirm(t("deleteConfirmCardio")))return;var plans=getCardioPlans().filter(function(p){return p.id!==id;});saveCardioPlans(plans);toast('\u2713 Deleted');pop();}
+function deleteCardioProtocol(id){showConfirm(t("deleteConfirmCardio"),function(){var plans=getCardioPlans().filter(function(p){return p.id!==id;});saveCardioPlans(plans);toast('\u2713 Deleted');pop();},{danger:true,title:'DELETE CARDIO PLAN',yesText:'DELETE'});}
 
 // ═══════════════════════════════════════════════════════════════════
 // SUPPLEMENT BUILDER — Scientifically-Backed Protocols
@@ -3159,7 +3222,7 @@ _pdfFooter(doc,W,H,M,gold,dimmed);
 var fname="REGI_Supplements_"+(c?c.name.replace(/[^a-zA-Z0-9]/g,"_")+"_":"")+plan.name.replace(/[^a-zA-Z0-9]/g,"_")+".pdf";
 safePDFSave(doc,fname);}
 
-function deleteSupplementProtocol(id){if(!confirm(t("deleteConfirmSupp")))return;var plans=getSupplementPlans().filter(function(p){return p.id!==id;});saveSupplementPlans(plans);toast('\u2713 Deleted');pop();}
+function deleteSupplementProtocol(id){showConfirm(t("deleteConfirmSupp"),function(){var plans=getSupplementPlans().filter(function(p){return p.id!==id;});saveSupplementPlans(plans);toast('\u2713 Deleted');pop();},{danger:true,title:'DELETE SUPPLEMENT PLAN',yesText:'DELETE'});}
 
 function startSupplementPlan(){_showClientPicker('supplementBuilder');}
 
@@ -3318,10 +3381,10 @@ html+='<div class="cd" style="padding:16px"><div class="g2"><button class="btn2"
 
 // ── DANGER ZONE ──
 html+='<div class="sl" style="margin-top:22px"><span style="display:inline-flex;vertical-align:middle;margin-right:6px;color:var(--danger)">'+IC.warn+'</span>'+t("dangerZone")+'</div>';
-html+='<div class="cd" style="padding:16px;border:1px solid rgba(224,88,88,0.12)"><div style="font-size:11px;color:var(--danger);margin-bottom:12px">'+t("cannotUndo")+'</div><div class="g2"><button class="btn-danger" onclick="if(confirm(\'Delete ALL sessions?\')&&confirm(\'Sure?\')){sessions=[];save();toast(\'Cleared\');render();}">'+t("clearSessions")+'</button><button class="btn-danger" onclick="if(confirm(\'RESET EVERYTHING?\')&&confirm(\'Last chance?\')){clients=[];sessions=[];schedule=[];save();toast(\'Reset\');render();}">'+t("resetAll")+'</button></div></div>';
+html+='<div class="cd" style="padding:16px;border:1px solid rgba(224,88,88,0.12)"><div style="font-size:11px;color:var(--danger);margin-bottom:12px">'+t("cannotUndo")+'</div><div class="g2"><button class="btn-danger" onclick="showDoubleConfirm(\'Delete ALL sessions?\',\'This cannot be undone. Are you absolutely sure?\',function(){sessions=[];save();toast(\'Cleared\');render();},{danger:true,title:\'CLEAR SESSIONS\',yesText:\'DELETE ALL\'})">'+t("clearSessions")+'</button><button class="btn-danger" onclick="showDoubleConfirm(\'RESET EVERYTHING?\',\'This will erase all clients, sessions, and schedules. Last chance.\',function(){clients=[];sessions=[];schedule=[];save();toast(\'Reset\');render();},{danger:true,title:\'FACTORY RESET\',yesText:\'RESET ALL\'})">'+t("resetAll")+'</button></div></div>';
 
 // ── FOOTER ──
-html+='<div style="text-align:center;padding:24px 0"><div class="gw" style="margin:0 0 20px"></div><div style="font-size:9px;color:var(--dmL);font-family:var(--mono);letter-spacing:0.08em">REGI '+t("coachingStudio")+' v'+VERSION+'</div><div style="font-size:8px;color:var(--dmL);font-family:var(--mono);margin-top:4px;letter-spacing:0.06em">regi.fitness \u00B7 Built by DK Fit Coaching Lab</div><button class="btn-danger" style="margin-top:16px;max-width:200px;margin-left:auto;margin-right:auto" onclick="if(confirm(\'Sign out of REGI?\'))signOut()">'+t("signOut")+'</button></div>';
+html+='<div style="text-align:center;padding:24px 0"><div class="gw" style="margin:0 0 20px"></div><div style="font-size:9px;color:var(--dmL);font-family:var(--mono);letter-spacing:0.08em">REGI '+t("coachingStudio")+' v'+VERSION+'</div><div style="font-size:8px;color:var(--dmL);font-family:var(--mono);margin-top:4px;letter-spacing:0.06em">regi.fitness \u00B7 Built by DK Fit Coaching Lab</div><button class="btn-danger" style="margin-top:16px;max-width:200px;margin-left:auto;margin-right:auto" onclick="showConfirm(\'Sign out of REGI?\',signOut,{title:\'SIGN OUT\',yesText:\'SIGN OUT\'})">'+t("signOut")+'</button></div>';
 return html;}
 function setGymCut(p){LS.set("gymCut",p);toast("\u2713 Gym cut "+p+"%");render();}
 
@@ -3409,7 +3472,18 @@ function showLockScreen(){var app=$("app");app.style.display="none";var ld=$("lo
 ld.innerHTML='<div style="position:absolute;inset:0;pointer-events:none;overflow:hidden"><div style="position:absolute;top:-25%;left:50%;transform:translateX(-50%);width:180%;height:55%;background:radial-gradient(ellipse 50% 65% at 50% 100%,rgba(212,164,74,0.10),rgba(201,168,76,0.03) 45%,transparent 70%);filter:blur(50px)"></div><div style="position:absolute;bottom:-15%;left:50%;transform:translateX(-50%);width:140%;height:35%;background:radial-gradient(ellipse 70% 90% at 50% 0%,rgba(154,112,32,0.05),transparent 55%);filter:blur(30px)"></div><div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:200%;height:200%;background:radial-gradient(circle at 50% 50%,rgba(212,164,74,0.018) 0%,transparent 40%);filter:blur(60px)"></div></div><div style="position:relative;display:flex;flex-direction:column;align-items:center;width:100%;max-width:340px"><div style="width:100px;height:100px;border-radius:24px;background:linear-gradient(145deg,#0c0c14,#161620);border:1px solid rgba(212,164,74,0.25);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:48px;font-weight:900;color:var(--acc);box-shadow:0 0 80px rgba(212,164,74,0.25),0 0 160px rgba(212,164,74,0.08),0 8px 32px rgba(0,0,0,0.6),inset 0 1px 0 rgba(212,164,74,0.1);animation:breathe 4s ease-in-out infinite;margin-bottom:28px;text-shadow:0 0 24px rgba(212,164,74,0.4)">R</div><div style="font-family:var(--display);font-size:34px;font-weight:800;letter-spacing:0.16em;color:var(--ice);margin-bottom:8px;text-shadow:0 2px 12px rgba(0,0,0,0.4)">REGI</div><div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><div style="width:32px;height:1px;background:linear-gradient(90deg,transparent,var(--accDeep))"></div><div style="font-size:9px;color:var(--acc);font-family:var(--mono);letter-spacing:0.3em;font-weight:700">COACHING STUDIO</div><div style="width:32px;height:1px;background:linear-gradient(90deg,var(--accDeep),transparent)"></div></div><div style="width:60px;height:1px;background:linear-gradient(90deg,transparent,var(--acc),transparent);margin-bottom:48px;box-shadow:0 0 12px var(--accGlow)"></div><div style="width:100%"><div id="pinDots" style="display:flex;justify-content:center;gap:12px;margin-bottom:20px;min-height:14px"></div><input id="pinInput" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="9" placeholder="" style="text-align:center;font-size:24px;letter-spacing:0.6em;font-family:var(--mono);padding:18px;margin-bottom:16px;border-radius:12px;background:rgba(212,164,74,0.03);border:1px solid rgba(212,164,74,0.2);box-shadow:inset 0 2px 8px rgba(0,0,0,0.3),0 0 20px rgba(212,164,74,0.04);color:transparent;text-shadow:0 0 0 transparent;caret-color:var(--acc)" oninput="updatePinDots()"><button class="btn" onclick="tryUnlock()" style="margin-bottom:12px;border-radius:12px;padding:16px;font-size:12px;letter-spacing:0.2em">'+t("unlockLabel")+'</button><div id="pinError" style="text-align:center;font-size:10px;color:var(--danger);font-family:var(--mono);min-height:18px"></div></div><div style="position:absolute;bottom:-80px;left:50%;transform:translateX(-50%);text-align:center"><div style="font-size:7px;color:var(--dmL);font-family:var(--mono);letter-spacing:0.2em">REGI COACHING STUDIO</div></div></div>';setTimeout(function(){var inp=$("pinInput");if(inp){inp.focus();updatePinDots();inp.addEventListener("keydown",function(e){if(e.key==="Enter")tryUnlock();});}},100);}
 function updatePinDots(){var inp=$("pinInput");var dots=$("pinDots");if(!inp||!dots)return;var len=inp.value.length;var pinLen=getPIN().length;var h='';for(var i=0;i<pinLen;i++){var filled=i<len;h+='<div style="width:12px;height:12px;border-radius:50%;transition:all 0.15s ease;'+(filled?'background:var(--acc);box-shadow:0 0 8px rgba(212,164,74,0.4)':'background:rgba(212,164,74,0.08);border:1px solid rgba(212,164,74,0.2)')+'"></div>';}dots.innerHTML=h;}
 function tryUnlock(){var inp=$("pinInput"),entered=inp?inp.value.trim():"";if(entered===getPIN()){haptic([15,50,15]);unlock();var lk=$("lockScreen");if(lk)lk.remove();$("app").style.display="";render();window.scrollTo({top:0,behavior:"instant"});}else{haptic([50,30,50]);var err=$("pinError");if(err){err.textContent=t("incorrectPIN");setTimeout(function(){err.textContent="";},1500);}if(inp){inp.value="";updatePinDots();inp.focus();inp.style.animation="shakeError 0.4s ease";setTimeout(function(){inp.style.animation="";},500);}}}
-function changePIN(){var cur=prompt(t("currentPIN"));if(cur!==getPIN()){toast(t("incorrect"));return;}var np=prompt(t("newPINPrompt"));if(!np||np.length<4||np.length>9||!/^\d+$/.test(np)){toast(t("mustBe4to8"));return;}var c2=prompt(t("confirmPIN"));if(c2!==np){toast(t("mismatch"));return;}setPIN(np);toast("\u2713 "+t("pinUpdated"));}
+function changePIN(){
+showPrompt(t("currentPIN"),function(cur){
+if(!cur||cur!==getPIN()){toast(t("incorrect"));return;}
+showPrompt(t("newPINPrompt"),function(np){
+if(!np||np.length<4||np.length>9||!/^\d+$/.test(np)){toast(t("mustBe4to8"));return;}
+showPrompt(t("confirmPIN"),function(c2){
+if(c2!==np){toast(t("mismatch"));return;}
+setPIN(np);toast("\u2713 "+t("pinUpdated"));
+},{title:'CONFIRM NEW PIN',inputType:'password',inputMode:'numeric',maxLength:'9',placeholder:'\u2022\u2022\u2022\u2022'});
+},{title:'NEW PIN',inputType:'password',inputMode:'numeric',maxLength:'9',placeholder:'4-9 digits'});
+},{title:'CHANGE PIN',inputType:'password',inputMode:'numeric',maxLength:'9',placeholder:'Current PIN'});
+}
 
 // PWA
 var _deferredPrompt=null;
@@ -3430,12 +3504,12 @@ var overlay=document.createElement("div");
 overlay.id="whatsNew";
 overlay.style.cssText="position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.92);backdrop-filter:blur(20px);padding:16px;animation:fadeIn 0.4s ease";
 var wnItems=[
-{icon:IC.timer,title:"Premium Session Timer",desc:"Full-screen timer with circular progress ring. Elegant preset buttons. Designed for training sessions."},
-{icon:IC.dumbbell,title:"Redesigned Tools",desc:"Symmetrical 2x2 grid layout. Protocol builders, databases, and utilities all properly organized."},
-{icon:IC.lock,title:"Persistent Login",desc:"Stay signed in for 24 hours. No more re-entering PIN every time you close the app."},
-{icon:IC.meal,title:"Streamlined Navigation",desc:"5-tab layout: Home, Clients, Schedule, Log, Tools. Guide and Settings accessible from Home."},
-{icon:IC.cardio,title:"Fixed PDFs",desc:"All PDF exports now work reliably on iOS. Share sheets, data URL fallback, proper downloads."},
-{icon:IC.finance,title:"Fixed Earnings Modal",desc:"Scroll bleed fixed. Proper backdrop. Tap outside to close. No more getting stuck."}
+{icon:IC.lock,title:"Premium Dialogs",desc:"Every confirmation, prompt, and PIN change now uses custom-designed modals. No more ugly browser popups."},
+{icon:IC.dumbbell,title:"Custom Client PDFs",desc:"Choose exactly which programs, meal plans, cardio plans, and supplements to include in each client\u2019s PDF."},
+{icon:IC.cardio,title:"iOS PDF Sharing",desc:"PDFs now work reliably on iPhone via native Share sheet. Desktop downloads work flawlessly too."},
+{icon:IC.timer,title:"Premium Session Timer",desc:"Full-screen timer with circular progress ring and elegant preset buttons."},
+{icon:IC.meal,title:"Streamlined Navigation",desc:"5-tab layout with Guide and Settings accessible from the header."},
+{icon:IC.finance,title:"Polished Details",desc:"Consistent colors, proper icons, and premium feel across every screen."}
 ];
 var wnHtml='';
 for(var wi=0;wi<wnItems.length;wi++){var wn=wnItems[wi];
