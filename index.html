@@ -147,7 +147,7 @@ html{scroll-behavior:smooth}
 
 var SUPA_URL="https://pwopwvvgjflunjxwkkql.supabase.co";
 var SUPA_KEY="sb_publishable_6slliEpPsWV9JXIDvz8pyw_FNPrPMhv";
-var VERSION="6.0";
+var VERSION="7.0";
 // ═══ GOLDEN SVG ICON SYSTEM ═══
 var IC={
 meal:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 6h18M6 6v-1a2 2 0 012-2h8a2 2 0 012 2v1M5 6c0 6 2 10 7 10s7-4 7-10M12 16v4M8 20h8"/></svg>',
@@ -1016,7 +1016,8 @@ push("new",{prefillClientId:prog.clientId,prefillRate:c?c.rate:"70",prefillType:
 function generateProgramPDF(progId){
 var prog=getPrograms().find(function(p){return p.id===progId;});if(!prog){toast("Program not found");return;}
 var c=clientById(prog.clientId);
-if(!window.jspdf||!window.jspdf.jsPDF){toast("Loading PDF...");ensureJsPDF().then(function(){generateProgramPDF(progId);}).catch(function(){toast("Could not load PDF library");});return;}
+if(!window.jspdf||!window.jspdf.jsPDF){_pdfShowLoading('LOADING PDF ENGINE');ensureJsPDF().then(function(){generateProgramPDF(progId);}).catch(function(){_pdfHideLoading();toast("Could not load PDF library");});return;}
+_pdfShowLoading('PROGRAM PDF');
 var doc=new window.jspdf.jsPDF({unit:"pt",format:"letter"});
 var W=612,H=792,M=50;var y=0;
 var gold=[212,164,74],darkBg=[8,8,10],cardBg=[20,20,24],white=[240,236,228],muted=[144,136,120],dimmed=[96,88,72];
@@ -1630,33 +1631,57 @@ var ta=document.createElement("textarea");ta.value=msg;document.body.appendChild
 // PDF EXPORT - Professional branded client reports
 function ensureJsPDF(attempt){attempt=attempt||1;return new Promise(function(resolve,reject){if(window.jspdf&&window.jspdf.jsPDF){resolve();return;}var s=document.createElement("script");s.src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js";s.onload=function(){setTimeout(function(){if(window.jspdf&&window.jspdf.jsPDF)resolve();else if(attempt<3)setTimeout(function(){ensureJsPDF(attempt+1).then(resolve,reject);},1000);else reject(new Error("jsPDF failed to initialize"));},300);};s.onerror=function(){if(attempt<3){setTimeout(function(){ensureJsPDF(attempt+1).then(resolve,reject);},1000*attempt);}else{reject(new Error("Failed to load PDF library"));}};document.head.appendChild(s);});}
 function safePDFSave(doc,fileName){
+_pdfHideLoading();
 try{
 var blob=doc.output('blob');
-var isIOS=navigator.userAgent.match(/iPhone|iPad|iPod/i);
-// Try Web Share API first (best for iOS — saves directly to Files/Books)
+var isIOS=/iPhone|iPad|iPod/i.test(navigator.userAgent);
+var isPWA=window.navigator.standalone||window.matchMedia('(display-mode:standalone)').matches;
+// iOS PWA: Share API is the ONLY reliable method
+if(isIOS&&isPWA){
 try{var file=new File([blob],fileName,{type:'application/pdf'});
-if(navigator.canShare&&navigator.canShare({files:[file]})){
+if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
 navigator.share({files:[file],title:fileName.replace('.pdf','').replace(/_/g,' ')}).then(function(){
-toast('\u2713 PDF shared');
+toast('\u2713 PDF shared successfully');
 }).catch(function(err){
-if(err.name!=='AbortError'){_pdfFallbackSave(blob,fileName);}
+if(err.name==='AbortError'){toast('Share cancelled — tap again to retry');}
+else{_pdfDataURLDownload(blob,fileName);}
 });return;}}catch(shareErr){}
-// Desktop or non-iOS browsers
-if(!isIOS){
-var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fileName;a.style.display='none';document.body.appendChild(a);a.click();
-setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(a.href);},1000);
-toast('\u2713 PDF downloaded');return;}
-// iOS fallback — data URL works better in standalone PWA mode
-_pdfFallbackSave(blob,fileName);
-}catch(e){try{doc.save(fileName);toast('\u2713 PDF downloaded');}catch(e2){toast('PDF error: '+e2.message);}}
+// Share API unavailable — data URL is the only remaining option in PWA mode
+_pdfDataURLDownload(blob,fileName);return;}
+// iOS Safari (not PWA): Share API or direct download
+if(isIOS){
+try{var file2=new File([blob],fileName,{type:'application/pdf'});
+if(navigator.canShare&&navigator.canShare({files:[file2]})){
+navigator.share({files:[file2],title:fileName.replace('.pdf','').replace(/_/g,' ')}).then(function(){
+toast('\u2713 PDF shared');}).catch(function(err){
+if(err.name!=='AbortError'){_pdfDownloadLink(blob,fileName);}
+});return;}}catch(e3){}
+_pdfDownloadLink(blob,fileName);return;}
+// Desktop / Android: standard blob download
+_pdfDownloadLink(blob,fileName);
+}catch(e){try{doc.save(fileName);toast('\u2713 PDF downloaded');}catch(e2){toast('\u2717 PDF error — try again');}}
 }
-function _pdfFallbackSave(blob,fileName){
+function _pdfDownloadLink(blob,fileName){
+var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download=fileName;a.style.display='none';
+document.body.appendChild(a);a.click();
+setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(url);},2000);
+toast('\u2713 PDF downloaded');
+}
+function _pdfDataURLDownload(blob,fileName){
 var reader=new FileReader();reader.onloadend=function(){
 var link=document.createElement('a');link.href=reader.result;link.download=fileName;link.target='_blank';link.rel='noopener';
-document.body.appendChild(link);link.click();setTimeout(function(){document.body.removeChild(link);},500);
-toast('\u2713 PDF ready \u2014 check Downloads or tap Share to save');};
+document.body.appendChild(link);
+setTimeout(function(){link.click();setTimeout(function(){document.body.removeChild(link);},1000);},100);
+toast('\u2713 PDF ready \u2014 check Downloads or open Files app');};
+reader.onerror=function(){toast('\u2717 PDF generation failed — please try again');};
 reader.readAsDataURL(blob);
 }
+function _pdfShowLoading(label){
+var ov=document.createElement('div');ov.id='pdfLoadingOverlay';
+ov.innerHTML='<div style="position:fixed;inset:0;z-index:600;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px)"><div style="text-align:center"><div style="width:48px;height:48px;border:3px solid rgba(212,164,74,0.15);border-top-color:var(--acc);border-radius:50%;margin:0 auto 16px;animation:spin 0.8s linear infinite"></div><div style="font-family:var(--mono);font-size:11px;color:var(--acc);letter-spacing:0.12em">'+(label||'GENERATING PDF')+'...</div></div></div><style>@keyframes spin{to{transform:rotate(360deg)}}</style>';
+document.body.appendChild(ov);
+}
+function _pdfHideLoading(){var el=document.getElementById('pdfLoadingOverlay');if(el)el.remove();}
 function _pdfDecor(doc,W,H,gold,dimmed){
 // Corner accents on every page
 doc.setDrawColor(gold[0],gold[1],gold[2]);doc.setLineWidth(0.5);
@@ -1696,7 +1721,8 @@ function generateClientPDF(clientIdx){
 var c=clients[clientIdx];if(!c){toast("Client not found");return;}
 var cs=sessions.filter(function(x){return x.clientId===c.id;}).slice().reverse();
 var rev=roundMoney(cs.filter(function(x){return x.status!=="cancelled";}).reduce(function(a,x){return a+parseFloat(x.rate||0);},0));
-if(!window.jspdf||!window.jspdf.jsPDF){toast("Loading PDF...");ensureJsPDF().then(function(){generateClientPDF(clientIdx);}).catch(function(){toast("Could not load PDF library");});return;}
+if(!window.jspdf||!window.jspdf.jsPDF){_pdfShowLoading('LOADING PDF ENGINE');ensureJsPDF().then(function(){generateClientPDF(clientIdx);}).catch(function(){_pdfHideLoading();toast("Could not load PDF library");});return;}
+_pdfShowLoading('CLIENT REPORT');
 var doc=new window.jspdf.jsPDF({unit:"pt",format:"letter"});
 var W=612,H=792,M=50;var y=0;
 var gold=[212,164,74],darkBg=[8,8,10],cardBg=[20,20,24],white=[240,236,228],muted=[144,136,120],dimmed=[96,88,72];
@@ -1763,7 +1789,8 @@ var moS=sessions.filter(function(s){var d=new Date(s.date+"T12:00:00");return d.
 var charged=moS.filter(function(s){return s.status!=="cancelled";});
 var gross=roundMoney(charged.reduce(function(a,s){return a+parseFloat(s.rate||0);},0));
 var cut=Math.round(gross*getGymCut()),take=roundMoney(gross-cut);
-if(!window.jspdf||!window.jspdf.jsPDF){toast("Loading PDF...");ensureJsPDF().then(function(){generateMonthlyPDF();}).catch(function(){toast("Could not load PDF library");});return;}
+if(!window.jspdf||!window.jspdf.jsPDF){_pdfShowLoading('LOADING PDF ENGINE');ensureJsPDF().then(function(){generateMonthlyPDF();}).catch(function(){_pdfHideLoading();toast("Could not load PDF library");});return;}
+_pdfShowLoading('MONTHLY REPORT');
 var doc=new window.jspdf.jsPDF({unit:"pt",format:"letter"});
 var W=612,H=792,M=50;var y=0;
 var gold=[212,164,74],darkBg=[8,8,10],cardBg=[20,20,24],white=[240,236,228],muted=[144,136,120],dimmed=[96,88,72];
@@ -1841,8 +1868,8 @@ var checks=document.querySelectorAll("#monthChecklist input:checked");
 var selectedMonths=[];checks.forEach(function(c){selectedMonths.push(c.value);});
 if(!selectedMonths.length){toast("Select at least one month");return;}
 var overlay=document.getElementById("earningsPickerOverlay");if(overlay)overlay.remove();document.body.style.overflow='';
-if(!window.jspdf||!window.jspdf.jsPDF){toast("Loading PDF...");ensureJsPDF().then(function(){generateMultiMonthPDF_exec(selectedMonths);}).catch(function(){toast("Could not load PDF library");});return;}
-generateMultiMonthPDF_exec(selectedMonths);
+if(!window.jspdf||!window.jspdf.jsPDF){_pdfShowLoading('LOADING PDF ENGINE');ensureJsPDF().then(function(){generateMultiMonthPDF_exec(selectedMonths);}).catch(function(){_pdfHideLoading();toast("Could not load PDF library");});return;}
+_pdfShowLoading('EARNINGS REPORT');generateMultiMonthPDF_exec(selectedMonths);
 }
 function generateMultiMonthPDF_exec(selectedMonths){
 var doc=new window.jspdf.jsPDF({unit:"pt",format:"letter"});
@@ -1943,7 +1970,8 @@ safePDFSave(doc,"REGI_Earnings_"+label+".pdf");
 // SESSION WORKOUT PDF
 function generateSessionPDF(sessionId){
 var s=sessions.find(function(x){return x.id===sessionId;});if(!s){toast("Session not found");return;}
-if(!window.jspdf||!window.jspdf.jsPDF){toast("Loading PDF...");ensureJsPDF().then(function(){generateSessionPDF(sessionId);}).catch(function(){toast("Could not load PDF library");});return;}
+if(!window.jspdf||!window.jspdf.jsPDF){_pdfShowLoading('LOADING PDF ENGINE');ensureJsPDF().then(function(){generateSessionPDF(sessionId);}).catch(function(){_pdfHideLoading();toast("Could not load PDF library");});return;}
+_pdfShowLoading('WORKOUT PDF');
 var doc=new window.jspdf.jsPDF({unit:"pt",format:"letter"});
 var W=612,H=792,M=50;var y=0;
 var gold=[212,164,74],darkBg=[8,8,10],cardBg=[20,20,24],white=[240,236,228],muted=[144,136,120],dimmed=[96,88,72];
@@ -2367,21 +2395,28 @@ return html;}
 function generateMealPlanPDF(planId){
 var plans=getMealPlans();var plan=plans.find(function(p){return p.id===planId;});
 if(!plan){toast('Plan not found');return;}
-if(!window.jspdf||!window.jspdf.jsPDF){toast("Loading PDF...");ensureJsPDF().then(function(){generateMealPlanPDF(planId);}).catch(function(){toast("Could not load PDF library");});return;}
+if(!window.jspdf||!window.jspdf.jsPDF){_pdfShowLoading('LOADING PDF ENGINE');ensureJsPDF().then(function(){generateMealPlanPDF(planId);}).catch(function(){_pdfHideLoading();toast("Could not load PDF library");});return;}
+_pdfShowLoading('MEAL PLAN PDF');
 var c=clientById(plan.clientId);var doc=new window.jspdf.jsPDF({unit:"pt",format:"letter"});
-var W=612,H=792,M=40,gold=[212,164,74],darkBg=[14,14,20],white=[240,236,228],dimmed=[148,138,122],green=[120,200,120],warn=[232,168,85],purple=[200,136,238];
+var W=612,H=792,M=50,gold=[212,164,74],darkBg=[8,8,10],white=[240,236,228],dimmed=[96,88,72],green=[120,200,120],warn=[232,168,85],purple=[200,136,238];
 // Page 1 background + header
 doc.setFillColor(darkBg[0],darkBg[1],darkBg[2]);doc.rect(0,0,W,H,"F");
 _pdfDecor(doc,W,H,gold,dimmed);
 _pdfHeader(doc,W,M,gold,darkBg,white,dimmed,"NUTRITION PROTOCOL");
-// Plan title block
-var y=150;
-doc.setFontSize(20);doc.setTextColor(white[0],white[1],white[2]);doc.text(plan.name,M,y);y+=18;
-if(c){doc.setFontSize(10);doc.setTextColor(gold[0],gold[1],gold[2]);doc.text("Client: "+c.name,M,y);y+=14;}
-doc.setFontSize(8);doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);doc.text("Created "+new Date(plan.createdAt).toLocaleDateString()+" | "+plan.mealCount+" meals/day",M,y);y+=20;
+doc.setFontSize(8);doc.setTextColor([144,136,120][0],[144,136,120][1],[144,136,120][2]);doc.text("Generated "+new Date().toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"}),W-M,62,{align:"right"});
+var cardBg=[20,20,24],muted=[144,136,120];
+var y=155;
+// Plan title card
+doc.setFillColor(cardBg[0],cardBg[1],cardBg[2]);doc.roundedRect(M,y,W-M*2,65,8,8,"F");
+doc.setDrawColor(gold[0],gold[1],gold[2]);doc.setLineWidth(0.3);doc.roundedRect(M,y,W-M*2,65,8,8,"S");
+doc.setFillColor(gold[0],gold[1],gold[2]);doc.roundedRect(M,y,4,65,2,2,"F");
+doc.setFontSize(20);doc.setFont("helvetica","bold");doc.setTextColor(white[0],white[1],white[2]);doc.text(plan.name,M+16,y+24);
+doc.setFontSize(10);doc.setTextColor(gold[0],gold[1],gold[2]);doc.text((c?c.name+" \u00B7 ":"")+plan.mealCount+" meals/day",M+16,y+42);
+doc.setFontSize(8);doc.setTextColor(muted[0],muted[1],muted[2]);doc.text("Created "+new Date(plan.createdAt).toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"}),M+16,y+56);
+y+=85;
 // Target macros bar
 if(plan.targetP||plan.targetC||plan.targetF){
-doc.setFillColor(22,22,30);doc.roundedRect(M,y,W-M*2,36,6,6,"F");
+doc.setFillColor(cardBg[0],cardBg[1],cardBg[2]);doc.roundedRect(M,y,W-M*2,36,6,6,"F");
 doc.setDrawColor(gold[0],gold[1],gold[2]);doc.setLineWidth(0.5);doc.roundedRect(M,y,W-M*2,36,6,6,"S");
 var targCal=plan.targetP*4+plan.targetC*4+plan.targetF*9;
 doc.setFontSize(9);doc.setTextColor(gold[0],gold[1],gold[2]);doc.text("DAILY TARGETS",M+12,y+14);
@@ -2397,7 +2432,7 @@ for(var mi=1;mi<=plan.mealCount;mi++){var items=plan.meals[mi]||[];if(!items.len
 var blockH=28+items.length*14;
 if(y+blockH>H-60){doc.addPage();doc.setFillColor(darkBg[0],darkBg[1],darkBg[2]);doc.rect(0,0,W,H,"F");_pdfDecor(doc,W,H,gold,dimmed);y=50;}
 // Meal header bar
-doc.setFillColor(22,22,30);doc.roundedRect(M,y,W-M*2,20,4,4,"F");
+doc.setFillColor(28,26,32);doc.roundedRect(M,y,W-M*2,20,4,4,"F");
 doc.setDrawColor(gold[0],gold[1],gold[2]);doc.setLineWidth(0.3);doc.line(M,y+20,W-M,y+20);
 doc.setFontSize(9);doc.setFont("helvetica","bold");doc.setTextColor(gold[0],gold[1],gold[2]);doc.text("MEAL "+mi,M+10,y+13);y+=24;
 var mp=0,mc2=0,mf=0,mcal=0;
@@ -2419,7 +2454,7 @@ doc.text("P"+Math.round(mp)+"g  C"+Math.round(mc2)+"g  F"+Math.round(mf)+"g  |  
 dayTP+=mp;dayTC+=mc2;dayTF+=mf;dayCal+=mcal;y+=22;}
 // Daily totals box
 if(y+50>H-60){doc.addPage();doc.setFillColor(darkBg[0],darkBg[1],darkBg[2]);doc.rect(0,0,W,H,"F");_pdfDecor(doc,W,H,gold,dimmed);y=50;}
-doc.setFillColor(22,22,30);doc.roundedRect(M,y,W-M*2,40,6,6,"F");
+doc.setFillColor(cardBg[0],cardBg[1],cardBg[2]);doc.roundedRect(M,y,W-M*2,40,6,6,"F");
 doc.setDrawColor(gold[0],gold[1],gold[2]);doc.setLineWidth(0.8);doc.roundedRect(M,y,W-M*2,40,6,6,"S");
 doc.setFont("helvetica","bold");doc.setFontSize(10);doc.setTextColor(gold[0],gold[1],gold[2]);doc.text("DAILY TOTALS",M+12,y+16);
 doc.setFontSize(11);doc.setTextColor(green[0],green[1],green[2]);doc.text("P "+Math.round(dayTP)+"g",M+130,y+16);
@@ -2433,15 +2468,15 @@ doc.text("vs Target: P "+(diffP>=0?"+":"")+diffP+"g | C "+(diffC>=0?"+":"")+diff
 y+=52;
 // Notes
 if(plan.notes){if(y+30>H-60){doc.addPage();doc.setFillColor(darkBg[0],darkBg[1],darkBg[2]);doc.rect(0,0,W,H,"F");_pdfDecor(doc,W,H,gold,dimmed);y=50;}
-doc.setFillColor(22,22,30);doc.roundedRect(M,y,W-M*2,28,4,4,"F");
-doc.setDrawColor(gold[0],gold[1],gold[2]);doc.setLineWidth(0.3);doc.line(M,y,M+3,y);doc.line(M,y,M,y+28);
-doc.setFont("helvetica","bold");doc.setFontSize(8);doc.setTextColor(gold[0],gold[1],gold[2]);doc.text("NOTES",M+10,y+12);
-doc.setFont("helvetica","normal");doc.setFontSize(8);doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);doc.text(plan.notes.substring(0,200),M+50,y+12);y+=36;}
+doc.setFillColor(cardBg[0],cardBg[1],cardBg[2]);doc.roundedRect(M,y,W-M*2,40,6,6,"F");
+doc.setDrawColor(gold[0],gold[1],gold[2]);doc.setLineWidth(0.3);doc.roundedRect(M,y,W-M*2,40,6,6,"S");
+doc.setFont("helvetica","bold");doc.setFontSize(7);doc.setTextColor(gold[0],gold[1],gold[2]);doc.text("\u25C6  NOTES",M+12,y+14);
+doc.setFont("helvetica","normal");doc.setFontSize(9);doc.setTextColor(white[0],white[1],white[2]);var nlines2=doc.splitTextToSize(plan.notes,W-M*2-24);doc.text(nlines2,M+12,y+28);y+=48;}
 // Attached supplement protocol
 if(plan.supplementProtocolId){var suppPlan2=getSupplementPlans().find(function(p){return p.id===plan.supplementProtocolId;});
 if(suppPlan2){if(y+40+suppPlan2.supplements.length*13>H-60){doc.addPage();doc.setFillColor(darkBg[0],darkBg[1],darkBg[2]);doc.rect(0,0,W,H,"F");_pdfDecor(doc,W,H,gold,dimmed);y=50;}
 // Section header
-doc.setFillColor(22,22,30);doc.roundedRect(M,y,W-M*2,20,4,4,"F");
+doc.setFillColor(28,26,32);doc.roundedRect(M,y,W-M*2,20,4,4,"F");
 doc.setDrawColor(green[0],green[1],green[2]);doc.setLineWidth(0.5);doc.line(M,y+20,W-M,y+20);
 doc.setFont("helvetica","bold");doc.setFontSize(9);doc.setTextColor(green[0],green[1],green[2]);doc.text("SUPPLEMENT PROTOCOL: "+suppPlan2.name.toUpperCase(),M+10,y+13);y+=24;
 for(var spi2=0;spi2<suppPlan2.supplements.length;spi2++){var ssp2=suppPlan2.supplements[spi2];
@@ -2916,48 +2951,49 @@ return html;}
 function generateSuppPDF(planId){
 var plans=getSupplementPlans();var plan=plans.find(function(p){return p.id===planId;});
 if(!plan){toast('Protocol not found');return;}
-if(!window.jspdf||!window.jspdf.jsPDF){toast("Loading PDF...");ensureJsPDF().then(function(){generateSuppPDF(planId);}).catch(function(){toast("Could not load PDF library");});return;}
+if(!window.jspdf||!window.jspdf.jsPDF){_pdfShowLoading('LOADING PDF ENGINE');ensureJsPDF().then(function(){generateSuppPDF(planId);}).catch(function(){_pdfHideLoading();toast("Could not load PDF library");});return;}
+_pdfShowLoading('SUPPLEMENT PDF');
 var c=clientById(plan.clientId);var doc=new window.jspdf.jsPDF({unit:"pt",format:"letter"});
-var W=612,H=792,M=40,gold=[212,164,74],darkBg=[14,14,20],white=[240,236,228],dimmed=[148,138,122],green=[120,200,120];
+var W=612,H=792,M=50,gold=[212,164,74],darkBg=[8,8,10],white=[240,236,228],dimmed=[96,88,72],green=[120,200,120];
 doc.setFillColor(darkBg[0],darkBg[1],darkBg[2]);doc.rect(0,0,W,H,"F");
 _pdfDecor(doc,W,H,gold,dimmed);
 _pdfHeader(doc,W,M,gold,darkBg,white,dimmed,"SUPPLEMENT PROTOCOL");
+var cardBg=[20,20,24],muted=[144,136,120];
 var y=150;
-doc.setFontSize(20);doc.setTextColor(white[0],white[1],white[2]);doc.text(plan.name,M,y);y+=18;
-if(c){doc.setFontSize(10);doc.setTextColor(gold[0],gold[1],gold[2]);doc.text("Client: "+c.name,M,y);y+=14;}
-doc.setFontSize(8);doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);doc.text(plan.goal+" | "+plan.supplements.length+" supplements | Created "+new Date(plan.createdAt).toLocaleDateString(),M,y);y+=24;
+// Protocol info card
+doc.setFillColor(cardBg[0],cardBg[1],cardBg[2]);doc.roundedRect(M,y,W-M*2,65,8,8,"F");
+doc.setDrawColor(gold[0],gold[1],gold[2]);doc.setLineWidth(0.3);doc.roundedRect(M,y,W-M*2,65,8,8,"S");
+doc.setFillColor(gold[0],gold[1],gold[2]);doc.roundedRect(M,y,4,65,2,2,"F");
+doc.setFontSize(20);doc.setFont("helvetica","bold");doc.setTextColor(white[0],white[1],white[2]);doc.text(plan.name,M+16,y+24);
+var subLine=(c?c.name+" \u00B7 ":"")+plan.goal+" \u00B7 "+plan.supplements.length+" supplements";
+doc.setFontSize(10);doc.setTextColor(gold[0],gold[1],gold[2]);doc.text(subLine,M+16,y+42);
+doc.setFontSize(8);doc.setTextColor(muted[0],muted[1],muted[2]);doc.text("Created "+new Date(plan.createdAt).toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"}),M+16,y+56);
+y+=85;
 // Table header
-doc.setFillColor(22,22,30);doc.roundedRect(M,y,W-M*2,18,4,4,"F");
-doc.setDrawColor(gold[0],gold[1],gold[2]);doc.setLineWidth(0.3);doc.line(M,y+18,W-M,y+18);
+doc.setFillColor(28,26,32);doc.roundedRect(M,y,W-M*2,22,4,4,"F");
 doc.setFont("helvetica","bold");doc.setFontSize(7);doc.setTextColor(gold[0],gold[1],gold[2]);
-doc.text("SUPPLEMENT",M+10,y+12);doc.text("DOSE",M+220,y+12);doc.text("TIMING",M+310,y+12);doc.text("CATEGORY",W-M-10,y+12,{align:"right"});y+=24;
+doc.text("SUPPLEMENT",M+8,y+14);doc.text("DOSE",M+220,y+14);doc.text("TIMING",M+310,y+14);doc.text("CATEGORY",W-M-8,y+14,{align:"right"});y+=22;
 // Supplements list
 for(var i=0;i<plan.supplements.length;i++){var sp=plan.supplements[i];
 if(y>H-80){doc.addPage();doc.setFillColor(darkBg[0],darkBg[1],darkBg[2]);doc.rect(0,0,W,H,"F");_pdfDecor(doc,W,H,gold,dimmed);y=50;}
-if(i%2===0){doc.setFillColor(18,18,24);doc.rect(M+4,y-9,W-M*2-8,16,"F");}
-doc.setFont("helvetica","normal");doc.setFontSize(9);doc.setTextColor(white[0],white[1],white[2]);doc.text(sp.name,M+10,y);
+if(i%2===0){doc.setFillColor(14,14,18);doc.rect(M,y-9,W-M*2,16,"F");}
+doc.setFont("helvetica","normal");doc.setFontSize(9);doc.setTextColor(white[0],white[1],white[2]);doc.text(sp.name,M+8,y);
 doc.setFontSize(8);doc.setTextColor(green[0],green[1],green[2]);doc.text(sp.dose,M+220,y);
-doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);doc.text(sp.timing,M+310,y);
-doc.setFontSize(7);doc.text(sp.category.toUpperCase(),W-M-10,y,{align:"right"});y+=16;}
+doc.setTextColor(muted[0],muted[1],muted[2]);doc.text(sp.timing,M+310,y);
+doc.setFontSize(7);doc.text(sp.category.toUpperCase(),W-M-8,y,{align:"right"});y+=16;}
 // Notes
 if(plan.notes){y+=10;if(y>H-60){doc.addPage();doc.setFillColor(darkBg[0],darkBg[1],darkBg[2]);doc.rect(0,0,W,H,"F");_pdfDecor(doc,W,H,gold,dimmed);y=50;}
-doc.setFillColor(22,22,30);doc.roundedRect(M,y,W-M*2,28,4,4,"F");
-doc.setFont("helvetica","bold");doc.setFontSize(8);doc.setTextColor(gold[0],gold[1],gold[2]);doc.text("NOTES",M+10,y+12);
-doc.setFont("helvetica","normal");doc.setFontSize(8);doc.setTextColor(dimmed[0],dimmed[1],dimmed[2]);doc.text(plan.notes.substring(0,200),M+50,y+12);}
+doc.setFillColor(cardBg[0],cardBg[1],cardBg[2]);doc.roundedRect(M,y,W-M*2,40,6,6,"F");
+doc.setDrawColor(gold[0],gold[1],gold[2]);doc.setLineWidth(0.3);doc.roundedRect(M,y,W-M*2,40,6,6,"S");
+doc.setFont("helvetica","bold");doc.setFontSize(7);doc.setTextColor(gold[0],gold[1],gold[2]);doc.text("\u25C6  NOTES",M+12,y+14);
+doc.setFont("helvetica","normal");doc.setFontSize(9);doc.setTextColor(white[0],white[1],white[2]);var nlines=doc.splitTextToSize(plan.notes,W-M*2-24);doc.text(nlines,M+12,y+28);}
 _pdfFooter(doc,W,H,M,gold,dimmed);
 var fname="REGI_Supplements_"+(c?c.name.replace(/[^a-zA-Z0-9]/g,"_")+"_":"")+plan.name.replace(/[^a-zA-Z0-9]/g,"_")+".pdf";
 safePDFSave(doc,fname);}
 
 function deleteSupplementProtocol(id){if(!confirm(t("deleteConfirmSupp")))return;var plans=getSupplementPlans().filter(function(p){return p.id!==id;});saveSupplementPlans(plans);toast('\u2713 Deleted');pop();}
 
-function startSupplementPlan(){
-if(!clients.length){push('supplementBuilder',{clientId:''});return;}
-if(clients.length===1){push('supplementBuilder',{clientId:clients[0].id});return;}
-var sel='<div style="position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);padding:20px;animation:fadeIn 0.3s" id="clientPicker3"><div style="width:100%;max-width:380px;background:linear-gradient(160deg,rgba(14,14,22,0.99),rgba(8,8,14,0.99));border:1px solid var(--accB);border-radius:16px;padding:24px;box-shadow:0 0 60px rgba(201,168,76,0.10)"><div class="pt" style="font-size:18px;margin-bottom:14px">'+t("selectClient")+'</div>';
-for(var i=0;i<clients.length;i++){sel+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="document.getElementById(\'clientPicker3\').remove();push(\'supplementBuilder\',{clientId:\''+escJs(clients[i].id)+'\'})"><div style="width:36px;height:36px;border-radius:8px;background:var(--accS);border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:14px;font-weight:700;color:var(--accVib)">'+safeInitial(clients[i].name)+'</div><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(clients[i].name)+'</div></div>';}
-sel+='<div class="cd cd-link" style="text-align:center;border:1px dashed var(--border)" onclick="document.getElementById(\'clientPicker3\').remove();push(\'supplementBuilder\',{clientId:\'\'})"><span style="font-size:12px;color:var(--dm)">'+t("generalNoClient")+'</span></div>';
-sel+='<button class="btn2" onclick="document.getElementById(\'clientPicker3\').remove()" style="width:100%;margin-top:10px">'+t("cancel")+'</button></div></div>';
-var el=document.createElement('div');el.innerHTML=sel;document.body.appendChild(el.firstChild);}
+function startSupplementPlan(){_showClientPicker('supplementBuilder');}
 
 // ═══════════════════════════════════════════════════════════════════
 // PRO EXERCISE DATABASE VIEWER
@@ -3043,109 +3079,20 @@ html+=_savedPlanCard(IC.supp,sp2.name,(c2?escHtml(c2.name)+' \u00B7 ':'')+sp2.go
 return html;}
 
 // ═══════════════════════════════════════════════════════════════════
-// QUICK CALCULATOR — Earnings, Tax, Gym Cut
+// CLIENT PICKER — shared modal for all builder launchers
 // ═══════════════════════════════════════════════════════════════════
-function renderQuickCalc(){
-var html='<button class="btn2" onclick="pop()" style="margin-bottom:14px">\u2039 '+t("back")+'</button>';
-html+='<div class="pt">Quick Calculator</div>';
-html+='<div style="font-size:11px;color:var(--mu);margin-bottom:18px;line-height:1.6">Fast earnings math. Enter amounts, see instant gym cut, tax estimates, and net take-home.</div>';
-
-// Quick add calculator
-html+='<div class="cd" style="padding:18px;border:1px solid var(--accB)">';
-html+='<div class="sl" style="margin-bottom:12px">EARNINGS CALCULATOR</div>';
-html+='<div class="field"><span class="lb">SESSION AMOUNTS (one per line or comma-separated)</span><textarea id="qcAmounts" rows="4" placeholder="70\n85\n70\n100\nor: 70, 85, 70, 100" oninput="calcQuickTotals()" style="font-size:14px;font-family:var(--mono)"></textarea></div>';
-html+='<div class="g2" style="gap:8px;margin-bottom:12px"><div class="field" style="margin-bottom:0"><span class="lb">GYM CUT %</span><input id="qcCut" type="number" value="'+Math.round(getGymCut()*100)+'" min="0" max="100" oninput="calcQuickTotals()" style="font-size:16px;text-align:center;font-family:var(--mono)"></div><div class="field" style="margin-bottom:0"><span class="lb">TAX RATE %</span><input id="qcTax" type="number" value="'+LS.get("taxRate","20")+'" min="0" max="50" oninput="LS.set(\'taxRate\',this.value);calcQuickTotals()" style="font-size:16px;text-align:center;font-family:var(--mono)"></div></div>';
-html+='<div id="qcResults" style="display:none">';
-html+='<div class="gw" style="margin:14px 0"></div>';
-html+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">';
-html+='<div class="stat" style="padding:14px"><b style="color:var(--ow);font-size:22px" id="qcGross">$0</b><small>GROSS</small></div>';
-html+='<div class="stat" style="padding:14px"><b style="color:var(--danger);font-size:22px" id="qcGymCut">-$0</b><small>GYM CUT</small></div>';
-html+='<div class="stat" style="padding:14px"><b style="color:var(--warn);font-size:22px" id="qcTaxAmt">-$0</b><small>SET ASIDE FOR TAX</small></div>';
-html+='<div class="stat" style="padding:14px;border:1px solid var(--accB)"><b style="color:var(--success);font-size:22px" id="qcNet">$0</b><small>NET TAKE-HOME</small></div>';
-html+='</div>';
-html+='<div style="margin-top:12px;padding:12px;background:rgba(212,164,74,0.04);border-radius:10px;border:1px solid rgba(212,164,74,0.10)">';
-html+='<div style="font-size:9px;font-family:var(--mono);color:var(--dm);line-height:1.8" id="qcBreakdown"></div>';
-html+='</div></div></div>';
-
-// Monthly snapshot from actual data
-var now_=new Date(),mo=now_.getMonth(),yr=now_.getFullYear();
-var moS=sessions.filter(function(s){var d=new Date(s.date+"T12:00:00");return d.getMonth()===mo&&d.getFullYear()===yr&&s.status!=="cancelled";});
-var moGross=roundMoney(moS.reduce(function(a,s){return a+parseFloat(s.rate||0);},0));
-var moCut=Math.round(moGross*getGymCut());
-var moNet=roundMoney(moGross-moCut);
-var moTaxRate=parseInt(LS.get("taxRate","20"));
-var moTax=Math.round(moNet*moTaxRate/100);
-var moAfterTax=roundMoney(moNet-moTax);
-
-html+='<div class="cd" style="padding:18px;margin-top:14px">';
-html+='<div class="sl" style="margin-bottom:12px">THIS MONTH\'S SNAPSHOT</div>';
-html+='<div style="font-size:10px;color:var(--dm);font-family:var(--mono);margin-bottom:12px">'+LANGS[getLang()].months[mo]+' '+yr+' \u00B7 '+moS.length+' sessions</div>';
-html+='<div style="padding:8px 0;border-bottom:1px solid var(--borderS);display:flex;justify-content:space-between"><span style="font-size:12px;color:var(--mu)">Gross Revenue</span><span style="font-size:14px;font-weight:700;font-family:var(--mono);color:var(--ow)">$'+moGross+'</span></div>';
-html+='<div style="padding:8px 0;border-bottom:1px solid var(--borderS);display:flex;justify-content:space-between"><span style="font-size:12px;color:var(--mu)">Gym Cut ('+Math.round(getGymCut()*100)+'%)</span><span style="font-size:14px;font-weight:700;font-family:var(--mono);color:var(--danger)">-$'+moCut+'</span></div>';
-html+='<div style="padding:8px 0;border-bottom:1px solid var(--borderS);display:flex;justify-content:space-between"><span style="font-size:12px;color:var(--mu)">Your Earnings</span><span style="font-size:14px;font-weight:700;font-family:var(--mono);color:var(--accVib)">$'+moNet+'</span></div>';
-html+='<div style="padding:8px 0;border-bottom:1px solid var(--borderS);display:flex;justify-content:space-between"><span style="font-size:12px;color:var(--mu)">Tax Reserve ('+moTaxRate+'%)</span><span style="font-size:14px;font-weight:700;font-family:var(--mono);color:var(--warn)">-$'+moTax+'</span></div>';
-html+='<div style="padding:8px 0;display:flex;justify-content:space-between"><span style="font-size:12px;font-weight:700;color:var(--wh)">Take-Home After Tax</span><span style="font-size:16px;font-weight:800;font-family:var(--mono);color:var(--success)">$'+moAfterTax+'</span></div>';
-html+='</div>';
-
-// Quarterly estimate
-var qSessions=sessions.filter(function(s){var d=new Date(s.date+"T12:00:00");var q1=Math.floor(mo/3)*3;return d.getMonth()>=q1&&d.getMonth()<=mo&&d.getFullYear()===yr&&s.status!=="cancelled";});
-var qGross=roundMoney(qSessions.reduce(function(a,s){return a+parseFloat(s.rate||0);},0));
-var qCut=Math.round(qGross*getGymCut());
-var qNet=roundMoney(qGross-qCut);
-var qTax=Math.round(qNet*moTaxRate/100);
-var quarterNum=Math.floor(mo/3)+1;
-
-html+='<div class="cd" style="padding:18px;margin-top:14px">';
-html+='<div class="sl" style="margin-bottom:12px">Q'+quarterNum+' '+yr+' QUARTERLY ESTIMATE</div>';
-html+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">';
-html+='<div class="stat" style="padding:12px"><b style="color:var(--ow);font-size:18px">$'+qGross+'</b><small>Q'+quarterNum+' GROSS</small></div>';
-html+='<div class="stat" style="padding:12px"><b style="color:var(--accVib);font-size:18px">$'+qNet+'</b><small>Q'+quarterNum+' NET</small></div>';
-html+='<div class="stat" style="padding:12px"><b style="color:var(--warn);font-size:18px">$'+qTax+'</b><small>EST. TAX DUE</small></div>';
-html+='<div class="stat" style="padding:12px"><b style="color:var(--success);font-size:18px">'+qSessions.length+'</b><small>SESSIONS</small></div>';
-html+='</div>';
-html+='<div style="margin-top:10px;font-size:9px;color:var(--dm);font-family:var(--mono);line-height:1.6">Estimated quarterly tax payment based on '+moTaxRate+'% rate. Adjust your tax rate above. For 1099 contractors, quarterly estimates are typically due Jan 15, Apr 15, Jun 15, Sep 15.</div>';
-html+='</div>';
-
-html+='<div style="margin-top:14px"><button class="btn" onclick="showEarningsReportPicker()">\u2193 GENERATE FULL TAX REPORT PDF</button></div>';
-return html;}
-
-function calcQuickTotals(){
-var raw=v('qcAmounts')||'';
-var nums=raw.replace(/\n/g,',').split(',').map(function(s){return parseFloat(s.trim());}).filter(function(n){return!isNaN(n)&&n>0;});
-var results=$('qcResults');
-if(!nums.length){if(results)results.style.display='none';return;}
-if(results)results.style.display='block';
-var gross=nums.reduce(function(a,b){return a+b;},0);
-var cutPct=parseInt(v('qcCut'))||20;
-var taxPct=parseInt(v('qcTax'))||20;
-var gymCut=Math.round(gross*cutPct/100);
-var afterCut=gross-gymCut;
-var taxAmt=Math.round(afterCut*taxPct/100);
-var net=afterCut-taxAmt;
-var elG=$('qcGross'),elC=$('qcGymCut'),elT=$('qcTaxAmt'),elN=$('qcNet'),elB=$('qcBreakdown');
-if(elG)elG.textContent='$'+roundMoney(gross);
-if(elC)elC.textContent='-$'+gymCut;
-if(elT)elT.textContent='-$'+taxAmt;
-if(elN)elN.textContent='$'+roundMoney(net);
-if(elB)elB.innerHTML=nums.length+' sessions totaling $'+roundMoney(gross)+'<br>Gym keeps $'+gymCut+' ('+cutPct+'%) \u2192 You earn $'+roundMoney(afterCut)+'<br>Set aside $'+taxAmt+' ('+taxPct+'%) for taxes \u2192 Take-home: $'+roundMoney(net)+'<br>Per session avg: $'+roundMoney(gross/nums.length)+' gross / $'+roundMoney(net/nums.length)+' net';}
-
-function startMealPlan(){
-if(!clients.length){push('mealPlanBuilder',{clientId:''});return;}
-if(clients.length===1){push('mealPlanBuilder',{clientId:clients[0].id});return;}
-var sel='<div style="position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);padding:20px;animation:fadeIn 0.3s" id="clientPicker"><div style="width:100%;max-width:380px;background:linear-gradient(160deg,rgba(22,21,26,0.99),rgba(10,9,12,0.99));border:1px solid var(--accB);border-radius:16px;padding:24px;box-shadow:0 0 60px rgba(212,164,74,0.12)"><div class="pt" style="font-size:18px;margin-bottom:14px">'+t("selectClient")+'</div>';
-for(var i=0;i<clients.length;i++){sel+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="document.getElementById(\'clientPicker\').remove();push(\'mealPlanBuilder\',{clientId:\''+escJs(clients[i].id)+'\'})"><div style="width:36px;height:36px;border-radius:8px;background:var(--accS);border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:14px;font-weight:700;color:var(--accVib)">'+safeInitial(clients[i].name)+'</div><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(clients[i].name)+'</div></div>';}
-sel+='<div class="cd cd-link" style="text-align:center;border:1px dashed var(--border)" onclick="document.getElementById(\'clientPicker\').remove();push(\'mealPlanBuilder\',{clientId:\'\'})"><span style="font-size:12px;color:var(--dm)">'+t("generalNoClient")+'</span></div>';
-sel+='<button class="btn2" onclick="document.getElementById(\'clientPicker\').remove()" style="width:100%;margin-top:10px">'+t("cancel")+'</button></div></div>';
+function _showClientPicker(builderView){
+if(!clients.length){push(builderView,{clientId:''});return;}
+if(clients.length===1){push(builderView,{clientId:clients[0].id});return;}
+var pid='cpick_'+Date.now();
+var sel='<div style="position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);padding:20px;animation:fadeIn 0.3s" id="'+pid+'" onclick="if(event.target===this){this.remove()}"><div style="width:100%;max-width:380px;background:linear-gradient(160deg,rgba(22,21,26,0.99),rgba(10,9,12,0.99));border:1px solid var(--accB);border-radius:16px;padding:24px;box-shadow:0 0 60px rgba(212,164,74,0.12)" onclick="event.stopPropagation()"><div class="pt" style="font-size:18px;margin-bottom:14px">'+t("selectClient")+'</div>';
+for(var i=0;i<clients.length;i++){sel+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="document.getElementById(\''+pid+'\').remove();push(\''+builderView+'\',{clientId:\''+escJs(clients[i].id)+'\'})"><div style="width:36px;height:36px;border-radius:8px;background:var(--accS);border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:14px;font-weight:700;color:var(--accVib)">'+safeInitial(clients[i].name)+'</div><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(clients[i].name)+'</div></div>';}
+sel+='<div class="cd cd-link" style="text-align:center;border:1px dashed var(--border)" onclick="document.getElementById(\''+pid+'\').remove();push(\''+builderView+'\',{clientId:\'\'})"><span style="font-size:12px;color:var(--dm)">'+t("generalNoClient")+'</span></div>';
+sel+='<button class="btn2" onclick="document.getElementById(\''+pid+'\').remove()" style="width:100%;margin-top:10px">'+t("cancel")+'</button></div></div>';
 var el=document.createElement('div');el.innerHTML=sel;document.body.appendChild(el.firstChild);}
 
-function startCardioPlan(){
-if(!clients.length){push('cardioBuilder',{clientId:''});return;}
-if(clients.length===1){push('cardioBuilder',{clientId:clients[0].id});return;}
-var sel='<div style="position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);padding:20px;animation:fadeIn 0.3s" id="clientPicker2"><div style="width:100%;max-width:380px;background:linear-gradient(160deg,rgba(22,21,26,0.99),rgba(10,9,12,0.99));border:1px solid var(--accB);border-radius:16px;padding:24px;box-shadow:0 0 60px rgba(212,164,74,0.12)"><div class="pt" style="font-size:18px;margin-bottom:14px">'+t("selectClient")+'</div>';
-for(var i=0;i<clients.length;i++){sel+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="document.getElementById(\'clientPicker2\').remove();push(\'cardioBuilder\',{clientId:\''+escJs(clients[i].id)+'\'})"><div style="width:36px;height:36px;border-radius:8px;background:var(--accS);border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:14px;font-weight:700;color:var(--accVib)">'+safeInitial(clients[i].name)+'</div><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(clients[i].name)+'</div></div>';}
-sel+='<div class="cd cd-link" style="text-align:center;border:1px dashed var(--border)" onclick="document.getElementById(\'clientPicker2\').remove();push(\'cardioBuilder\',{clientId:\'\'})"><span style="font-size:12px;color:var(--dm)">'+t("generalNoClient")+'</span></div>';
-sel+='<button class="btn2" onclick="document.getElementById(\'clientPicker2\').remove()" style="width:100%;margin-top:10px">'+t("cancel")+'</button></div></div>';
-var el=document.createElement('div');el.innerHTML=sel;document.body.appendChild(el.firstChild);}
+function startMealPlan(){_showClientPicker('mealPlanBuilder');}
+function startCardioPlan(){_showClientPicker('cardioBuilder');}
 
 function renderFoodBrowser(){
 var foods=getAllFoods();
@@ -3285,7 +3232,7 @@ function toggleGuideItem(si,ii){var el=$("git"+si+"_"+ii),a=$("gia"+si+"_"+ii);i
 
 
 // PIN
-var PIN_KEY="regi_pin",DEFAULT_PIN="1234";
+var PIN_KEY="regi_pin",DEFAULT_PIN="0000";
 function getPIN(){return localStorage.getItem(PIN_KEY)||DEFAULT_PIN;}
 function setPIN(p){localStorage.setItem(PIN_KEY,p);}
 function isUnlocked(){var ts=localStorage.getItem("regi_unlock_ts");if(!ts)return false;var elapsed=Date.now()-parseInt(ts);return elapsed<24*60*60*1000;}
