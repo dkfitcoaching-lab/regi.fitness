@@ -138,7 +138,7 @@ html{scroll-behavior:smooth}
 <div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#0e0e14,#1a1a24);border:1px solid var(--borderH);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:20px;font-weight:900;color:var(--acc);box-shadow:0 0 32px var(--accGlow);animation:breathe 4s ease-in-out infinite">R</div>
 <div><div style="font-family:var(--display);font-size:15px;font-weight:700;letter-spacing:0.08em;color:var(--ice)">REGI</div><div style="font-size:8px;color:var(--dm);font-family:var(--mono);letter-spacing:0.12em;margin-top:1px">COACHING STUDIO</div></div>
 </div>
-<div style="display:flex;align-items:center;gap:8px"><span id="syncBadge" onclick="syncFromCloud().then(render)" style="font-size:10px;cursor:pointer;transition:color 0.3s;padding:6px;border-radius:6px;font-family:var(--mono);font-weight:700" title="Tap to sync">&#9675;</span></div>
+<div style="display:flex;align-items:center;gap:4px"><span onclick="go('guide')" style="padding:8px;cursor:pointer;color:var(--dm);border-radius:8px;display:flex;align-items:center" title="Guide"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg></span><span onclick="go('settings')" style="padding:8px;cursor:pointer;color:var(--dm);border-radius:8px;display:flex;align-items:center" title="Settings"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></span><span id="syncBadge" onclick="syncFromCloud().then(render)" style="font-size:10px;cursor:pointer;transition:color 0.3s;padding:6px;border-radius:6px;font-family:var(--mono);font-weight:700" title="Tap to sync">&#9675;</span></div>
 </div>
 <div class="tabs" id="tabs"></div>
 <div class="ct" id="ct"></div>
@@ -1157,11 +1157,7 @@ html+='<div class="cd" style="display:flex;align-items:center;gap:12px;border-le
 if(todaySched.length){html+='<div class="sl" style="margin-top:24px">'+t("todaySchedule")+'</div>';for(var i=0;i<todaySched.length;i++){var s=todaySched[i];var ic=s.status==="complete",ix=s.status==="cancelled";var bc=ic?"var(--success)":ix?"var(--danger)":"var(--acc)";var cidx=clients.findIndex(function(cc){return cc.id===s.clientId;});html+='<div class="cd" style="display:flex;align-items:center;gap:14px;border-left:3px solid '+bc+'"><div style="min-width:50px;font-family:var(--mono);font-size:13px;font-weight:700;color:'+(ic?"var(--success)":"var(--acc)")+'">'+fmtTimeStr(s.time)+'</div><div style="flex:1;cursor:pointer" onclick="'+(cidx>=0?"navToClient("+cidx+")":"")+'"><div style="font-size:14px;font-weight:600;color:var(--wh)">'+escHtml(s.clientName)+'</div><div style="font-size:10px;color:var(--dm)">'+escHtml(s.type||"Training")+(ic?' \u00B7 <span class="status-chip status-complete">'+t("complete")+'</span>':ix?' \u00B7 <span class="status-chip status-cancelled">'+t("cancelled")+'</span>':"")+'</div></div>'+(!ic&&!ix?'<button class="btn2" onclick="completeScheduled(\''+escJs(s.id)+'\')" style="padding:5px 10px;font-size:8px">'+t("log2")+'</button>':"")+'<div style="font-size:11px;color:var(--ow);font-family:var(--mono)">$'+escHtml(s.rate||70)+'</div></div>';}}
 else html+='<div class="cd" style="text-align:center;padding:22px;margin-top:24px;border:1px dashed var(--border)"><div style="color:var(--dm);margin-bottom:10px">'+t("noSessions")+'</div><button class="btn2" onclick="go(\'schedule\')">'+t("scheduleOne")+'</button></div>';
 if(sessions.length){html+='<div class="sl" style="margin-top:24px">'+t("recentSessions")+'</div>';var rec=sessions.slice(-3).reverse();for(var i=0;i<rec.length;i++){var s=rec[i];html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="navToSession(\''+escJs(s.id)+'\')"><div style="width:34px;height:34px;border-radius:8px;background:var(--accS);border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;font-weight:700;color:var(--accVib)">'+safeInitial(s.clientName)+'</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(s.clientName)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+escHtml(s.type)+' \u00B7 '+fmtDate(s.date)+'</div></div><div style="font-size:10px;color:var(--ow);font-family:var(--mono)">$'+escHtml(s.rate)+'</div></div>';}}
-html+='<div class="g2" style="margin-top:20px">';
-html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:10px;padding:14px" onclick="go(\'guide\')"><span style="color:var(--acc)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg></span><div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--wh)">'+t("trainingGuide")+'</div><div style="font-size:8px;color:var(--dm);font-family:var(--mono)">KNOWLEDGE BASE</div></div><span style="color:var(--dm);font-size:14px">\u203A</span></div>';
-html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:10px;padding:14px" onclick="go(\'settings\')"><span style="color:var(--acc)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></span><div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--wh)">'+t("settings")+'</div><div style="font-size:8px;color:var(--dm);font-family:var(--mono)">PREFERENCES</div></div><span style="color:var(--dm);font-size:14px">\u203A</span></div>';
-html+='</div>';
-html+='<div style="text-align:center;padding:16px 0 4px"><div style="font-size:8px;color:var(--dmL);font-family:var(--mono)">REGI v'+VERSION+'</div></div>';
+html+='<div style="text-align:center;padding:24px 0 4px"><div style="font-size:8px;color:var(--dmL);font-family:var(--mono)">REGI v'+VERSION+'</div></div>';
 return html;
 }
 function completeScheduled(schedId){var sched=schedule.find(function(s){return s.id===schedId;});if(!sched)return;navStack=[];currentView={tab:"sessions",view:"main",data:{}};push("new",{prefillClientId:sched.clientId,prefillType:sched.type,prefillRate:sched.rate,prefillDate:sched.date,scheduleId:schedId});}
@@ -3008,58 +3004,41 @@ if(currentView.view==='supplementBuilder')return renderSupplementBuilder();
 if(currentView.view==='supplementDetail')return renderSupplementDetail();
 if(currentView.view==='proExercises')return renderProExercises();
 if(currentView.view==='foodBrowser')return renderFoodBrowser();
-if(currentView.view==='quickCalc')return renderQuickCalc();
 
 var html='<div class="gw" style="margin:0 0 18px"></div><div class="pt">Tools</div>';
 
-// ── SESSION TIMER ── (always visible at top for quick access during training)
-html+='<div class="cd" style="padding:16px 18px;margin-bottom:18px;border:1px solid var(--accB);display:flex;align-items:center;gap:14px;cursor:pointer" onclick="showTimerModal()">';
-html+='<div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,rgba(212,164,74,0.14),rgba(212,164,74,0.04));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;color:var(--acc);flex-shrink:0">'+IC.timer+'</div>';
-html+='<div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--wh)">Session Timer</div><div style="font-size:9px;color:var(--dm);font-family:var(--mono);margin-top:2px">'+(timer.running?'RUNNING \u00B7 '+fmtTime(timer.seconds):'TAP TO OPEN')+'</div></div>';
-html+='<div style="font-family:var(--mono);font-size:24px;font-weight:300;color:'+(timer.running?'var(--accVib)':'var(--dm)')+';letter-spacing:0.04em">'+fmtTime(timer.seconds>0?timer.seconds:timer.preset)+'</div>';
-html+='</div>';
+function _toolCard(icon,label,sub,onclick){
+return '<div class="cd cd-link" style="padding:22px 16px;text-align:center" onclick="'+onclick+'"><div style="margin-bottom:10px;display:flex;justify-content:center"><span style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,rgba(212,164,74,0.12),rgba(212,164,74,0.03));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;color:var(--acc)">'+icon+'</span></div><div style="font-size:13px;font-weight:700;color:var(--wh);line-height:1.3">'+label+'</div><div style="font-size:8px;color:var(--dm);margin-top:5px;font-family:var(--mono);letter-spacing:0.08em">'+sub+'</div></div>';}
 
-function _toolCard(icon,iconBg,iconBorder,iconColor,label,sub,onclick){
-return '<div class="cd cd-link" style="padding:22px 16px;text-align:center" onclick="'+onclick+'"><div style="margin-bottom:10px;display:flex;justify-content:center"><span style="width:48px;height:48px;border-radius:14px;background:'+iconBg+';border:1px solid '+iconBorder+';display:flex;align-items:center;justify-content:center;color:'+iconColor+'">'+icon+'</span></div><div style="font-size:13px;font-weight:700;color:var(--wh);line-height:1.3">'+label+'</div><div style="font-size:8px;color:var(--dm);margin-top:5px;font-family:var(--mono);letter-spacing:0.08em">'+sub+'</div></div>';}
+function _savedPlanCard(icon,name,detail,onclick){
+return '<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="'+onclick+'"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(212,164,74,0.18),rgba(212,164,74,0.06));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--acc)">'+icon+'</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+detail+'</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}
 
-// ── PROTOCOL BUILDERS ──
-html+='<div class="sl">PROTOCOL BUILDERS</div>';
+// ── BUILDERS ── (2x2 grid, the core of what a coach creates)
+html+='<div class="sl">BUILDERS</div>';
 html+='<div class="g2" style="margin-bottom:10px">';
-html+=_toolCard(IC.meal,'linear-gradient(135deg,rgba(212,164,74,0.12),rgba(212,164,74,0.03))','var(--accB)','var(--acc)','Meal Plan','MACRO BUILDER','startMealPlan()');
-html+=_toolCard(IC.supp,'linear-gradient(135deg,rgba(212,164,74,0.12),rgba(212,164,74,0.03))','var(--accB)','var(--acc)','Supplements','SCIENCE-BACKED','startSupplementPlan()');
+html+=_toolCard(IC.meal,'Meal Plan','MACRO BUILDER','startMealPlan()');
+html+=_toolCard(IC.supp,'Supplements','SCIENCE-BACKED','startSupplementPlan()');
 html+='</div>';
 html+='<div class="g2" style="margin-bottom:14px">';
-html+=_toolCard(IC.cardio,'linear-gradient(135deg,rgba(212,164,74,0.12),rgba(212,164,74,0.03))','var(--accB)','var(--acc)','Cardio Protocol','CARDIO BUILDER','startCardioPlan()');
-html+=_toolCard(IC.dumbbell,'linear-gradient(135deg,rgba(212,164,74,0.12),rgba(212,164,74,0.03))','var(--accB)','var(--acc)','Exercise Database',t("byMuscle"),"push('proExercises')");
+html+=_toolCard(IC.cardio,'Cardio Protocol','CARDIO BUILDER','startCardioPlan()');
+html+=_toolCard(IC.dumbbell,'Exercise Database',t("byMuscle"),"push('proExercises')");
 html+='</div>';
 
-// ── REFERENCE ──
-html+='<div class="sl" style="margin-top:8px">REFERENCE & UTILITIES</div>';
-html+='<div class="g2" style="margin-bottom:14px">';
-html+=_toolCard(IC.food,'linear-gradient(135deg,rgba(212,164,74,0.12),rgba(212,164,74,0.03))','var(--accB)','var(--acc)','Food Database',getAllFoods().length+' FOODS',"push('foodBrowser')");
-html+=_toolCard(IC.finance,'linear-gradient(135deg,rgba(212,164,74,0.12),rgba(212,164,74,0.03))','var(--accB)','var(--acc)','Earnings Calc','TAX & REVENUE',"push('quickCalc')");
-html+='</div>';
+// ── QUICK ACCESS ──
+html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px;padding:14px;margin-top:4px" onclick="push(\'foodBrowser\')"><span style="color:var(--acc)">'+IC.food+'</span><div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--wh)">Food Database</div><div style="font-size:8px;color:var(--dm);font-family:var(--mono)">'+getAllFoods().length+' FOODS \u00B7 MACROS REFERENCE</div></div><span style="color:var(--dm);font-size:14px">\u203A</span></div>';
 
-// Saved meal plans
-var allMealPlans=getMealPlans();
-if(allMealPlans.length){
-html+='<div class="sl" style="margin-top:18px">'+t("mealPlan").toUpperCase()+'S ('+allMealPlans.length+')</div>';
-for(var i=allMealPlans.length-1;i>=Math.max(0,allMealPlans.length-5);i--){var mp=allMealPlans[i];var c=clientById(mp.clientId);
-html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="push(\'mealPlanDetail\',{planId:\''+escJs(mp.id)+'\'})"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(212,164,74,0.18),rgba(212,164,74,0.06));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--acc)">'+IC.meal+'</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(mp.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+(c?escHtml(c.name)+' \u00B7 ':'')+mp.mealCount+' meals \u00B7 P'+mp.targetP+'/C'+mp.targetC+'/F'+mp.targetF+'</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}}
-
-// Saved cardio plans
-var allCardioPlan=getCardioPlans();
-if(allCardioPlan.length){
-html+='<div class="sl" style="margin-top:18px">'+t("savedCardio")+' ('+allCardioPlan.length+')</div>';
-for(var i=allCardioPlan.length-1;i>=Math.max(0,allCardioPlan.length-5);i--){var cp=allCardioPlan[i];var c=clientById(cp.clientId);
-html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="push(\'cardioDetail\',{planId:\''+escJs(cp.id)+'\'})"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(201,168,76,0.18),rgba(201,168,76,0.06));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--acc)">'+IC.cardio+'</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(cp.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+(c?escHtml(c.name)+' \u00B7 ':'')+cp.phase+' \u00B7 '+cp.frequency+'x/wk</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}}
-
-// Saved supplement plans
-var allSuppPlans=getSupplementPlans();
-if(allSuppPlans.length){
-html+='<div class="sl" style="margin-top:18px">'+t("savedSupplements")+' ('+allSuppPlans.length+')</div>';
-for(var i=allSuppPlans.length-1;i>=Math.max(0,allSuppPlans.length-5);i--){var sp2=allSuppPlans[i];var c2=clientById(sp2.clientId);
-html+='<div class="cd cd-link" style="display:flex;align-items:center;gap:12px" onclick="push(\'supplementDetail\',{planId:\''+escJs(sp2.id)+'\'})"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(212,164,74,0.18),rgba(212,164,74,0.06));border:1px solid var(--accB);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--acc)">'+IC.supp+'</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+escHtml(sp2.name)+'</div><div style="font-size:10px;color:var(--dm);font-family:var(--mono)">'+(c2?escHtml(c2.name)+' \u00B7 ':'')+sp2.goal+' \u00B7 '+sp2.supplements.length+' supps</div></div><div style="color:var(--dm);font-size:14px">\u203A</div></div>';}}
+// ── SAVED PROTOCOLS ──
+var allMealPlans=getMealPlans(),allCardioPlan=getCardioPlans(),allSuppPlans=getSupplementPlans();
+var hasSaved=allMealPlans.length||allCardioPlan.length||allSuppPlans.length;
+if(hasSaved){
+html+='<div class="sl" style="margin-top:18px">SAVED PROTOCOLS</div>';
+for(var i=allMealPlans.length-1;i>=Math.max(0,allMealPlans.length-3);i--){var mp=allMealPlans[i];var c=clientById(mp.clientId);
+html+=_savedPlanCard(IC.meal,mp.name,(c?escHtml(c.name)+' \u00B7 ':'')+mp.mealCount+' meals \u00B7 P'+mp.targetP+'/C'+mp.targetC+'/F'+mp.targetF,"push('mealPlanDetail',{planId:'"+escJs(mp.id)+"'})");}
+for(var i=allCardioPlan.length-1;i>=Math.max(0,allCardioPlan.length-3);i--){var cp=allCardioPlan[i];var c=clientById(cp.clientId);
+html+=_savedPlanCard(IC.cardio,cp.name,(c?escHtml(c.name)+' \u00B7 ':'')+cp.phase+' \u00B7 '+cp.frequency+'x/wk',"push('cardioDetail',{planId:'"+escJs(cp.id)+"'})");}
+for(var i=allSuppPlans.length-1;i>=Math.max(0,allSuppPlans.length-3);i--){var sp2=allSuppPlans[i];var c2=clientById(sp2.clientId);
+html+=_savedPlanCard(IC.supp,sp2.name,(c2?escHtml(c2.name)+' \u00B7 ':'')+sp2.goal+' \u00B7 '+sp2.supplements.length+' supps',"push('supplementDetail',{planId:'"+escJs(sp2.id)+"'})");}
+}
 
 return html;}
 
@@ -3195,17 +3174,16 @@ function filterFoodBrowse(q){q=q.toLowerCase();document.querySelectorAll('#foodB
 function filterFoodBrowseCat(cat,el){el.parentElement.querySelectorAll('.chip').forEach(function(c){c.classList.remove('on');});el.classList.add('on');document.querySelectorAll('#foodBrowseList .food-browse-item').forEach(function(item){item.style.display=(cat==='all'||item.dataset.cat===cat)?'grid':'none';});}
 
 // SETTINGS
-function renderSettings(){var tr=roundMoney(sessions.filter(function(s){return s.status!=="cancelled";}).reduce(function(a,s){return a+parseFloat(s.rate||0);},0));var go2=Math.round(tr*getGymCut());var net=roundMoney(tr-go2);var pcts=[10,15,20,25,30],ph="";for(var i=0;i<pcts.length;i++)ph+='<div class="chip'+(Math.round(getGymCut()*100)===pcts[i]?" on":"")+'" onclick="setGymCut('+pcts[i]+')">'+pcts[i]+'%</div>';
+function renderSettings(){var pcts=[10,15,20,25,30],ph="";for(var i=0;i<pcts.length;i++)ph+='<div class="chip'+(Math.round(getGymCut()*100)===pcts[i]?" on":"")+'" onclick="setGymCut('+pcts[i]+')">'+pcts[i]+'%</div>';
 var html='<div class="gw" style="margin:0 0 18px"></div><button class="btn2" onclick="go(\'home\')" style="margin-bottom:12px">\u2039 '+t("back").toUpperCase()+'</button><div class="pt">'+t("settings")+'</div>';
 
-// ── OVERVIEW SNAPSHOT ──
-html+='<div class="cd" style="padding:18px;border:1px solid var(--accB);background:linear-gradient(160deg,rgba(12,12,20,0.99),rgba(6,6,12,0.99));margin-bottom:18px"><div class="g3"><div class="stat"><b style="color:var(--acc);font-size:20px">'+clients.length+'</b><small>'+t("clients").toUpperCase()+'</small></div><div class="stat"><b style="color:var(--ow);font-size:20px">'+sessions.length+'</b><small>'+t("sessions").toUpperCase()+'</small></div><div class="stat"><b style="color:var(--accVib);font-size:20px">$'+net+'</b><small>NET</small></div></div></div>';
-
-// ── BUSINESS & FINANCE ──
-html+='<div class="sl"><span style="display:inline-flex;vertical-align:middle;margin-right:6px;color:var(--acc)">'+IC.finance+'</span>BUSINESS & FINANCE</div>';
-html+='<div class="cd" style="padding:16px"><div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--borderS)"><span style="font-size:12px;color:var(--mu)">'+t("gross")+'</span><span style="font-size:13px;font-weight:700;color:var(--accVib);font-family:var(--mono)">$'+tr+'</span></div><div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--borderS)"><span style="font-size:12px;color:var(--mu)">'+t("gymCut")+'</span><span style="font-size:13px;font-weight:700;color:var(--dm);font-family:var(--mono)">$'+go2+'</span></div><div style="display:flex;justify-content:space-between;padding:8px 0"><span style="font-size:12px;color:var(--mu)">NET INCOME</span><span style="font-size:13px;font-weight:700;color:var(--success);font-family:var(--mono)">$'+net+'</span></div></div>';
+// ── GYM & RATES ──
+html+='<div class="sl"><span style="display:inline-flex;vertical-align:middle;margin-right:6px;color:var(--acc)">'+IC.finance+'</span>GYM & RATES</div>';
 html+='<div class="cd" style="padding:16px"><div class="field"><span class="lb">'+t("gymCut")+'</span><div style="display:flex;gap:4px;flex-wrap:wrap">'+ph+'</div></div><div class="field" style="margin-bottom:0"><span class="lb">'+t("defaultRate")+'</span><input id="defRate" type="number" min="0" value="'+LS.get("defaultRate","70")+'" onchange="LS.set(\'defaultRate\',this.value)"></div></div>';
-html+='<div class="cd" style="padding:16px"><div class="g2"><button class="btn2" onclick="generateMonthlyPDF()" style="width:100%;background:rgba(201,168,76,0.05);border-color:var(--accB)">\u2193 '+t("monthlyPDF")+'</button><button class="btn" onclick="showEarningsReportPicker()" style="width:100%;font-size:10px;padding:10px 14px">\u2193 TAX REPORT</button></div></div>';
+
+// ── REPORTS ──
+html+='<div class="sl" style="margin-top:22px">REPORTS</div>';
+html+='<div class="cd" style="padding:16px"><div class="g2"><button class="btn2" onclick="generateMonthlyPDF()" style="width:100%">\u2193 '+t("monthlyPDF")+'</button><button class="btn" onclick="showEarningsReportPicker()" style="width:100%;font-size:10px;padding:10px 14px">\u2193 TAX REPORT</button></div></div>';
 
 // ── DISPLAY & PREFERENCES ──
 html+='<div class="sl" style="margin-top:22px"><span style="display:inline-flex;vertical-align:middle;margin-right:6px;color:var(--acc)">'+IC.palette+'</span>DISPLAY & PREFERENCES</div>';
@@ -3213,7 +3191,7 @@ html+='<div class="cd" style="padding:16px"><div class="field"><span class="lb">
 
 // ── SECURITY ──
 html+='<div class="sl" style="margin-top:22px"><span style="display:inline-flex;vertical-align:middle;margin-right:6px;color:var(--acc)">'+IC.lock+'</span>'+t("security")+'</div>';
-html+='<div class="cd" style="padding:16px"><div style="margin-bottom:12px"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+t("pin")+'</div><div style="font-size:10px;color:var(--dm)">'+t("quickAccessSecurity")+'</div></div><div class="g2"><button class="btn2" onclick="changePIN()" style="width:100%">'+t("changePIN")+'</button><button class="btn2" onclick="sessionStorage.removeItem(\'regi_unlocked\');showLockScreen()" style="width:100%">'+t("lockNow")+'</button></div></div>';
+html+='<div class="cd" style="padding:16px"><div style="margin-bottom:12px"><div style="font-size:13px;font-weight:600;color:var(--wh)">'+t("pin")+'</div><div style="font-size:10px;color:var(--dm)">'+t("quickAccessSecurity")+'</div></div><div class="g2"><button class="btn2" onclick="changePIN()" style="width:100%">'+t("changePIN")+'</button><button class="btn2" onclick="localStorage.removeItem(\'regi_unlock_ts\');showLockScreen()" style="width:100%">'+t("lockNow")+'</button></div></div>';
 
 // ── NOTIFICATIONS ──
 html+='<div class="sl" style="margin-top:22px"><span style="display:inline-flex;vertical-align:middle;margin-right:6px;color:var(--acc)">'+IC.bell+'</span>NOTIFICATIONS</div>';
