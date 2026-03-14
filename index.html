@@ -16,7 +16,7 @@
 <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png"/>
 <link rel="icon" type="image/png" sizes="512x512" href="icon.png"/>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 <style>
 :root{
 --bg:#020204;--bg2:#060608;--card:#08080c;--cardH:#0e0e14;
@@ -1221,7 +1221,8 @@ html+='<div style="font-size:10px;color:var(--dm);font-family:var(--mono);letter
 html+='<div style="margin-top:20px;font-size:28px;font-weight:800;color:var(--wh);line-height:1.05;font-family:var(--display);letter-spacing:0.02em">'+gr+',</div>';
 html+='<div style="font-size:36px;font-weight:900;line-height:1.2;font-family:var(--display);letter-spacing:0.03em"><span style="background:linear-gradient(135deg,var(--accBright),var(--accVib),var(--acc));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 20px rgba(212,164,74,0.2))">'+escHtml(getCoachName())+'</span></div>';
 html+='</div></div>';
-html+='<div class="sl" style="margin-top:22px">'+now_.toLocaleDateString(getLang()==="hu"?"hu-HU":"en-US",{month:"long"}).toUpperCase()+' '+t("monthlyEarnings")+'</div>';
+html+='<div class="gw" style="margin:0 0 18px"></div>';
+html+='<div class="sl">'+now_.toLocaleDateString(getLang()==="hu"?"hu-HU":"en-US",{month:"long"}).toUpperCase()+' '+t("monthlyEarnings")+'</div>';
 html+='<div class="g3"><div class="stat"><b style="color:var(--acc)">'+moS.length+'</b><small>'+t("sessions").toUpperCase()+'</small></div><div class="stat"><b style="color:var(--ow)">$'+gross+'</b><small>'+t("gross").toUpperCase()+'</small></div><div class="stat" style="border-color:rgba(212,164,74,0.18);box-shadow:0 4px 28px rgba(0,0,0,0.65),0 0 20px rgba(212,164,74,0.06)"><b style="color:var(--accBright);text-shadow:0 0 20px var(--accGlow)">$'+take+'</b><small>'+t("yours").toUpperCase()+' <span style="font-size:7px;color:var(--dm)">('+Math.round(getGymCut()*100)+'% gym)</span></small></div></div>';
 var alerts=getRetentionAlerts();
 if(alerts.length){html+='<div class="sl" style="margin-top:24px">'+t("needsAttention")+'</div>';
@@ -1706,7 +1707,7 @@ var ta=document.createElement("textarea");ta.value=msg;document.body.appendChild
 });}}
 
 // PDF EXPORT - Professional branded client reports
-function ensureJsPDF(attempt){attempt=attempt||1;return new Promise(function(resolve,reject){if(window.jspdf&&window.jspdf.jsPDF){resolve();return;}var s=document.createElement("script");s.src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js";s.onload=function(){setTimeout(function(){if(window.jspdf&&window.jspdf.jsPDF)resolve();else if(attempt<3)setTimeout(function(){ensureJsPDF(attempt+1).then(resolve,reject);},1000);else reject(new Error("jsPDF failed to initialize"));},300);};s.onerror=function(){if(attempt<3){setTimeout(function(){ensureJsPDF(attempt+1).then(resolve,reject);},1000*attempt);}else{reject(new Error("Failed to load PDF library"));}};document.head.appendChild(s);});}
+function ensureJsPDF(attempt){attempt=attempt||1;return new Promise(function(resolve,reject){if(window.jspdf&&window.jspdf.jsPDF){resolve();return;}var s=document.createElement("script");s.src="https://unpkg.com/jspdf@2.5.2/dist/jspdf.umd.min.js";s.onload=function(){setTimeout(function(){if(window.jspdf&&window.jspdf.jsPDF)resolve();else if(attempt<3)setTimeout(function(){ensureJsPDF(attempt+1).then(resolve,reject);},1000);else reject(new Error("jsPDF failed to initialize"));},300);};s.onerror=function(){if(attempt<3){setTimeout(function(){ensureJsPDF(attempt+1).then(resolve,reject);},1000*attempt);}else{reject(new Error("Failed to load PDF library"));}};document.head.appendChild(s);});}
 function safePDFSave(doc,fileName){
 _pdfHideLoading();
 try{
@@ -3575,12 +3576,12 @@ var overlay=document.createElement("div");
 overlay.id="whatsNew";
 overlay.style.cssText="position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.92);backdrop-filter:blur(20px);padding:16px;animation:fadeIn 0.4s ease";
 var wnItems=[
-{icon:IC.dumbbell,title:"Complete Exercise DB",desc:"Every muscle group covered for both men and women. Chest, glutes, hamstrings, calves, traps \u2014 all properly separated with pro-level exercises."},
-{icon:IC.meal,title:"Real Food Database",desc:"16 regular carb sources added: oats, pasta, bread, bagels, and more. GF clients auto-filtered. No more all-GF restriction."},
-{icon:IC.finance,title:"$0 Rate Fix",desc:"Clients with $0 or comp rates now display correctly everywhere \u2014 session logs, PDFs, earnings, and schedule."},
-{icon:IC.lock,title:"PDF Engine Fix",desc:"Service worker no longer blocks PDF library loading. Reliable PDF generation on all devices including offline."},
-{icon:IC.cardio,title:"Multi-Page PDF Footer",desc:"Every page now gets the branded footer, not just the last one."},
-{icon:IC.timer,title:"Clean Sign Out",desc:"Signing out now fully clears all data \u2014 programs, meal plans, supplements, PIN, and settings."}
+{icon:IC.dumbbell,title:"Pro Exercise Database",desc:"Complete muscle group database for men and women. Chest, glutes, hamstrings, calves, traps, biceps, triceps \u2014 all separated with Olympia-level exercise selections."},
+{icon:IC.meal,title:"Macro Meal Plan Builder",desc:"Full food database with 150+ foods. GF and regular options. Auto-filters by client diet. Build competition-ready meal plans with one tap."},
+{icon:IC.supp,title:"Supplement Protocols",desc:"Create, save, and attach supplement protocols to any client. Full PDF export with branded formatting."},
+{icon:IC.cardio,title:"Cardio Protocol Builder",desc:"Build and assign cardio protocols with equipment selection, phases, heart rate targets, and weekly frequency."},
+{icon:IC.finance,title:"Branded PDF Reports",desc:"Generate professional client PDFs with programs, meals, supplements, and session history. Multi-page with branded headers and footers on every page."},
+{icon:IC.timer,title:"Premium Session Timer",desc:"Full-screen timer with circular progress ring, preset buttons, and haptic feedback. Custom dialogs everywhere \u2014 no more browser popups."}
 ];
 var wnHtml='';
 for(var wi=0;wi<wnItems.length;wi++){var wn=wnItems[wi];

@@ -28,7 +28,7 @@ self.addEventListener('fetch', function(e) {
     return;
   }
   // CDN requests (jsPDF etc): network-first, cache the response, never fallback to index.html
-  if (e.request.url.includes('cdnjs.cloudflare.com') || e.request.url.includes('cdn.jsdelivr.net')) {
+  if (e.request.url.includes('cdnjs.cloudflare.com') || e.request.url.includes('cdn.jsdelivr.net') || e.request.url.includes('unpkg.com')) {
     e.respondWith(
       fetch(e.request).then(function(response) {
         if (response && response.status === 200) {
